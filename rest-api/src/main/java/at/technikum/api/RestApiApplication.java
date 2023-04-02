@@ -13,19 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 				description = "SWEN Project REST API"
 		)
 )
-//@EnableAsync
 public class RestApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RestApiApplication.class, args);
 	}
-//	@Bean
-//	public Executor taskExecutor() {
-//		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-//		executor.setCorePoolSize(2);
-//		executor.setMaxPoolSize(2);
-//		executor.setQueueCapacity(500);
-//		executor.setThreadNamePrefix("TourPlannerAPI-");
-//		executor.initialize();
-//		return executor;
-//	}
 }

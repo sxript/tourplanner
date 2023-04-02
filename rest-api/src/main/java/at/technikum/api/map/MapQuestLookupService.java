@@ -46,10 +46,9 @@ public class MapQuestLookupService {
         return CompletableFuture.completedFuture(results);
     }
 
-    // TODO: create getStaticMap
     @Async
-    public CompletableFuture<byte[]> getStaticMap(String from, String to, String transportMode) {
-        MapResult mapResult = getRouteDirections(from, to, transportMode).join();
+    public CompletableFuture<byte[]> getStaticMap(String to, MapResult mapResult) {
+//        MapResult mapResult = getRouteDirections(from, to, transportMode).join();
         if(mapResult != null) {
             String baseURL = vaultConfiguration.getApiUrl();
             String apiKey = vaultConfiguration.getApiKeyMap();

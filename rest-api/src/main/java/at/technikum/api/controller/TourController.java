@@ -46,7 +46,7 @@ public class TourController {
             return ResponseEntity.badRequest().build();
         }
 
-        byte[] image = mapQuestLookupService.getStaticMap(newTour.getFrom(), newTour.getTo(), newTour.getTransportType()).join();
+        byte[] image = mapQuestLookupService.getStaticMap(newTour.getTo(), mapResult).join();
         newTour.setMapImage(image);
 
         newTour.setEstimatedTime(mapResult.getRealTime());

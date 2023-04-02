@@ -1,12 +1,10 @@
 package at.technikum.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
@@ -26,14 +24,17 @@ public class Tour {
     private String to;
     @Column(nullable = false)
     private String transportType; // maybe enum?
+    @Column(nullable = false)
+    private String description;
     private Double distance;
     private Integer estimatedTime;
-    private String routeInformation; // routeImage?
+    private String routeInformation; // TODO: change this to be an image and add it on create of TOUR
 
     public Tour(String name,
                 String from,
                 String to,
                 String transportType,
+                String description,
                 Double distance,
                 Integer estimatedTime,
                 String routeInformation) {
@@ -41,6 +42,7 @@ public class Tour {
         this.from = from;
         this.to = to;
         this.transportType = transportType;
+        this.description = description;
         this.distance = distance;
         this.estimatedTime = estimatedTime;
         this.routeInformation = routeInformation;

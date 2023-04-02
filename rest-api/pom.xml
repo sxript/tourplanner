@@ -53,6 +53,12 @@
 			<artifactId>spring-cloud-starter-vault-config</artifactId>
 			<version>4.0.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.0.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>

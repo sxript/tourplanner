@@ -24,7 +24,7 @@ public class MapQuestLookupService {
     }
 
     @Async
-    public CompletableFuture<MapResult> findRoute(String from, String to, String transportMode) {
+    public CompletableFuture<MapResult> getRouteDirections(String from, String to, String transportMode) {
         logger.info("Searching Route from: {} to: {}", from, to);
         String baseURL = vaultConfiguration.getApiUrl();
         String apiKey = vaultConfiguration.getApiKeyMap();
@@ -44,4 +44,6 @@ public class MapQuestLookupService {
         MapResult results = restTemplate.getForObject(builder.toUriString(), MapResult.class);
         return CompletableFuture.completedFuture(results);
     }
+
+    // TODO: create getStaticMap
 }

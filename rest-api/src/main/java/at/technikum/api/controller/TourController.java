@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -40,7 +38,7 @@ public class TourController {
 
     @PostMapping("/tours")
     public ResponseEntity<Tour> createTour(@RequestBody Tour newTour) {
-        MapResult mapResult = mapQuestLookupService.findRoute(newTour.getFrom(), newTour.getTo(), newTour.getTransportType()).join();
+        MapResult mapResult = mapQuestLookupService.getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType()).join();
         if(mapResult.getInfo().getStatusCode() != 0) {
             // TODO: RETURN ERROR MESSAGE FROM getInfo().getMessages()
             return ResponseEntity.badRequest().build();

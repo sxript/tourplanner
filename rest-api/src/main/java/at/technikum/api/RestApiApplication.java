@@ -1,14 +1,9 @@
 package at.technikum.api;
 
-import at.technikum.api.Configuration.VaultConfiguration;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @OpenAPIDefinition(
@@ -18,9 +13,19 @@ import org.springframework.context.ConfigurableApplicationContext;
 				description = "SWEN Project REST API"
 		)
 )
+//@EnableAsync
 public class RestApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RestApiApplication.class, args);
 	}
-
+//	@Bean
+//	public Executor taskExecutor() {
+//		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//		executor.setCorePoolSize(2);
+//		executor.setMaxPoolSize(2);
+//		executor.setQueueCapacity(500);
+//		executor.setThreadNamePrefix("TourPlannerAPI-");
+//		executor.initialize();
+//		return executor;
+//	}
 }

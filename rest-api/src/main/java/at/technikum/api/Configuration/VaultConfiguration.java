@@ -9,4 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class VaultConfiguration {
     @Value("${api_key_map}")
     private String apiKeyMap;
+
+    @Value("${api_url}")
+    private String apiUrl;
 }

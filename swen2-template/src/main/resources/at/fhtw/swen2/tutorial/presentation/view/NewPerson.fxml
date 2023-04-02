@@ -14,7 +14,7 @@
       fx:controller="at.fhtw.swen2.tutorial.presentation.view.NewPersonController">
 
    <children>
-      <Label text="%tab.demo.title">
+      <Label text="%tab.tours.title">
          <font>
             <Font size="14.0" />
          </font>

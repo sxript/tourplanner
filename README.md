@@ -1,3 +1,24 @@
+# Setup
+## Dev Environment
+**Postgres Setup**
+1. Start Postgres
+   - `make up`
+2. Enter Postgres Container
+   - `docker exec -it postgres_swen bash`
+3. Connect to DB
+   - `psql -p 5432 -h localhost -U postgres`
+4. Create Database `tour`
+   -   `CREATE DATABASE tour;`
+5. Grant Privileges to *postgres* user 
+   -   `GRANT ALL PRIVILEGES ON DATABASE tour TO postgres;`
+   
+**Vault Setup**
+1. Start vault 
+```bash 
+   $ vault server --dev --dev-root-token-id="00000000-0000-0000-0000-000000000000"
+```
+2. Connect to vault and add **KEY**=`api_key_map` **VALUE**=(Map token from API provider)
+
 # Goals
 - [ ] GUI using JavaFX
 - [ ] Using Presentation-Model Java

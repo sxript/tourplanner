@@ -27,8 +27,10 @@ public class Tour {
     @Column(nullable = false)
     private String description;
     private Double distance;
+
     private Integer estimatedTime;
-    private String routeInformation; // TODO: change this to be an image and add it on create of TOUR
+    @Transient
+    private byte[] mapImage;
 
     public Tour(String name,
                 String from,
@@ -37,7 +39,7 @@ public class Tour {
                 String description,
                 Double distance,
                 Integer estimatedTime,
-                String routeInformation) {
+                byte[] mapImage) {
         this.name = name;
         this.from = from;
         this.to = to;
@@ -45,6 +47,6 @@ public class Tour {
         this.description = description;
         this.distance = distance;
         this.estimatedTime = estimatedTime;
-        this.routeInformation = routeInformation;
+        this.mapImage = mapImage;
     }
 }

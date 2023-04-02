@@ -1,4 +1,4 @@
-package at.technikum.api.Configuration;
+package at.technikum.api.configuration;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

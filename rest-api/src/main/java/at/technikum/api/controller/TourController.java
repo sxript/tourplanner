@@ -18,6 +18,7 @@ public class TourController {
     private static final Logger logger = LoggerFactory.getLogger(TourController.class);
     private final TourService tourService;
     private final MapQuestLookupService mapQuestLookupService;
+
     @Autowired
     public TourController(TourService tourService, MapQuestLookupService mapQuestLookupService) {
         this.tourService = tourService;
@@ -39,10 +40,14 @@ public class TourController {
     @PostMapping("/tours")
     public ResponseEntity<Tour> createTour(@RequestBody Tour newTour) {
         MapResult mapResult = mapQuestLookupService.getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType()).join();
-        if(mapResult.getInfo().getStatusCode() != 0) {
+        logger.info("STATUS CODE: {}", mapResult.getInfo().getStatusCode());
+        if (mapResult.getInfo().getStatusCode() != 0) {
             // TODO: RETURN ERROR MESSAGE FROM getInfo().getMessages()
             return ResponseEntity.badRequest().build();
         }
+
+        byte[] image = mapQuestLookupService.getStaticMap(newTour.getFrom(), newTour.getTo(), newTour.getTransportType()).join();
+        newTour.setMapImage(image);
 
         newTour.setEstimatedTime(mapResult.getRealTime());
         newTour.setDistance(mapResult.getDistance());

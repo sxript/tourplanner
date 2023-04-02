@@ -1,6 +1,5 @@
 package at.technikum.api.repository;
 
-import at.technikum.api.model.Tour;
 import at.technikum.api.model.TourLog;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

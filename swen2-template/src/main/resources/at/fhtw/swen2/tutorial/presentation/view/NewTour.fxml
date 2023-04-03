@@ -11,7 +11,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="200.0" prefWidth="200.0"
       spacing="8.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="at.fhtw.swen2.tutorial.presentation.view.NewPersonController">
+      fx:controller="at.fhtw.swen2.tutorial.presentation.view.NewTourController">
 
    <children>
       <Label text="%tab.tours.title">
@@ -20,7 +20,6 @@
          </font>
       </Label>
       <Separator prefWidth="200.0" />
-      <Text text="new Person"/>
       <TextField fx:id="nameTextField"/>
       <Button fx:id="submitButton" onAction="#submitButtonAction" text="insert"/>
       <Separator prefWidth="200.0" />

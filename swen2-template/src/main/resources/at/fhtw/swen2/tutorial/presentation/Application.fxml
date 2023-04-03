@@ -25,6 +25,18 @@
                   <MenuItem fx:id="miQuit" mnemonicParsing="false" onAction="#onFileClose" text="%menu.file.quit" />
                </items>
             </Menu>
+
+             <Menu mnemonicParsing="false" text="Edit">
+                 <items>
+<!--                     <MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#onHelpAbout" text="%menu.help.about" />-->
+                 </items>
+             </Menu>
+             <Menu mnemonicParsing="false" text="Options">
+                 <items>
+<!--                     <MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#onHelpAbout" text="%menu.help.about" />-->
+                 </items>
+             </Menu>
+
             <Menu mnemonicParsing="false" text="%menu.help.title">
                <items>
                   <MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#onHelpAbout" text="%menu.help.about" />
@@ -42,7 +54,7 @@
                     <items>
                         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                            <children>
-                               <fx:include source="view/NewPerson.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                               <fx:include source="view/NewTour.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="319.0" prefWidth="542.0">
@@ -50,7 +62,7 @@
                                <fx:include source="view/Search.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                           <children>
-                              <fx:include source="view/PersonList.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
+                              <fx:include source="view/TourLogList.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
                               <VBox layoutX="26.0" layoutY="59.0" prefHeight="200.0" prefWidth="531.0" />
                           </children>
                       </AnchorPane>

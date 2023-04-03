@@ -42,9 +42,6 @@ public class SearchController {
                 loadData();
             }
         });
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            searchLabel.setText(newValue);
-        });
     }
 
     private void loadData() {

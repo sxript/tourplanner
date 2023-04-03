@@ -1,7 +1,6 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
-import at.fhtw.swen2.tutorial.presentation.viewmodel.PersonListViewModel;
-import at.fhtw.swen2.tutorial.service.PersonService;
+import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
@@ -15,10 +14,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 @Component
-public class PersonListController implements Initializable{
+public class TourLogListController implements Initializable{
 
     @Autowired
-    public PersonListViewModel personListViewModel;
+    public TourLogListViewModel tourLogListViewModel;
 
     @FXML
     public TableView tableView = new TableView<>();
@@ -27,19 +26,22 @@ public class PersonListController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle rb){
-        tableView.setItems(personListViewModel.getPersonListItems());
+        tableView.setItems(tourLogListViewModel.getPersonListItems());
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn id = new TableColumn("ID");
-        id.setCellValueFactory(new PropertyValueFactory("id"));
-        TableColumn name = new TableColumn("NAME");
-        name.setCellValueFactory(new PropertyValueFactory("name"));
-        TableColumn employed = new TableColumn("EMPLOYED");
-        employed.setCellValueFactory(new PropertyValueFactory("isEmployed"));
-        tableView.getColumns().addAll(id, name, employed);
+        TableColumn date = new TableColumn("Date");
+        date.setCellValueFactory(new PropertyValueFactory("date"));
+
+        TableColumn duration = new TableColumn("Duration");
+        duration.setCellValueFactory(new PropertyValueFactory("duration"));
+
+        TableColumn distance = new TableColumn("Distance");
+        distance.setCellValueFactory(new PropertyValueFactory("distance"));
+
+        tableView.getColumns().addAll(date, duration, distance);
 
         dataContainer.getChildren().add(tableView);
-        personListViewModel.initList();
+        tourLogListViewModel.initList();
     }
 
 }

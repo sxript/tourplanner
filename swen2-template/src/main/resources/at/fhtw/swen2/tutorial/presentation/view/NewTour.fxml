@@ -21,7 +21,7 @@
       </Label>
       <Separator prefWidth="200.0" />
       <TextField fx:id="nameTextField"/>
-      <Button fx:id="submitButton" onAction="#submitButtonAction" text="insert"/>
+      <Button fx:id="submitButton" onAction="#submitButtonCreateNewTour" text="insert"/>
       <Separator prefWidth="200.0" />
       <Text fx:id="feedbackText" />
    </children>

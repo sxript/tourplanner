@@ -1,8 +1,13 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
+import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -12,36 +17,38 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @Component
 public class TourListController implements Initializable{
 
     @Autowired
-    public TourLogListViewModel tourLogListViewModel;
+    public TourListViewModel tourListViewModel;
 
     @FXML
-    public TableView tableView = new TableView<>();
+    public ListView<String> listView = new ListView<>();
     @FXML
-    private VBox dataContainer;
+    private VBox listContainer;
 
     @Override
     public void initialize(URL location, ResourceBundle rb){
-        tableView.setItems(tourLogListViewModel.getPersonListItems());
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn date = new TableColumn("Date");
-        date.setCellValueFactory(new PropertyValueFactory("date"));
 
-        TableColumn duration = new TableColumn("Duration");
-        duration.setCellValueFactory(new PropertyValueFactory("duration"));
 
-        TableColumn distance = new TableColumn("Distance");
-        distance.setCellValueFactory(new PropertyValueFactory("distance"));
+        ObservableList<String> list = FXCollections.observableArrayList();
 
-        tableView.getColumns().addAll(date, duration, distance);
+        tourListViewModel.getTourListItems().forEach(s->list.add(s.getName()));
+        listView.setItems(list);
 
-        dataContainer.getChildren().add(tableView);
-        tourLogListViewModel.initList();
+//        tableView.setItems(tourLogListViewModel.getTourLogListItems());
+
+        tourListViewModel.getTourListItems();
+
+        if(listView.getItems().size()==0){
+            listView.setPlaceholder(new Label("Kein Inhalt in der Liste"));
+        }
+        listContainer.getChildren().add(listView);
+        tourListViewModel.initList();
     }
 
 }

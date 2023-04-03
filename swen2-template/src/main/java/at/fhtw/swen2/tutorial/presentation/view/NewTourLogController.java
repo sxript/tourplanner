@@ -45,6 +45,6 @@ public class NewTourLogController implements Initializable {
         }
 
         System.out.println("in button");
-        newTourLogViewModel.addNewPerson();
+        newTourLogViewModel.addNewTourLog();
     }
 }

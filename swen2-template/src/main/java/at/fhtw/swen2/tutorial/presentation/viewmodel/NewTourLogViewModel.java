@@ -38,7 +38,7 @@ public class NewTourLogViewModel {
     }
 
 
-    public void addNewPerson() {
+    public void addNewTourLog() {
         TourLog tourLog = TourLog.builder().date(new Date()).distance(0).duration(0l).build();
 
         //TODO call the service, to add the toulog in the database

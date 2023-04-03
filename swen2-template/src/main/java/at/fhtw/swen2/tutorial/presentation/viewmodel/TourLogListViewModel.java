@@ -3,6 +3,7 @@ import at.fhtw.swen2.tutorial.model.TourLog;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,15 +11,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Getter
 public class TourLogListViewModel {
 
 
     private List<TourLog> masterData = new ArrayList<>();
     private ObservableList<TourLog> tourLogListItems = FXCollections.observableArrayList();
 
-    public ObservableList<TourLog> getPersonListItems() {
-        return tourLogListItems;
-    }
+
 
     public void addItem(TourLog tourLog) {
         tourLogListItems.add(tourLog);

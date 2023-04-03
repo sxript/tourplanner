@@ -26,7 +26,7 @@ public class TourLogListController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle rb){
-        tableView.setItems(tourLogListViewModel.getPersonListItems());
+        tableView.setItems(tourLogListViewModel.getTourLogListItems());
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn date = new TableColumn("Date");

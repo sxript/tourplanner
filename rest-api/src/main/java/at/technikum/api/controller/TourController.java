@@ -1,18 +1,23 @@
 package at.technikum.api.controller;
 
+import at.technikum.api.exception.BadRequestException;
+import at.technikum.api.exception.ResourceNotFoundException;
 import at.technikum.api.map.MapQuestLookupService;
 import at.technikum.api.map.MapResult;
 import at.technikum.api.model.Tour;
 import at.technikum.api.service.TourService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/api/v1/")
 public class TourController {
     private static final Logger logger = LoggerFactory.getLogger(TourController.class);
@@ -25,8 +30,6 @@ public class TourController {
         this.mapQuestLookupService = mapQuestLookupService;
     }
 
-    // TODO: add better response messages
-    // TODO: add better error messages + handling
     @GetMapping("/tours")
     public ResponseEntity<List<Tour>> getAllTours() {
         return ResponseEntity.ok(tourService.getAllTours());
@@ -34,16 +37,18 @@ public class TourController {
 
     @GetMapping("/tours/{id}")
     public ResponseEntity<Tour> getTourById(@PathVariable Long id) {
-        return tourService.getTourById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return tourService.getTourById(id).map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResourceNotFoundException("No Tour with Id: " + id));
     }
 
     @PostMapping("/tours")
-    public ResponseEntity<Tour> createTour(@RequestBody Tour newTour) {
-        MapResult mapResult = mapQuestLookupService.getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType()).join();
+    public ResponseEntity<Tour> createTour(@Valid @RequestBody Tour newTour) {
+        MapResult mapResult = mapQuestLookupService
+                .getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType())
+                .join();
         logger.info("STATUS CODE: {}", mapResult.getInfo().getStatusCode());
         if (mapResult.getInfo().getStatusCode() != 0) {
-            // TODO: RETURN ERROR MESSAGE FROM getInfo().getMessages()
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("StatusCode:" + mapResult.getInfo().getStatusCode() + " Messages" + mapResult.getInfo().getMessages());
         }
 
         byte[] image = mapQuestLookupService.getStaticMap(newTour.getTo(), mapResult).join();
@@ -56,12 +61,14 @@ public class TourController {
     }
 
     @PutMapping("/tours/{id}")
-    public ResponseEntity<Tour> updateTour(@RequestBody Tour newTour, @PathVariable Long id) {
-        return tourService.updateTour(newTour, id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Tour> updateTour(@Valid @RequestBody Tour newTour, @PathVariable Long id) {
+        return ResponseEntity.ok(tourService.updateTour(newTour, id));
     }
 
     @DeleteMapping("/tours/{id}")
     public ResponseEntity<Tour> deleteTour(@PathVariable Long id) {
-        return tourService.deleteTour(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        int deletedRows = tourService.deleteTour(id);
+        if (deletedRows == 0) throw new ResourceNotFoundException("No TourLog with Id: " + id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,7 @@
 package at.technikum.api.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,15 +17,17 @@ public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @Column(nullable = false)
+    @NotNull
     private String name;
-    @Column(name = "valueFrom", nullable = false)
+    @NotNull
+    @Column(name = "valueFrom")
     private String from;
-    @Column(name = "valueTo", nullable = false)
+    @NotNull
+    @Column(name = "valueTo")
     private String to;
-    @Column(nullable = false)
+    @NotNull
     private String transportType; // maybe enum?
-    @Column(nullable = false)
+    @NotNull
     private String description;
     private Double distance;
 

@@ -1,8 +1,11 @@
 package at.technikum.api.service;
 
 import at.technikum.api.configuration.VaultConfiguration;
+import at.technikum.api.exception.ResourceNotFoundException;
 import at.technikum.api.model.Tour;
+import at.technikum.api.model.TourLog;
 import at.technikum.api.repository.TourRepository;
+import at.technikum.api.utils.BeanHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,22 +28,22 @@ public class TourService {
     }
 
     public List<Tour> getAllTours() {
-        log.info(vaultConfiguration.getApiKeyMap());
         return tourRepository.findAll();
     }
 
     public Optional<Tour> getTourById(Long id) {
         return tourRepository.findById(id);
     }
-    public Optional<Tour> updateTour(Tour updateTour, Long id) {
-        Optional<Tour> optionalTour = tourRepository.findById(id);
-        if (optionalTour.isPresent()) {
-            return Optional.of(tourRepository.save(updateTour));
-        }
-        return Optional.empty();
+    public Tour updateTour(Tour updateTour, Long id) {
+       Tour tour = tourRepository.findById(id)
+               .orElseThrow(() -> new ResourceNotFoundException("No Tour with id = " + id));
+
+        BeanHelper.copyNonNullProperties(updateTour, tour);
+
+        return tourRepository.save(tour);
     }
 
-    public Optional<Tour> deleteTour(Long id) {
+    public int deleteTour(Long id) {
         return tourRepository.deleteTourById(id);
     }
 }

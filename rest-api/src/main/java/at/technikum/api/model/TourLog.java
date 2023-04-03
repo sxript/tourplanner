@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,23 +31,23 @@ public class TourLog {
     @JsonIgnore
     private Date date;
 
-    @Column(nullable = false)
+    @NotNull
     private String comment;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer totalTime;
 
-    @Column(nullable = false)
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
-    @Column(nullable = false)
+    @NotNull
     @Range(min = 1, max = 5)
     private Integer rating;
 
     // FetchType.EAGER includes the Tour but this is slower than LAZY
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tour_id", nullable = false)
+    @JoinColumn(name = "tour_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Tour tour;

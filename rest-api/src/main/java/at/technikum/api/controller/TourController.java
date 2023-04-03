@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -52,12 +53,12 @@ public class TourController {
         }
 
         byte[] image = mapQuestLookupService.getStaticMap(newTour.getTo(), mapResult).join();
-        newTour.setMapImage(image);
-
+        newTour.setMapImage(Base64.getEncoder().encodeToString(image));
         newTour.setEstimatedTime(mapResult.getRealTime());
         newTour.setDistance(mapResult.getDistance());
 
-        return ResponseEntity.ok().body(tourService.createTour(newTour));
+        tourService.createTour(newTour);
+        return ResponseEntity.ok().body(newTour);
     }
 
     @PutMapping("/tours/{id}")

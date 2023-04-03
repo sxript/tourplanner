@@ -18,6 +18,7 @@ public class MapQuestLookupService {
     private static final Logger logger = LoggerFactory.getLogger(MapQuestLookupService.class);
     private final RestTemplate restTemplate;
     private final VaultConfiguration vaultConfiguration;
+
     @Autowired
     public MapQuestLookupService(RestTemplateBuilder restTemplateBuilder, VaultConfiguration vaultConfiguration) {
         this.restTemplate = restTemplateBuilder.build();
@@ -37,9 +38,9 @@ public class MapQuestLookupService {
                 .queryParam("transportMode", transportMode);
 
         // TOOD: add error handling
-        if(transportMode.equals("BICYCLE")) {
+        if (transportMode.equals("BICYCLE")) {
             builder.queryParam("routeType", "bicycle");
-        } else if(transportMode.equals("WALKING")) {
+        } else if (transportMode.equals("WALKING")) {
             builder.queryParam("routeType", "pedestrian");
         }
         MapResult results = restTemplate.getForObject(builder.toUriString(), MapResult.class);
@@ -48,8 +49,7 @@ public class MapQuestLookupService {
 
     @Async
     public CompletableFuture<byte[]> getStaticMap(String to, MapResult mapResult) {
-//        MapResult mapResult = getRouteDirections(from, to, transportMode).join();
-        if(mapResult != null) {
+        if (mapResult != null) {
             String baseURL = vaultConfiguration.getApiUrl();
             String apiKey = vaultConfiguration.getApiKeyMap();
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseURL)

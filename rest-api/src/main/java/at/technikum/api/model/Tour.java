@@ -33,7 +33,7 @@ public class Tour {
 
     private Integer estimatedTime;
     @Transient
-    private byte[] mapImage;
+    private String mapImage;
 
     public Tour(String name,
                 String from,
@@ -42,7 +42,7 @@ public class Tour {
                 String description,
                 Double distance,
                 Integer estimatedTime,
-                byte[] mapImage) {
+                String mapImage) {
         this.name = name;
         this.from = from;
         this.to = to;

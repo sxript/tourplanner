@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
-
-
 @Component
 @Getter
 @Setter(AccessLevel.PACKAGE)
@@ -26,9 +23,7 @@ public class NewTourLogViewModel {
 
 
     public NewTourLogViewModel() {
-
     }
-
     public NewTourLogViewModel(TourLog tourLog) {
         setTourLog(tourLog);
         setDate(new SimpleObjectProperty<>(tourLog.getDate()));
@@ -37,14 +32,9 @@ public class NewTourLogViewModel {
 
     }
 
-
     public void addNewTourLog() {
-        TourLog tourLog = TourLog.builder().date(new Date()).distance(0).duration(0l).build();
-
+        TourLog tourLog = TourLog.builder().date(new Date()).distance(0).duration(0L).build();
         //TODO call the service, to add the toulog in the database
-
         tourLogListViewModel.addItem(tourLog);
     }
-
-
 }

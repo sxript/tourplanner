@@ -1,6 +1,5 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
-import at.fhtw.swen2.tutorial.presentation.viewmodel.NewTourLogViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.NewTourViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +15,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 @Component
-//@Scope("prototype")
 @Slf4j
 public class NewTourController implements Initializable {
     public Button submitButton;
@@ -32,18 +30,15 @@ public class NewTourController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle rb) {
-//        nameTextField.textProperty().bindBidirectional(newTourViewModel.nameProperty());
+        nameTextField.textProperty().bindBidirectional(newTourViewModel.getNameProperty());
     }
 
     public void submitButtonCreateNewTour(ActionEvent event) {
-
-        System.out.println("jffjfjfjfjfjjjjjjjjjjjj");
-
-        if (nameTextField.getText().isEmpty()) {
+        if (newTourViewModel.getNameProperty().getValue().isEmpty()) {
             feedbackText.setText("nothing entered!");
             return;
         }
-
         newTourViewModel.addNewTour();
     }
 }
+

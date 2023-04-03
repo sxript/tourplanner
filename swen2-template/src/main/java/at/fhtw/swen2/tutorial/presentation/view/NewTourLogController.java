@@ -35,7 +35,9 @@ public class NewTourLogController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle rb) {
-//        nameTextField.textProperty().bindBidirectional(newTourLogViewModel.nameProperty());
+//        dateTextField.textProperty().bindBidirectional(newTourLogViewModel.getDate().toString());
+
+//        dateTextField.textProperty().bindBidirectional(newTourLogViewModel.getDate());
     }
 
     public void addTourLogsButton(ActionEvent event) {

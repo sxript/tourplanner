@@ -1,5 +1,7 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
+import at.fhtw.swen2.tutorial.model.Tour;
+import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
 import javafx.collections.FXCollections;
@@ -24,31 +26,27 @@ public class TourListController implements Initializable{
 
     @Autowired
     public TourListViewModel tourListViewModel;
-
     @FXML
-    public ListView<String> listView = new ListView<>();
+    public ListView<Tour> listView = new ListView<>();
     @FXML
     private VBox listContainer;
 
     @Override
     public void initialize(URL location, ResourceBundle rb){
 
+//        listView.setItems(tourListViewModel.getTourListItems().stream().map(Tour::getName).collect(Collectors.toCollection(FXCollections::observableArrayList)));
 
-
-        ObservableList<String> list = FXCollections.observableArrayList();
-
-        tourListViewModel.getTourListItems().forEach(s->list.add(s.getName()));
-        listView.setItems(list);
-
-//        tableView.setItems(tourLogListViewModel.getTourLogListItems());
+        listView.setItems(tourListViewModel.getTourListItems());
 
         tourListViewModel.getTourListItems();
 
         if(listView.getItems().size()==0){
             listView.setPlaceholder(new Label("Kein Inhalt in der Liste"));
         }
+
+        System.out.println("hallo ---------- " );
         listContainer.getChildren().add(listView);
-        tourListViewModel.initList();
+//        tourListViewModel.initList();
     }
 
 }

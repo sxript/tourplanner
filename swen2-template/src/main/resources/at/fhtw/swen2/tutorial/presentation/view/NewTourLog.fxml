@@ -17,7 +17,9 @@
 <!--      <TextField fx:id="durationTextField"/>-->
 
 
-      <Button fx:id="submitButtonn" onAction="#addTourLogsButton" text="AddTourLog"/>
+      <Button fx:id="submitButton" onAction="#addTourLogsButton" text="AddTourLog"/>
+
+
       <Separator prefWidth="200.0" />
       <Text fx:id="feedbackText" />
    </children>

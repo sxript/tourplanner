@@ -1,4 +1,4 @@
-package at.fhtw.swen2.tutorial.dal.dao.Tour;
+package at.fhtw.swen2.tutorial.dal.dao.tour;
 
 import at.fhtw.swen2.tutorial.model.Tour;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -35,14 +35,17 @@ public class TourDaoImpl implements TourDao {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            List<Tour> tours = objectMapper.readValue(responseBody, new TypeReference<>() {
-            });
-            log.info("Found {} tours", tours.size());
-            return tours;
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                List<Tour> tours = objectMapper.readValue(responseBody, new TypeReference<List<Tour>>() {
+                });
+                log.info("Found {} tours", tours.size());
+                return tours;
+            }
         } catch (IOException | InterruptedException e) {
             log.error("Failed to retrieve tours", e);
-            return Collections.emptyList();
+            throw new RuntimeException(e);
         }
+        return Collections.emptyList();
     }
 
     @Override
@@ -53,13 +56,16 @@ public class TourDaoImpl implements TourDao {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            Tour tour = objectMapper.readValue(responseBody, Tour.class);
-            log.info("Found tour with id {}", id);
-            return Optional.ofNullable(tour);
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                Tour tour = objectMapper.readValue(responseBody, Tour.class);
+                log.info("Found tour with id {}", id);
+                return Optional.ofNullable(tour);
+            }
         } catch (IOException | InterruptedException e) {
             log.error("Failed to retrieve tour with id {}", id, e);
-            return Optional.empty();
+            throw new RuntimeException(e);
         }
+        return Optional.empty();
     }
 
     @Override
@@ -74,9 +80,14 @@ public class TourDaoImpl implements TourDao {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            Tour updatedTour = objectMapper.readValue(responseBody, Tour.class);
-            log.info("Updated tour with id {}", tour.getId());
-            return Optional.of(updatedTour);
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                Tour updatedTour = objectMapper.readValue(responseBody, Tour.class);
+                log.info("Updated tour with id {}", tour.getId());
+                return Optional.ofNullable(updatedTour);
+            } else {
+                log.error("Failed to update tour with id {}: {}", tour.getId(), response.body());
+                return Optional.empty();
+            }
         } catch (IOException | InterruptedException e) {
             log.error("Failed to update tour with id {}", tour.getId(), e);
             return Optional.empty();
@@ -85,7 +96,6 @@ public class TourDaoImpl implements TourDao {
 
     @Override
     public Tour save(Tour entity) {
-
         try {
             String requestBody = objectMapper.writeValueAsString(entity);
             HttpRequest request = HttpRequest.newBuilder()

@@ -1,10 +1,6 @@
 package at.fhtw.swen2.tutorial;
 
-import at.fhtw.swen2.tutorial.dal.dao.Tour.TourDaoImpl;
-import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.presentation.view.ApplicationStartupEvent;
-import at.fhtw.swen2.tutorial.service.TourService;
-import at.fhtw.swen2.tutorial.service.impl.TourServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.builder.SpringApplicationBuilder;

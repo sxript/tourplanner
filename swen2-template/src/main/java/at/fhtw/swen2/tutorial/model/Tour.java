@@ -34,7 +34,7 @@ public class Tour {
         BufferedImage bufferedImage = null;
         try {
             bufferedImage = ImageIO.read(new ByteArrayInputStream(mapImage));
-            File outputFile = new File("/map/imgages/" + id + ".jpg");
+            File outputFile = new File("/map/images/" + id + ".jpg");
             ImageIO.write(bufferedImage, "jpg", outputFile);
         } catch (IOException e) {
             throw new RuntimeException(e);

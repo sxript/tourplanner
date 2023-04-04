@@ -1,7 +1,7 @@
 package at.fhtw.swen2.tutorial.service.impl;
 
 
-import at.fhtw.swen2.tutorial.dal.dao.Tour.TourDao;
+import at.fhtw.swen2.tutorial.dal.dao.tour.TourDao;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
 

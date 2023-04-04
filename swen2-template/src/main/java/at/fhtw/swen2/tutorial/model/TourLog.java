@@ -1,21 +1,21 @@
 package at.fhtw.swen2.tutorial.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
-@Data
-@Builder
 @Getter
 @Setter
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class TourLog {
-
+    private Long id;
     private Date date;
-    private Long duration;
-    private double distance;
-
-
+    private String comment;
+    private Integer totalTime;
+    private String difficulty;
+    private Integer rating;
 }

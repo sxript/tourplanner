@@ -27,13 +27,13 @@ public class NewTourLogViewModel {
     public NewTourLogViewModel(TourLog tourLog) {
         setTourLog(tourLog);
         setDate(new SimpleObjectProperty<>(tourLog.getDate()));
-        setDistance(new SimpleDoubleProperty(tourLog.getDistance()));
-        setDuration(new SimpleLongProperty(tourLog.getDuration()));
+        setDistance(new SimpleDoubleProperty(tourLog.getRating()));
+        setDuration(new SimpleLongProperty(tourLog.getTotalTime()));
 
     }
 
     public void addNewTourLog() {
-        TourLog tourLog = TourLog.builder().date(new Date()).distance(0).duration(0L).build();
+        TourLog tourLog = TourLog.builder().date(new Date()).rating(0).totalTime(0).build();
         //TODO call the service, to add the toulog in the database
         tourLogListViewModel.addItem(tourLog);
     }

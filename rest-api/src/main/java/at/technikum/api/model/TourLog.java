@@ -2,6 +2,7 @@ package at.technikum.api.model;
 
 import at.technikum.api.enums.Difficulty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -28,7 +29,7 @@ public class TourLog {
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date date;
 
     @NotNull
@@ -51,4 +52,8 @@ public class TourLog {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Tour tour;
+    @PrePersist
+    protected void onCreate() {
+        date = new Date();
+    }
 }

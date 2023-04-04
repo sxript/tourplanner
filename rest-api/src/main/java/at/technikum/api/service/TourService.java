@@ -17,11 +17,9 @@ import java.util.Optional;
 @Slf4j
 public class TourService {
     private final TourRepository tourRepository;
-    private final VaultConfiguration vaultConfiguration;
     @Autowired
-    public TourService(TourRepository tourRepository, VaultConfiguration vaultConfiguration) {
+    public TourService(TourRepository tourRepository) {
         this.tourRepository = tourRepository;
-        this.vaultConfiguration = vaultConfiguration;
     }
     public Tour createTour(Tour tour) {
         return tourRepository.save(tour);

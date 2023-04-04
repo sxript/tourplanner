@@ -1,12 +1,11 @@
 package at.technikum.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
@@ -18,31 +17,39 @@ public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @Column(nullable = false)
+    @NotNull
     private String name;
-    @Column(name = "valueFrom", nullable = false)
+    @NotNull
+    @Column(name = "valueFrom")
     private String from;
-    @Column(name = "valueTo", nullable = false)
+    @NotNull
+    @Column(name = "valueTo")
     private String to;
-    @Column(nullable = false)
+    @NotNull
     private String transportType; // maybe enum?
+    @NotNull
+    private String description;
     private Double distance;
+
     private Integer estimatedTime;
-    private String routeInformation; // routeImage?
+    @Transient
+    private String mapImage;
 
     public Tour(String name,
                 String from,
                 String to,
                 String transportType,
+                String description,
                 Double distance,
                 Integer estimatedTime,
-                String routeInformation) {
+                String mapImage) {
         this.name = name;
         this.from = from;
         this.to = to;
         this.transportType = transportType;
+        this.description = description;
         this.distance = distance;
         this.estimatedTime = estimatedTime;
-        this.routeInformation = routeInformation;
+        this.mapImage = mapImage;
     }
 }

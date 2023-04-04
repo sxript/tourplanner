@@ -17,6 +17,7 @@ public class MapResult {
     private String sessionId;
     private Integer realTime;
     private Double distance;
+    @JsonProperty("boundingBox")
     private BoundingBox boundingBox;
     @JsonProperty("info")
     private Info info;

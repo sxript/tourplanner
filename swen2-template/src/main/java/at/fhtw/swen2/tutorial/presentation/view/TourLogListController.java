@@ -7,7 +7,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -16,13 +15,18 @@ import java.util.ResourceBundle;
 @Component
 public class TourLogListController implements Initializable{
 
-    @Autowired
-    public TourLogListViewModel tourLogListViewModel;
-
+    private final TourLogListViewModel tourLogListViewModel;
     @FXML
     public TableView tableView = new TableView<>();
     @FXML
     private VBox dataContainer;
+
+
+
+
+    public TourLogListController() {
+        this.tourLogListViewModel = new TourLogListViewModel();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle rb){

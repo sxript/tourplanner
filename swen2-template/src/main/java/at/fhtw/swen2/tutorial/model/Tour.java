@@ -2,6 +2,7 @@ package at.fhtw.swen2.tutorial.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import java.util.Base64;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Slf4j
 public class Tour {
     private Long id;
     private String name;
@@ -30,6 +32,10 @@ public class Tour {
 
     @JsonProperty("mapImage")
     public void setMapImage(String mapImageString) {
+        if (mapImageString == null) {
+            mapImage = null;
+            return;
+        }
         this.mapImage = Base64.getDecoder().decode(mapImageString);
         BufferedImage bufferedImage = null;
         try {

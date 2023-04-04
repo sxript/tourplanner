@@ -19,8 +19,7 @@ import java.util.ResourceBundle;
 public class NewTourLogController implements Initializable {
     @Autowired
     private SearchController searchController;
-    @Autowired
-    private NewTourLogViewModel newTourLogViewModel;
+    private final NewTourLogViewModel newTourLogViewModel;
 
     @FXML
     private Text feedbackText;
@@ -31,6 +30,10 @@ public class NewTourLogController implements Initializable {
 
     @FXML
     private TextField distanceTextField;
+
+    public NewTourLogController() {
+        this.newTourLogViewModel = new NewTourLogViewModel();
+    }
 
 
     @Override

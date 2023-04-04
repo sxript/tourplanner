@@ -20,13 +20,17 @@ public class NewTourController implements Initializable {
     public Button submitButton;
     @Autowired
     private SearchController searchController;
-    @Autowired
-    private NewTourViewModel newTourViewModel;
+
+    private final NewTourViewModel newTourViewModel;
 
     @FXML
     private Text feedbackText;
     @FXML
     private TextField nameTextField;
+
+    public NewTourController() {
+        this.newTourViewModel = new NewTourViewModel();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle rb) {

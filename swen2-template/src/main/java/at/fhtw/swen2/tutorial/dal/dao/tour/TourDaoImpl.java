@@ -34,13 +34,16 @@ public class TourDaoImpl implements TourDao {
 
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            log.info("Response status code: {}", response.statusCode());
+            log.info("Response status code: {}", response.statusCode() >= 200 && response.statusCode() < 300);
             String responseBody = response.body();
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                List<Tour> tours = objectMapper.readValue(responseBody, new TypeReference<List<Tour>>() {
+                List<Tour> tours = objectMapper.readValue(responseBody, new TypeReference<>() {
                 });
                 log.info("Found {} tours", tours.size());
                 return tours;
             }
+            log.info(request.uri().toString());
         } catch (IOException | InterruptedException e) {
             log.error("Failed to retrieve tours", e);
             throw new RuntimeException(e);

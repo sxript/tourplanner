@@ -1,24 +1,27 @@
 package at.fhtw.swen2.tutorial.presentation.viewmodel;
 import at.fhtw.swen2.tutorial.model.TourLog;
+import at.fhtw.swen2.tutorial.service.TourLogService;
+import at.fhtw.swen2.tutorial.service.TourService;
+import at.fhtw.swen2.tutorial.service.impl.TourLogServiceImpl;
+import at.fhtw.swen2.tutorial.service.impl.TourServiceImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Component
 @Getter
 public class TourLogListViewModel {
 
 
     private List<TourLog> masterData = new ArrayList<>();
     private ObservableList<TourLog> tourLogListItems = FXCollections.observableArrayList();
+    private TourLogService tourLogService;
 
-
+    public TourLogListViewModel() {
+        this.tourLogService = new TourLogServiceImpl();
+    }
 
     public void addItem(TourLog tourLog) {
         tourLogListItems.add(tourLog);
@@ -28,9 +31,6 @@ public class TourLogListViewModel {
     public void clearItems(){ tourLogListItems.clear(); }
 
     public void initList(){
-//        personService.getPersonList().forEach(p -> {
-//            addItem(p);
-//        });
     }
 
 //    public void filterList(String searchText){

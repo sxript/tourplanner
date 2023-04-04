@@ -14,14 +14,15 @@ import org.springframework.stereotype.Component;
 public class NewTourViewModel {
     private StringProperty nameProperty = new SimpleStringProperty();
 
-    @Autowired
-    private TourListViewModel tourListViewModel;
+    private final TourListViewModel tourListViewModel;
     private Tour tour;
 
     public NewTourViewModel() {
+        this.tourListViewModel = new TourListViewModel();
     }
 
     public NewTourViewModel(Tour tour) {
+        this.tourListViewModel = new TourListViewModel();
         setTour(tour);
         setNameProperty(new SimpleStringProperty(tour.getName()));
     }

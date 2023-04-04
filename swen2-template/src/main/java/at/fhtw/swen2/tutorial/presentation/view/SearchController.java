@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,8 +17,7 @@ public class SearchController {
 
     public static final int PAGE_ITEMS_COUNT = 10;
 
-    @Autowired
-    private SearchViewModel searchViewModel;
+    private final SearchViewModel searchViewModel;
 
     @FXML
     private TextField searchField;
@@ -27,6 +25,10 @@ public class SearchController {
     private Button searchButton;
     @FXML
     private Label searchLabel;
+
+    public SearchController() {
+        this.searchViewModel = new SearchViewModel();
+    }
 
     @FXML
     private void initialize() {

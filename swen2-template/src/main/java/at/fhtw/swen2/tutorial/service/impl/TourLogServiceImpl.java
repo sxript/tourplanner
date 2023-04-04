@@ -1,6 +1,7 @@
 package at.fhtw.swen2.tutorial.service.impl;
 
 import at.fhtw.swen2.tutorial.dal.dao.tourLog.TourLogDao;
+import at.fhtw.swen2.tutorial.dal.dao.tourLog.TourLogDaoImpl;
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.service.TourLogService;
 
@@ -10,8 +11,8 @@ public class TourLogServiceImpl implements TourLogService {
     // TODO: make Service use TourDao and remove useless methods from TourLogDao
     private final TourLogDao tourLogDao;
 
-    public TourLogServiceImpl(TourLogDao tourLogDao) {
-        this.tourLogDao = tourLogDao;
+    public TourLogServiceImpl() {
+        this.tourLogDao = new TourLogDaoImpl();
     }
 
     @Override

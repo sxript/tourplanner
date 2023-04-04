@@ -2,6 +2,7 @@ package at.fhtw.swen2.tutorial.service.impl;
 
 
 import at.fhtw.swen2.tutorial.dal.dao.tour.TourDao;
+import at.fhtw.swen2.tutorial.dal.dao.tour.TourDaoImpl;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
 
@@ -11,8 +12,8 @@ import java.util.Optional;
 public class TourServiceImpl implements TourService {
     private final TourDao tourDao;
 
-    public TourServiceImpl(TourDao tourDao) {
-        this.tourDao = tourDao;
+    public TourServiceImpl() {
+        this.tourDao = new TourDaoImpl();
     }
 
 

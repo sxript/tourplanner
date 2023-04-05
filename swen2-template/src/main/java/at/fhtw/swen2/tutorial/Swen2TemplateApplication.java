@@ -1,6 +1,6 @@
 package at.fhtw.swen2.tutorial;
 
-import at.fhtw.swen2.tutorial.presentation.view.ApplicationStartupEvent;
+import at.fhtw.swen2.tutorial.presentation.event.ApplicationStartupEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.builder.SpringApplicationBuilder;

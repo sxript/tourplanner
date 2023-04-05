@@ -8,16 +8,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-@Component
 //@Scope("prototype")
+@Component
+@Scope("prototype")
 @Slf4j
 public class NewTourLogController implements Initializable {
-    @Autowired
     private SearchController searchController;
     private final NewTourLogViewModel newTourLogViewModel;
 

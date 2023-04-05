@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 @Component
 @Getter
-@Setter(AccessLevel.PACKAGE)
+@Setter
 public class NewTourLogViewModel {
     private SimpleObjectProperty<Date> date = new SimpleObjectProperty<>();
     private SimpleLongProperty duration = new SimpleLongProperty();

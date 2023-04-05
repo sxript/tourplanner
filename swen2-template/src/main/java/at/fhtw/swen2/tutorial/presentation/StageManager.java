@@ -1,8 +1,8 @@
 package at.fhtw.swen2.tutorial.presentation;
 
-import at.fhtw.swen2.tutorial.presentation.view.ApplicationErrorEvent;
-import at.fhtw.swen2.tutorial.presentation.view.ApplicationShutdownEvent;
-import at.fhtw.swen2.tutorial.presentation.view.ApplicationStartupEvent;
+import at.fhtw.swen2.tutorial.presentation.event.ApplicationErrorEvent;
+import at.fhtw.swen2.tutorial.presentation.event.ApplicationShutdownEvent;
+import at.fhtw.swen2.tutorial.presentation.event.ApplicationStartupEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.Property;

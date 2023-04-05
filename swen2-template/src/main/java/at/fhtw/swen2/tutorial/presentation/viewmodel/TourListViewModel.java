@@ -3,20 +3,23 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
 import at.fhtw.swen2.tutorial.service.impl.TourServiceImpl;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 
-@Getter(AccessLevel.PUBLIC)
+@Component
+@Getter
 public class TourListViewModel {
 
 
-    private ObservableList<Tour> tourListItems = FXCollections.observableArrayList();
+    private final ObservableList<Tour> tourListItems = FXCollections.observableArrayList();
+    @Autowired
     private final TourService tourService;
 
     public TourListViewModel() {
@@ -27,10 +30,6 @@ public class TourListViewModel {
         tourListItems.add(tour);
        // comment out because this would double add already exsiting items when calling initList()
         // tourService.saveTour(tour);
-
-        System.out.println("add Items");
-        System.out.println(tourListItems.size());
-        System.out.println(getTourListItems());
     }
 
     public void clearItems() {
@@ -40,6 +39,4 @@ public class TourListViewModel {
     public void initList() {
         tourService.findAllTours().forEach(this::addItem);
     }
-
-
 }

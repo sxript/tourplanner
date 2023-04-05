@@ -4,9 +4,13 @@ import at.fhtw.swen2.tutorial.dal.dao.tourLog.TourLogDao;
 import at.fhtw.swen2.tutorial.dal.dao.tourLog.TourLogDaoImpl;
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.service.TourLogService;
+import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Service
+@Transactional
 public class TourLogServiceImpl implements TourLogService {
     // TODO: make Service use TourDao and remove useless methods from TourLogDao
     private final TourLogDao tourLogDao;

@@ -19,8 +19,6 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 @Slf4j
 public class NewTourController implements Initializable {
-    public Button submitButton;
-
     @Autowired
     private SearchController searchController;
     @Autowired

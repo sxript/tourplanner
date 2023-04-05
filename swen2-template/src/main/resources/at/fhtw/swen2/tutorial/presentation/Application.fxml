@@ -54,11 +54,11 @@
                     <items>
                         <AnchorPane minHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                            <children>
-                               <fx:include source="view/NewTour.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                               <fx:include source="view/CUDTour.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
 
                             <children>
-                                <fx:include source="view/TourList.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
+                                <fx:include source="view/TourList.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
                             </children>
                         </AnchorPane>
 

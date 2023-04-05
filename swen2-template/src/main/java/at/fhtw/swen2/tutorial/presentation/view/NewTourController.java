@@ -20,18 +20,17 @@ import java.util.ResourceBundle;
 @Slf4j
 public class NewTourController implements Initializable {
     public Button submitButton;
+
+    @Autowired
     private SearchController searchController;
-
-    private final NewTourViewModel newTourViewModel;
-
+    @Autowired
+    private  NewTourViewModel newTourViewModel;
     @FXML
     private Text feedbackText;
     @FXML
     private TextField nameTextField;
 
-    public NewTourController() {
-        this.newTourViewModel = new NewTourViewModel();
-    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle rb) {

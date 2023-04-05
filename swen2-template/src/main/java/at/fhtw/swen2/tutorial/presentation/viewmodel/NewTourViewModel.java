@@ -13,16 +13,15 @@ import org.springframework.stereotype.Component;
 public class NewTourViewModel {
     private StringProperty nameProperty = new SimpleStringProperty();
 
-    private final TourListViewModel tourListViewModel;
+    @Autowired
+    private TourListViewModel tourListViewModel;
 
     private Tour tour;
 
     public NewTourViewModel() {
-        this.tourListViewModel = new TourListViewModel();
     }
 
     public NewTourViewModel(Tour tour) {
-        this.tourListViewModel = new TourListViewModel();
         setTour(tour);
         setNameProperty(new SimpleStringProperty(tour.getName()));
     }
@@ -30,7 +29,6 @@ public class NewTourViewModel {
     public void addNewTour() {
         Tour tour = Tour.builder().name(getNameProperty().getValue()).build();
         tourListViewModel.addItem(tour);
-        System.out.println("-------------------");
         //TODO call the service, to add the tourlog in the database
     }
 

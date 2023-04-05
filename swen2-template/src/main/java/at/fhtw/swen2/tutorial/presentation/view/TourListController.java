@@ -2,7 +2,6 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
-import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
@@ -12,6 +11,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,19 +23,14 @@ import java.util.ResourceBundle;
 @Slf4j
 public class TourListController implements Initializable{
 
-    private final TourListViewModel tourListViewModel;
-    private final TourLogListViewModel tourLogListViewModel;
+    @Autowired
+    private TourListViewModel tourListViewModel;
 
     @FXML
     public ListView<Tour> listView = new ListView<>();
     @FXML
     private VBox listContainer;
 
-
-    public TourListController() {
-        this.tourListViewModel = new TourListViewModel();
-        this.tourLogListViewModel = new TourLogListViewModel();
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle rb){
@@ -50,7 +45,10 @@ public class TourListController implements Initializable{
 
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                tourLogListViewModel.displayTourLogList(newSelection.getId());
+//                tourLogListViewModel.displayTourLogList(newSelection.getId());
+                System.out.println(newSelection);
+                tourListViewModel.selectedTour(newSelection);
+
             }
         });
 

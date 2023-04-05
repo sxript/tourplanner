@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,10 +19,11 @@ import java.util.List;
 @Getter
 public class TourLogListViewModel {
     private final ObservableList<TourLog> tourLogListItems = FXCollections.observableArrayList();
-    private final TourLogService tourLogService;
+
+    @Autowired
+    private TourLogService tourLogService;
 
     public TourLogListViewModel() {
-        this.tourLogService = new TourLogServiceImpl();
     }
 
     public void addItem(TourLog tourLog) {

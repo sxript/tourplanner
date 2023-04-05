@@ -16,11 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 public class TourListViewModel {
-
-
     private final ObservableList<Tour> tourListItems = FXCollections.observableArrayList();
+
+
     @Autowired
-    private final TourService tourService;
+    private TourLogListViewModel tourLogListViewModel;
+
+    @Autowired
+    private  TourService tourService;
 
     public TourListViewModel() {
         this.tourService = new TourServiceImpl();
@@ -30,6 +33,10 @@ public class TourListViewModel {
         tourListItems.add(tour);
        // comment out because this would double add already exsiting items when calling initList()
         // tourService.saveTour(tour);
+    }
+
+    public void selectedTour(Tour tour){
+        tourLogListViewModel.displayTourLogList(tour.getId());
     }
 
     public void clearItems() {

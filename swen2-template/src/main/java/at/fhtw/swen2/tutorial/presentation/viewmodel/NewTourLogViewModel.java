@@ -16,17 +16,17 @@ public class NewTourLogViewModel {
     private SimpleLongProperty duration = new SimpleLongProperty();
     private SimpleDoubleProperty distance = new SimpleDoubleProperty();
 
-    private final TourLogListViewModel tourLogListViewModel;
+    @Autowired
+    private  TourLogListViewModel tourLogListViewModel;
 
     private TourLog tourLog;
 
 
-    public NewTourLogViewModel() {
-        this.tourLogListViewModel = new TourLogListViewModel();
+    public NewTourLogViewModel(){
     }
 
     public NewTourLogViewModel(TourLog tourLog) {
-        this.tourLogListViewModel = new TourLogListViewModel();
+
         setTourLog(tourLog);
         setDate(new SimpleObjectProperty<>(tourLog.getDate()));
         setDistance(new SimpleDoubleProperty(tourLog.getRating()));

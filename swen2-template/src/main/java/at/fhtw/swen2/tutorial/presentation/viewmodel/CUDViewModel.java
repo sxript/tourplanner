@@ -2,9 +2,12 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,16 +22,15 @@ import java.net.URL;
 @Getter
 @Slf4j
 public class CUDViewModel {
-
     private final ObjectProperty<Stage> newStage = new SimpleObjectProperty<>();
 
     @Autowired
-    private NewTourViewModel newTourViewModel = new NewTourViewModel();
+    private NewTourViewModel newTourViewModel;
 
     @Autowired
     private ApplicationContext applicationContext;
 
-    public void openNewStage() throws IOException {
+    public void openNewStage(ActionEvent event) throws IOException {
         // Create a new Scene object with a root node
         String path = "/at/fhtw/swen2/tutorial/presentation/view/NewTour.fxml";
         URL url = getClass().getResource(path);
@@ -43,7 +45,9 @@ public class CUDViewModel {
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.show();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+            stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }

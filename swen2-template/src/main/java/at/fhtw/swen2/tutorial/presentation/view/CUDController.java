@@ -18,7 +18,7 @@ public class CUDController {
 
     public void onCreateHandle(ActionEvent event) {
         try {
-            cudViewModel.openNewStage();
+            cudViewModel.openNewStage(event);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

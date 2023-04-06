@@ -17,6 +17,10 @@ import org.springframework.stereotype.Component;
 public class NewTourViewModel {
 
     private StringProperty nameProperty = new SimpleStringProperty();
+    private StringProperty fromProperty = new SimpleStringProperty();
+    private StringProperty toProperty = new SimpleStringProperty();
+    private StringProperty descriptionProperty = new SimpleStringProperty();
+    private StringProperty transportType = new SimpleStringProperty();
 
     @Autowired
     private TourListViewModel tourListViewModel;

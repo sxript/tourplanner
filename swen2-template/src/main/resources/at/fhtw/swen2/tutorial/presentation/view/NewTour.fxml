@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="400.0" prefHeight="162.0"
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="450.0" prefHeight="300"
       prefWidth="229.0" spacing="8.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="at.fhtw.swen2.tutorial.presentation.view.NewTourController">
 
@@ -16,14 +16,33 @@
             </font>
         </Label>
         <Separator prefWidth="200.0"/>
-        <TextField fx:id="nameTextField"/>
-        <TextField fx:id="fromTextField"/>
-        <TextField fx:id="toTextField"/>
-        <TextField fx:id="descriptionTextField"/>
+        <VBox>
+            <Label text="Name"/>
+            <TextField fx:id="nameTextField"/>
+        </VBox>
+        <HBox alignment="CENTER">
+            <VBox HBox.hgrow="ALWAYS">
+                <Label text="From"/>
+                <TextField fx:id="fromTextField"/>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS">
+                <Label text="To"/>
+                <TextField fx:id="toTextField"/>
+            </VBox>
+        </HBox>
+        <VBox>
+            <Label text="Description"/>
+            <TextField fx:id="descriptionTextField"/>
+        </VBox>
+        <HBox alignment="CENTER">
+            <VBox HBox.hgrow="ALWAYS">
+                <Label text="Transport Type"/>
+                <ComboBox fx:id="transportTypeMenu"/>
+            </VBox>
+            <Button HBox.hgrow="ALWAYS" fx:id="submitButton" onAction="#onSubmitCreateTour" text="insert"/>
+        </HBox>
 
 
-        <Button fx:id="submitButton" onAction="#submitButtonCreateNewTour" prefHeight="25.0" prefWidth="49.0"
-                text="insert"/>
 
         <Separator prefWidth="200.0"/>
         <Text fx:id="feedbackText"/>

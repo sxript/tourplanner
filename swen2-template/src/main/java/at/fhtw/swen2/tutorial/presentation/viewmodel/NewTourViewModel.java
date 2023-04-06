@@ -39,6 +39,4 @@ public class NewTourViewModel {
         //TODO call the service, to add the tourlog in the database
     }
 
-
-
 }

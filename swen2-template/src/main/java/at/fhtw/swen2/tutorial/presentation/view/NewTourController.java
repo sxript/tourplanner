@@ -24,9 +24,8 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 @Slf4j
 @Setter
-public class NewTourController implements Initializable, StageAware {
+public class NewTourController implements Initializable {
 
-    SimpleObjectProperty<Stage> stage = new SimpleObjectProperty<>();
     @Autowired
     private SearchController searchController;
     @Autowired
@@ -36,15 +35,10 @@ public class NewTourController implements Initializable, StageAware {
     @FXML
     private TextField nameTextField;
 
-    @Autowired
-    private TaskExecutor taskExecutor;
-
-
-
     @Override
     public void initialize(URL location, ResourceBundle rb) {
 //        stage.addListener((obv, o, n) -> n.setTitle(rb.getString("app.title")));
-//        nameTextField.textProperty().bindBidirectional(newTourViewModel.getNameProperty());
+        nameTextField.textProperty().bindBidirectional(newTourViewModel.getNameProperty());
 
     }
 
@@ -54,11 +48,6 @@ public class NewTourController implements Initializable, StageAware {
             return;
         }
         newTourViewModel.addNewTour();
-    }
-
-    @Override
-    public void setStage(Stage stage) {
-        this.stage.setValue(stage);
     }
 }
 

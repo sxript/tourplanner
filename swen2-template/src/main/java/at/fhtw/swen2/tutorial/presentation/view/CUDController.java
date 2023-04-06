@@ -15,6 +15,7 @@ public class CUDController {
 
     @Autowired
     private CUDViewModel cudViewModel;
+
     public void onCreateHandle(ActionEvent event) {
         try {
             cudViewModel.openNewStage();

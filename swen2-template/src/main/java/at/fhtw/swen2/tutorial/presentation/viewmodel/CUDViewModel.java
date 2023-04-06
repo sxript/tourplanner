@@ -1,7 +1,12 @@
 package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
+import at.fhtw.swen2.tutorial.model.Tour;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -20,16 +26,23 @@ import java.net.URL;
 
 @Component
 @Getter
+@Setter
 @Slf4j
 public class CUDViewModel {
     private final ObjectProperty<Stage> newStage = new SimpleObjectProperty<>();
+    private BooleanProperty isDeleteButtonEnabled = new SimpleBooleanProperty(false);
 
+    @Autowired
+    private TourListViewModel tourListViewModel;
     @Autowired
     private NewTourViewModel newTourViewModel;
 
     @Autowired
     private ApplicationContext applicationContext;
 
+    public void updateDeleteButtonEnabled() {
+        isDeleteButtonEnabled.set(tourListViewModel.getSelectedTour() != null);
+    }
     public void openNewStage(ActionEvent event) throws IOException {
         // Create a new Scene object with a root node
         String path = "/at/fhtw/swen2/tutorial/presentation/view/NewTour.fxml";

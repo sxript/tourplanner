@@ -1,6 +1,7 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.model.Tour;
+import at.fhtw.swen2.tutorial.presentation.viewmodel.CUDViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -21,20 +22,23 @@ import java.util.ResourceBundle;
 @Component
 @Scope("prototype")
 @Slf4j
-public class TourListController implements Initializable{
+public class TourListController implements Initializable {
 
     @Autowired
     private TourListViewModel tourListViewModel;
+
+    @Autowired
+    private CUDViewModel cudViewModel;
 
     @FXML
     public ListView<Tour> listView = new ListView<>();
     @FXML
     private VBox listContainer;
 
-
     @Override
-    public void initialize(URL location, ResourceBundle rb){
+    public void initialize(URL location, ResourceBundle rb) {
         setupTourListViewCellFactory();
+
 
         tourListViewModel.initList();
 
@@ -45,14 +49,13 @@ public class TourListController implements Initializable{
 
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-//                tourLogListViewModel.displayTourLogList(newSelection.getId());
-                System.out.println(newSelection);
+                tourListViewModel.getSelectedTour().setValue(newSelection);
                 tourListViewModel.selectedTour(newSelection);
-
             }
+            cudViewModel.updateDeleteButtonEnabled();
         });
 
-        if(listView.getItems().isEmpty()){
+        if (listView.getItems().isEmpty()) {
             listView.setPlaceholder(new Label("Kein Inhalt in der Liste"));
         }
 

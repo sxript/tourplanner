@@ -2,19 +2,34 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 
 import at.fhtw.swen2.tutorial.presentation.viewmodel.CUDViewModel;
+import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 @Component
-public class CUDController {
+public class CUDController implements Initializable {
+
+    @FXML
+    public Button deleteButton;
 
     @Autowired
     private CUDViewModel cudViewModel;
+
+    @Autowired
+    private TourListViewModel tourListViewModel;
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        deleteButton.disableProperty().bind(cudViewModel.getIsDeleteButtonEnabled().not());
+    }
 
     public void onCreateHandle(ActionEvent event) {
         try {
@@ -22,5 +37,10 @@ public class CUDController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    public void onDeleteHandle(ActionEvent actionEvent) {
+        tourListViewModel.deleteSelectedTour();
     }
 }

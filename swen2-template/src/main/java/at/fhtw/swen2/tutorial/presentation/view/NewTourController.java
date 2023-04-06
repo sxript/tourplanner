@@ -8,9 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import lombok.Setter;
@@ -64,15 +62,17 @@ public class NewTourController implements Initializable {
 
         ObservableList<String> transportTypes = FXCollections.observableArrayList("WALKING", "DRIVING", "BICYCLE");
         transportTypeMenu.setItems(transportTypes);
-        transportTypeMenu.valueProperty().bindBidirectional(newTourViewModel.getTransportType());
+        transportTypeMenu.valueProperty().bindBidirectional(newTourViewModel.getTransportTypeProperty());
+
+        feedbackText.textProperty().bindBidirectional(newTourViewModel.getFeedbackProperty());
     }
 
     public void onSubmitCreateTour(ActionEvent actionEvent) {
-        if (newTourViewModel.getNameProperty().getValue().isEmpty()) {
-            feedbackText.setText("nothing entered!");
-            return;
+        System.out.println("inisde onsubmit");
+        boolean successful = newTourViewModel.addNewTour();
+        if (successful) {
+            nameTextField.getScene().getWindow().hide();
         }
-        newTourViewModel.addNewTour();
     }
 }
 

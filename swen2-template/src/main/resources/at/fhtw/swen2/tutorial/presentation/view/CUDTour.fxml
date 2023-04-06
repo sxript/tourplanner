@@ -30,7 +30,7 @@
                 <Button fx:id="createButton" onAction="#onCreateHandle" prefHeight="25.0" prefWidth="49.0"
                         text="+"/>
 
-                <Button fx:id="deleteButton" prefHeight="25.0" prefWidth="49.0"
+                <Button fx:id="deleteButton" onAction="#onDeleteHandle" prefHeight="25.0" prefWidth="49.0"
                         text="-"/>
 
             </children>

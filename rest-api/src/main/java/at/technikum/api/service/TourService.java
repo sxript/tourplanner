@@ -6,6 +6,7 @@ import at.technikum.api.model.Tour;
 import at.technikum.api.model.TourLog;
 import at.technikum.api.repository.TourRepository;
 import at.technikum.api.utils.BeanHelper;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@Transactional
 public class TourService {
     private final TourRepository tourRepository;
     @Autowired

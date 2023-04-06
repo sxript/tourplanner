@@ -6,6 +6,7 @@ import at.technikum.api.model.TourLog;
 import at.technikum.api.repository.TourLogsRepository;
 import at.technikum.api.repository.TourRepository;
 import at.technikum.api.utils.BeanHelper;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
@@ -20,6 +21,7 @@ import java.util.Set;
 
 @Slf4j
 @Service
+@Transactional
 public class TourLogsService {
    private final TourLogsRepository tourLogsRepository;
    private final TourRepository tourRepository;

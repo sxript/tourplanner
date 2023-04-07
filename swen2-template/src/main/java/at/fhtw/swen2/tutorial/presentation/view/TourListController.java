@@ -51,11 +51,13 @@ public class TourListController implements Initializable {
         listView.setItems(tourListViewModel.getTourListItems());
 
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            log.info("Selected item changed from {} to {}", oldSelection, newSelection);
             if (newSelection != null) {
                 tourListViewModel.getSelectedTour().setValue(newSelection);
                 tourListViewModel.selectedTour(newSelection);
             }
             cudViewModel.updateDeleteButtonEnabled();
+            cudViewModel.updateUpdateButtonEnabled();
         });
 
         if (listView.getItems().isEmpty()) {

@@ -62,4 +62,10 @@ public class TourListViewModel {
             e.printStackTrace();
         }
     }
+
+    public void updateTour(Tour tour) {
+        tourListItems.remove(selectedTour.get());
+        tourListItems.add(tour);
+        selectedTour.set(tour);
+    }
 }

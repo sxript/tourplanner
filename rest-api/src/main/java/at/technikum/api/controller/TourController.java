@@ -65,6 +65,18 @@ public class TourController {
 
     @PutMapping("/tours/{id}")
     public ResponseEntity<Tour> updateTour(@Valid @RequestBody Tour newTour, @PathVariable Long id) {
+        MapResult mapResult = mapQuestLookupService
+                .getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType())
+                .join();
+        logger.info("STATUS CODE: {}", mapResult.getInfo().getStatusCode());
+        if (mapResult.getInfo().getStatusCode() != 0) {
+            throw new BadRequestException("StatusCode:" + mapResult.getInfo().getStatusCode() + " Messages" + mapResult.getInfo().getMessages());
+        }
+
+        byte[] image = mapQuestLookupService.getStaticMap(newTour.getTo(), mapResult).join();
+        newTour.setMapImage(Base64.getEncoder().encodeToString(image));
+        newTour.setEstimatedTime(mapResult.getRealTime());
+        newTour.setDistance(mapResult.getDistance());
         return ResponseEntity.ok(tourService.updateTour(newTour, id));
     }
 

@@ -133,11 +133,7 @@ public class ApplicationController implements Initializable, StageAware {
                     }
                 }
             } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Error reading file");
-                alert.setContentText(e.getMessage());
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Error", "Error reading file", e.getMessage());
             }
         }
     }
@@ -188,11 +184,7 @@ public class ApplicationController implements Initializable, StageAware {
         }
 
         reportManager.generateTourReport(file, selectedTour, tourLogService.findAllTourLogsByTourId(selectedTour.getId()));
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Report Generated");
-        alert.setHeaderText("Report Generated");
-        alert.setContentText("The report was generated successfully.");
-        alert.showAndWait();
+        showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
     }
 
     public void onSummarizeReport(ActionEvent actionEvent) {
@@ -208,19 +200,19 @@ public class ApplicationController implements Initializable, StageAware {
 
         if (file == null) {
             log.info("No file selected");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error generating report");
-            alert.setContentText("Please select a a file to save the report to.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Error", "Error generating report", "Please select a file to save the report to.");
             return;
         }
 
         reportManager.generateSummarizeReport(file, allTours);
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Report Generated");
-        alert.setHeaderText("Report Generated");
-        alert.setContentText("The report was generated successfully.");
+        showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
         alert.showAndWait();
     }
 }

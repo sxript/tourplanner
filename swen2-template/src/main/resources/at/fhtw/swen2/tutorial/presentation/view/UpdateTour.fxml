@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="450.0" prefHeight="300"
+      prefWidth="229.0" spacing="8.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="at.fhtw.swen2.tutorial.presentation.view.UpdateTourController">
+
+    <children>
+        <Label text="Update Tour">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <Separator prefWidth="200.0"/>
+        <VBox>
+            <Label text="Name"/>
+            <TextField fx:id="nameTextField"/>
+        </VBox>
+        <HBox alignment="CENTER">
+            <VBox HBox.hgrow="ALWAYS">
+                <Label text="From"/>
+                <TextField fx:id="fromTextField"/>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS">
+                <Label text="To"/>
+                <TextField fx:id="toTextField"/>
+            </VBox>
+        </HBox>
+        <VBox>
+            <Label text="Description"/>
+            <TextField fx:id="descriptionTextField"/>
+        </VBox>
+        <HBox alignment="CENTER">
+            <VBox HBox.hgrow="ALWAYS">
+                <Label text="Transport Type"/>
+                <ComboBox fx:id="transportTypeMenu"/>
+            </VBox>
+            <Button HBox.hgrow="ALWAYS" fx:id="submitButton" onAction="#onSubmitUpdate" text="update"/>
+        </HBox>
+
+        <Separator prefWidth="200.0"/>
+        <Text fx:id="feedbackText"/>
+    </children>
+    <padding>
+        <Insets bottom="8.0" left="8.0" right="8.0" top="20.0"/>
+    </padding>
+</VBox>

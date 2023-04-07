@@ -26,6 +26,7 @@ import java.util.Date;
 public class TourLog {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tour_logs_generator")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)

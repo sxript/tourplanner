@@ -30,8 +30,6 @@ public class TourLogListController implements Initializable{
 
     @Autowired
     private TourLogListViewModel tourLogListViewModel;
-    @Autowired
-    private TourListViewModel tourListViewModel;
 
     @Override
     public void initialize(URL location, ResourceBundle rb){

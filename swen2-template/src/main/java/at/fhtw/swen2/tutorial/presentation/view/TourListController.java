@@ -32,7 +32,6 @@ public class TourListController implements Initializable {
     private CUDViewModel cudViewModel;
 
 
-
     @FXML
     public ListView<Tour> listView = new ListView<>();
     @FXML
@@ -61,8 +60,9 @@ public class TourListController implements Initializable {
         if (listView.getItems().isEmpty()) {
             listView.setPlaceholder(new Label("Kein Inhalt in der Liste"));
         }
-
         listContainer.getChildren().add(listView);
+
+
     }
 
     // This method is used to only display the name of the tour in the list view

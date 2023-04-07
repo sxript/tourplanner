@@ -37,12 +37,12 @@
 
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <!--                     <MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#onHelpAbout" text="%menu.help.about" />-->
+                        <!--<MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#onHelpAbout" text="%menu.help.about" />-->
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Options">
                     <items>
-                        <!--                     <MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#onHelpAbout" text="%menu.help.about" />-->
+                        <!--<MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#onHelpAbout" text="%menu.help.about" />-->
                     </items>
                 </Menu>
 
@@ -84,11 +84,6 @@
                                                     AnchorPane.topAnchor="0.0"/>
                                     </children>
 
-                                    <!--                          <children>-->
-                                    <!--                              <fx:include source="view/NewTourLog.fxml" AnchorPane.bottomAnchor="0.0"-->
-                                    <!--                                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"-->
-                                    <!--                                          AnchorPane.topAnchor="30.0"/>-->
-                                    <!--                          </children>-->
                                     <children>
                                         <fx:include source="view/DetailTourView.fxml" AnchorPane.bottomAnchor="0.0"
                                                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"

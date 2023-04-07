@@ -3,8 +3,10 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.presentation.viewmodel.DetailTourViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,6 +51,7 @@ public class DetailTourController implements Initializable {
     public Label currentTourFromLabel;
     @FXML
     public Label currentTourDistanceLabel;
+    public Button newTourLog;
 
     @Autowired
     private DetailTourViewModel detailTourViewModel;
@@ -66,6 +70,8 @@ public class DetailTourController implements Initializable {
         currentTourImageView.imageProperty().bindBidirectional(detailTourViewModel.getCurrTourImage());
         currentTourDistanceLabel.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourDistanceLabel());
 
+
+        newTourLog.setVisible(false);
         tourListViewModel.getSelectedTour().addListener((observableValue, oldTour, selectedTour) -> {
             clearTourDetails();
             currentTourNameLabel.textProperty().set(selectedTour.getName());
@@ -75,6 +81,7 @@ public class DetailTourController implements Initializable {
             currentTourToLabel.textProperty().set(selectedTour.getTo());
             currentTourFromLabel.textProperty().set(selectedTour.getFrom());
             currentTourDistanceLabel.textProperty().set(String.valueOf(selectedTour.getDistance()));
+            newTourLog.setVisible(true);
 
             Path imageDir = Paths.get("swen2-template", "src", "main", "resources", "static", "map", "images", selectedTour.getId() + ".jpg");
             String imageDirPath = imageDir.toAbsolutePath().toString();
@@ -97,5 +104,13 @@ public class DetailTourController implements Initializable {
         currentTourFromLabel.textProperty().set("");
         currentTourDistanceLabel.textProperty().set("");
         currentTourImageView.imageProperty().set(null);
+    }
+
+    public void onClickCreateNewTourLog(ActionEvent actionEvent) {
+        try {
+            detailTourViewModel.openNewStage(actionEvent);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

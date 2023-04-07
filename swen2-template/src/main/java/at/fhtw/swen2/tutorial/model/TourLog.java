@@ -13,9 +13,10 @@ import java.util.Date;
 @ToString
 public class TourLog {
     private Long id;
-    private Date date;
+    private String date;
     private String comment;
     private Integer totalTime;
     private String difficulty;
-    private Integer rating;
+    private String duration;
+    private String rating;
 }

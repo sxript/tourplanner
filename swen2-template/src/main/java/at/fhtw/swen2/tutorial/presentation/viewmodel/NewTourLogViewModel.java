@@ -1,42 +1,61 @@
 package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
+import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.model.TourLog;
+import at.fhtw.swen2.tutorial.service.TourLogService;
+import at.fhtw.swen2.tutorial.service.impl.TourLogServiceImpl;
 import javafx.beans.property.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
+
 @Component
 @Getter
 @Setter
 public class NewTourLogViewModel {
-    private SimpleObjectProperty<Date> date = new SimpleObjectProperty<>();
-    private SimpleLongProperty duration = new SimpleLongProperty();
-    private SimpleDoubleProperty distance = new SimpleDoubleProperty();
+
+    TourLogService tourLogService = new TourLogServiceImpl();
+
+    private SimpleStringProperty dateProperty = new SimpleStringProperty();
+    private SimpleStringProperty commentProperty = new SimpleStringProperty();
+    private SimpleStringProperty durationProperty = new SimpleStringProperty();
+    private SimpleStringProperty difficultyProperty = new SimpleStringProperty();
+    private SimpleStringProperty ratingProperty = new SimpleStringProperty();
 
     @Autowired
-    private  TourLogListViewModel tourLogListViewModel;
+    private TourLogListViewModel tourLogListViewModel;
+
+    @Autowired
+    private TourListViewModel tourListViewModel;
 
     private TourLog tourLog;
 
 
-    public NewTourLogViewModel(){
+    public NewTourLogViewModel() {
     }
 
     public NewTourLogViewModel(TourLog tourLog) {
 
         setTourLog(tourLog);
-        setDate(new SimpleObjectProperty<>(tourLog.getDate()));
-        setDistance(new SimpleDoubleProperty(tourLog.getRating()));
-        setDuration(new SimpleLongProperty(tourLog.getTotalTime()));
-
     }
 
-    public void addNewTourLog() {
-        TourLog tourLog = TourLog.builder().date(new Date()).rating(0).totalTime(0).build();
-        //TODO call the service, to add the toulog in the database
-        tourLogListViewModel.addItem(tourLog);
+    public boolean addNewTourLog() {
+        TourLog tourLog = TourLog.builder().date(getDateProperty().getValue()).comment(getCommentProperty().getValue()).
+                difficulty(getDifficultyProperty().getValue()).rating(getRatingProperty().getValue()).duration(getDurationProperty().getValue()).id(1L).build();
+
+        Tour tour = tourListViewModel.getSelectedTour().getValue();
+
+        System.out.println(tour.getId());
+
+        TourLog tourLog1 = tourLogService.saveTourLog(tour.getId(), tourLog);
+        System.out.println(tourLog1);
+
+        tourLogListViewModel.addItem(tourLog1);
+
+        return true;
     }
 }

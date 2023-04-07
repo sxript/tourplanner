@@ -196,5 +196,31 @@ public class ApplicationController implements Initializable, StageAware {
     }
 
     public void onSummarizeReport(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+        fileChooser.setInitialFileName("summarize-report.pdf");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+
+        // Show the file chooser dialog and get the selected file
+        File file = fileChooser.showSaveDialog(stage.getValue());
+        List<Tour> allTours = tourListViewModel.getTourListItems().stream().toList();
+
+        if (file == null) {
+            log.info("No file selected");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error generating report");
+            alert.setContentText("Please select a a file to save the report to.");
+            alert.showAndWait();
+            return;
+        }
+
+        reportManager.generateSummarizeReport(file, allTours);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Report Generated");
+        alert.setHeaderText("Report Generated");
+        alert.setContentText("The report was generated successfully.");
+        alert.showAndWait();
     }
 }

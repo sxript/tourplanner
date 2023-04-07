@@ -27,7 +27,7 @@ public class TourListViewModel {
     private DetailTourViewModel detailTourViewModel;
 
     @Autowired
-    private  TourService tourService;
+    private TourService tourService;
 
     public TourListViewModel() {
         this.tourService = new TourServiceImpl();
@@ -37,7 +37,7 @@ public class TourListViewModel {
         tourListItems.add(tour);
     }
 
-    public void selectedTour(Tour tour){
+    public void selectedTour(Tour tour) {
         tourLogListViewModel.displayTourLogList(tour.getId());
     }
 
@@ -56,6 +56,10 @@ public class TourListViewModel {
     }
 
     public void initList() {
-        tourService.findAllTours().forEach(this::addItem);
+        try {
+            tourService.findAllTours().forEach(this::addItem);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -40,7 +40,6 @@ public class TourLogListViewModel {
         // TODO: this is only temporal to display some data for now this should be deleted since no element is selected at start
         if (!tourLogListItems.isEmpty())
             tourLogService.findAllTourLogsByTourId(tourLogListItems.get(0).getId()).forEach(this::addItem);
-        else tourLogService.findAllTourLogsByTourId(52L).forEach(this::addItem);
         log.info(String.valueOf(tourLogListItems.size()));
     }
 

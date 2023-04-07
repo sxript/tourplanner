@@ -9,6 +9,7 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -52,9 +53,13 @@ public class TourDaoImpl implements TourDao {
                 return tours;
             }
             log.info(request.uri().toString());
+        } catch (ConnectException e) {
+            log.error("Failed to connect to server: {}", e.getMessage());
+            // TODO: error handling for connection problems
+            // TODO: retry mechanism
+//            throw new ConnectException("Failed to connect to server");
         } catch (IOException | InterruptedException e) {
             log.error("Failed to retrieve tours", e);
-            throw new RuntimeException(e);
         }
         return Collections.emptyList();
     }

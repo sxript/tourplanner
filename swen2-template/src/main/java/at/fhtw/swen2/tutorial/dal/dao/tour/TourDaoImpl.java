@@ -5,6 +5,7 @@ import at.fhtw.swen2.tutorial.model.Tour;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class TourDaoImpl implements TourDao {
@@ -138,12 +141,7 @@ public class TourDaoImpl implements TourDao {
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 log.info("Tour with id: {} has been deleted", entity.getId());
-
-                // TODO: rename after app rename
-                Path imageDir = Paths.get("swen2-template", "src", "main", "resources", "static", "map", "images");
-                String imageDirPath = imageDir.toAbsolutePath().toString();
-                File outputFile = new File(imageDirPath,  entity.getId() + ".jpg");
-                Files.deleteIfExists(outputFile.toPath());
+                deleteImage(entity);
             } else {
                 log.error(response.body());
                 throw new RuntimeException("Failed to delete Tour with id: " + entity.getId());
@@ -152,5 +150,27 @@ public class TourDaoImpl implements TourDao {
             log.error("Failed to delete Tour with id: {}", entity.getId(), e);
             throw new RuntimeException("Failed to delete Tour with id: " + entity.getId());
         }
+    }
+
+    private void deleteImage(Tour entity) {
+        Path imageDir = Paths.get("swen2-template", "src", "main", "resources", "static", "map", "images");
+        String imageDirPath = imageDir.toAbsolutePath().toString();
+        File outputFile = new File(imageDirPath, entity.getId() + ".jpg");
+        CompletableFuture.runAsync(() -> {
+            int retries = 5;
+            int timeout = 1;
+            while (retries > 0) {
+                    if(outputFile.delete()) {
+                        return;
+                    } else log.info("Failed to delete image, retrying in {} seconds", timeout);
+                try {
+                    TimeUnit.SECONDS.sleep(timeout);
+                    timeout *= 2;
+                    retries--;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 }

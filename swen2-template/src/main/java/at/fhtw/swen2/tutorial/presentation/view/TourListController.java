@@ -2,6 +2,7 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.CUDViewModel;
+import at.fhtw.swen2.tutorial.presentation.viewmodel.DetailTourViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -29,6 +30,8 @@ public class TourListController implements Initializable {
 
     @Autowired
     private CUDViewModel cudViewModel;
+
+
 
     @FXML
     public ListView<Tour> listView = new ListView<>();

@@ -30,7 +30,7 @@ public class TourLogController {
     @GetMapping("/logs/{id}")
     public ResponseEntity<TourLog> getTourLogById(@PathVariable Long id) {
         return tourLogsService.findTourLogById(id).map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("No TourLog with Id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No Tour with Id: " + id));
     }
 
     @PostMapping("/tours/{tourId}/logs")

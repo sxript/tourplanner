@@ -1,0 +1,60 @@
+<?import javafx.scene.layout.HBox?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="400.0" prefWidth="600.0"
+            fx:controller="at.fhtw.swen2.tutorial.presentation.view.DetailTourController">
+
+    <VBox>
+        <HBox>
+            <VBox>
+                <Label fx:id="currentTourNameLabel">
+                    <font>
+                        <Font name="Arial" size="16.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="currentTourFromLabel">
+                    <font>
+                        <Font name="Arial" size="16.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="currentTourToLabel">
+                    <font>
+                        <Font name="Arial" size="16.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="currentTourTransportTypeLabel">
+                    <font>
+                        <Font name="Arial" size="16.0"/>
+                    </font>
+                </Label>
+
+                <Label fx:id="currentTourDescriptionLabel">
+                    <font>
+                        <Font name="Arial" size="16.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="currentTourDistanceLabel">
+                    <font>
+                        <Font name="Arial" size="16.0"/>
+                    </font>
+                </Label>
+
+                <Label fx:id="currentTourDurationLabel">
+                    <font>
+                        <Font name="Arial" size="16.0"/>
+                    </font>
+                </Label>
+            </VBox>
+            <ImageView fx:id="currentTourImageView" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true"
+                       preserveRatio="true"/>
+        </HBox>
+        <fx:include source="TourLogList.fxml"/>
+    </VBox>
+
+</AnchorPane>

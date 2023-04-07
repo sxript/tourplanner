@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="layout" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhtw.swen2.tutorial.presentation.view.ApplicationController">
+<BorderPane fx:id="layout" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhtw.swen2.tutorial.presentation.view.ApplicationController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
          <menus>
@@ -63,20 +63,18 @@
                         </AnchorPane>
 
 
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="319.0" prefWidth="542.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0">
                            <children>
                                <fx:include source="view/Search.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
 
+<!--                          <children>-->
+<!--                              <fx:include source="view/NewTourLog.fxml" AnchorPane.bottomAnchor="0.0"-->
+<!--                                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"-->
+<!--                                          AnchorPane.topAnchor="30.0"/>-->
+<!--                          </children>-->
                           <children>
-                              <fx:include source="view/NewTourLog.fxml" AnchorPane.bottomAnchor="0.0"
-                                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                          AnchorPane.topAnchor="30.0"/>
-                          </children>
-
-                          <children>
-                              <fx:include source="view/TourLogList.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
-
+                              <fx:include source="view/DetailTourView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
                           </children>
                       </AnchorPane>
                     </items>

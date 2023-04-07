@@ -7,6 +7,7 @@ import at.technikum.api.map.MapResult;
 import at.technikum.api.model.Tour;
 import at.technikum.api.service.TourService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Base64;
 import java.util.List;
 
+@Slf4j
 @RestController
 @Validated
 @RequestMapping("/api/v1/")
@@ -69,7 +71,7 @@ public class TourController {
     @DeleteMapping("/tours/{id}")
     public ResponseEntity<Tour> deleteTour(@PathVariable Long id) {
         int deletedRows = tourService.deleteTour(id);
-        if (deletedRows == 0) throw new ResourceNotFoundException("No TourLog with Id: " + id);
+        if (deletedRows == 0) throw new ResourceNotFoundException("No Tour with Id: " + id);
         return ResponseEntity.noContent().build();
     }
 }

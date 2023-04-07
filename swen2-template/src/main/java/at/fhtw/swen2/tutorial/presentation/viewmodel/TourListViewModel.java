@@ -24,6 +24,9 @@ public class TourListViewModel {
     private TourLogListViewModel tourLogListViewModel;
 
     @Autowired
+    private DetailTourViewModel detailTourViewModel;
+
+    @Autowired
     private  TourService tourService;
 
     public TourListViewModel() {
@@ -32,8 +35,6 @@ public class TourListViewModel {
 
     public void addItem(Tour tour) {
         tourListItems.add(tour);
-       // TODO: comment out because this would double add already exsiting items when calling initList()
-        // tourService.saveTour(tour);
     }
 
     public void selectedTour(Tour tour){
@@ -45,8 +46,9 @@ public class TourListViewModel {
         if (selectedTourToDelete == null) {
             return;
         }
-        tourService.deleteTour(selectedTourToDelete);
+        detailTourViewModel.clear();
         tourListItems.remove(selectedTourToDelete);
+        tourService.deleteTour(selectedTourToDelete);
     }
 
     public void clearItems() {

@@ -44,8 +44,9 @@ public class NewTourLogViewModel {
     }
 
     public boolean addNewTourLog() {
+        // TODO: CHANGED ADDED INTEGER.VALUEOF
         TourLog tourLog = TourLog.builder().date(getDateProperty().getValue()).comment(getCommentProperty().getValue()).
-                difficulty(getDifficultyProperty().getValue()).rating(getRatingProperty().getValue()).duration(getDurationProperty().getValue()).id(1L).build();
+                difficulty(getDifficultyProperty().getValue()).rating(Integer.valueOf(getRatingProperty().getValue())).duration(getDurationProperty().getValue()).id(1L).build();
 
         Tour tour = tourListViewModel.getSelectedTour().getValue();
 

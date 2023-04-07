@@ -34,7 +34,12 @@
                                   text="%menu.file.quit"/>
                     </items>
                 </Menu>
-
+                <Menu mnemonicParsing="false" text="%menu.report.title">
+                   <MenuItem fx:id="miTourReport" mnemonicParsing="false" onAction="#onTourReport"
+                                  text="%menu.report.tour"/>
+                    <MenuItem fx:id="miSummarizeReport" onAction="#onSummarizeReport"
+                              text="%menu.report.summarize" />
+                </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
                         <!--                     <MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#onHelpAbout" text="%menu.help.about" />-->

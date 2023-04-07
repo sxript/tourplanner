@@ -5,6 +5,7 @@ import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.presentation.StageAware;
 import at.fhtw.swen2.tutorial.presentation.event.ApplicationShutdownEvent;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
+import at.fhtw.swen2.tutorial.reports.ReportManager;
 import at.fhtw.swen2.tutorial.service.TourLogService;
 import at.fhtw.swen2.tutorial.service.TourService;
 import at.fhtw.swen2.tutorial.util.DataExportDTO;
@@ -41,6 +42,7 @@ import java.util.ResourceBundle;
 @Slf4j
 public class ApplicationController implements Initializable, StageAware {
 
+    private final ReportManager reportManager = new ReportManager();
     ApplicationEventPublisher publisher;
 
     @FXML
@@ -57,6 +59,10 @@ public class ApplicationController implements Initializable, StageAware {
     MenuItem miExport;
     @FXML
     MenuItem miImport;
+    @FXML
+    MenuItem miTourReport;
+    @FXML
+    MenuItem miSummarizeReport;
 
     // Toolbar, at some point break out
     @FXML
@@ -158,5 +164,63 @@ public class ApplicationController implements Initializable, StageAware {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void onTourReport(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+        fileChooser.setInitialFileName("tour-report.pdf");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+
+        // Show the file chooser dialog and get the selected file
+        File file = fileChooser.showSaveDialog(stage.getValue());
+        Tour selectedTour = tourListViewModel.getSelectedTour().get();
+
+        if (file == null || selectedTour == null) {
+            log.info("No file or tour selected");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error generating report");
+            alert.setContentText("Please select a tour and a file to save the report to.");
+            alert.showAndWait();
+            return;
+        }
+
+        reportManager.generateTourReport(file, selectedTour, tourLogService.findAllTourLogsByTourId(selectedTour.getId()));
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Report Generated");
+        alert.setHeaderText("Report Generated");
+        alert.setContentText("The report was generated successfully.");
+        alert.showAndWait();
+    }
+
+    public void onSummarizeReport(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+        fileChooser.setInitialFileName("summarize-report.pdf");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+
+        // Show the file chooser dialog and get the selected file
+        File file = fileChooser.showSaveDialog(stage.getValue());
+        List<Tour> allTours = tourListViewModel.getTourListItems().stream().toList();
+
+        if (file == null) {
+            log.info("No file selected");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error generating report");
+            alert.setContentText("Please select a a file to save the report to.");
+            alert.showAndWait();
+            return;
+        }
+
+        reportManager.generateSummarizeReport(file, allTours);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Report Generated");
+        alert.setHeaderText("Report Generated");
+        alert.setContentText("The report was generated successfully.");
+        alert.showAndWait();
     }
 }

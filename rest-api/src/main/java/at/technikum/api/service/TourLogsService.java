@@ -53,7 +53,12 @@ public class TourLogsService {
        TourLog updatedTourLog = tourLogsRepository.findById(id)
                .orElseThrow(() -> new ResourceNotFoundException("No TourLog with id = " + id));
 
-       BeanHelper.copyNonNullProperties(updatedTourLog, tourLog);
+       // TODO: check where this Method is used and check if it is called correctly
+       //  this was called incorrectly before and caused a bug
+       BeanHelper.copyNonNullProperties(tourLog, updatedTourLog);
+       tourLog.setId(updatedTourLog.getId());
+       tourLog.setTour(updatedTourLog.getTour());
+       tourLog.setDate(updatedTourLog.getDate());
 
        return tourLogsRepository.save(tourLog);
    }

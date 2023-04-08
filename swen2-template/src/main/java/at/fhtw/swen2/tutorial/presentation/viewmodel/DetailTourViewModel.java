@@ -2,6 +2,8 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 
 import at.fhtw.swen2.tutorial.model.Tour;
+import at.fhtw.swen2.tutorial.presentation.view.UpdateTourController;
+import at.fhtw.swen2.tutorial.presentation.view.UpdateTourLogController;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -80,6 +82,34 @@ public class DetailTourViewModel {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void openUpdateStage(ActionEvent event) throws IOException {
+        // Create a new Scene object with a root node
+        String path = "/at/fhtw/swen2/tutorial/presentation/view/UpdateTourLog.fxml";
+        URL url = getClass().getResource(path);
+        if (url == null) {
+            log.error("Cannot load resource: " + path);
+            throw new IOException("Cannot load resource: " + path);
+        }
+        try {
+            // Load the FXML file for the new stage
+            FXMLLoader loader = new FXMLLoader(url);
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent root = loader.load();
+            Stage stage = new Stage();
+
+            UpdateTourLogController updateTourController = loader.getController();
+            updateTourController.setProperties();
+
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();

@@ -56,6 +56,12 @@ public class TourLogListViewModel {
         log.info(String.valueOf(tourLogListItems.size()));
     }
 
+    public void updateTourLog(TourLog tourLog) {
+        tourLogListItems.remove(selectedTourLog.get());
+        tourLogListItems.add(tourLog);
+        selectedTourLog.set(tourLog);
+    }
+
 //    public void filterList(String searchText){
 //        Task<List<TourLog>> task = new Task<>() {
 //            @Override

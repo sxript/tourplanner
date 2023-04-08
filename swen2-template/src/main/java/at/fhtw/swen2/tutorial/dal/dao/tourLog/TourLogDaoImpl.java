@@ -61,6 +61,7 @@ public class TourLogDaoImpl implements TourLogDao {
             String requestBody = objectMapper.writeValueAsString(entity);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_BASE_URL + API_TOURLOGS_ENDPOINT + "/" + entity.getId()))
+                    .header("Content-Type", "application/json")
                     .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 

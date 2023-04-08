@@ -129,5 +129,10 @@ public class DetailTourController implements Initializable {
     }
 
     public void onUpdateHandle(ActionEvent actionEvent) {
+        try {
+            detailTourViewModel.openUpdateStage(actionEvent);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

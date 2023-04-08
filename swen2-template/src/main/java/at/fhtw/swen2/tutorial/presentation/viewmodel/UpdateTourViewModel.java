@@ -90,7 +90,6 @@ public class UpdateTourViewModel {
                 }
             } catch (Exception e) {
                 feedbackProperty.set("Error updating tour");
-                return false;
             }
         }
         return false;

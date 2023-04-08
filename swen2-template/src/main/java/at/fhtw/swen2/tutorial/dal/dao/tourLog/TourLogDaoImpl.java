@@ -1,5 +1,6 @@
 package at.fhtw.swen2.tutorial.dal.dao.tourLog;
 
+import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.TourLog;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,12 +70,14 @@ public class TourLogDaoImpl implements TourLogDao {
                 TourLog tourLog = objectMapper.readValue(responseBody, TourLog.class);
                 log.info("Updated tourLog with id {}", entity.getId());
                 return Optional.ofNullable(tourLog);
+            } else {
+                log.error("Failed to update tourLog with id {}: {}", entity.getId(), responseBody);
+                throw new BadStatusException("Failed to update tourLog with id " + entity.getId());
             }
         } catch (IOException | InterruptedException e) {
             log.error("Failed to update tourLog with id {}", entity.getId(), e);
             throw new RuntimeException(e);
         }
-        return Optional.empty();
     }
 
     @Override
@@ -128,6 +131,7 @@ public class TourLogDaoImpl implements TourLogDao {
             String requestBody = objectMapper.writeValueAsString(tourLog);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT))
+                    .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
@@ -137,13 +141,14 @@ public class TourLogDaoImpl implements TourLogDao {
                 TourLog savedTourLog = objectMapper.readValue(responseBody, TourLog.class);
                 log.info("Saved tourLog with id {}", savedTourLog.getId());
                 return savedTourLog;
+            } else {
+                log.error("Failed to save tourLog: {}", responseBody);
+                throw new BadStatusException("Failed to save tourLog");
             }
         } catch (IOException | InterruptedException e) {
             log.error("Failed to save tourLog", e);
             throw new RuntimeException(e);
         }
-
-        return null;
     }
 
     @Override

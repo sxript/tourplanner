@@ -7,18 +7,13 @@ import at.fhtw.swen2.tutorial.service.TourService;
 import at.fhtw.swen2.tutorial.service.impl.TourServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +42,7 @@ public class NewTourViewModel {
         this.tourService = new TourServiceImpl();
     }
 
-    private boolean areFieldsValidate() {
+    private boolean areFieldsValid() {
         if (nameProperty.getValue().isEmpty()) {
             feedbackProperty.set("Name is required");
             return false;
@@ -73,7 +68,7 @@ public class NewTourViewModel {
 
     // TODO: add progress indicator
     public boolean addNewTour() {
-        if (!areFieldsValidate()) {
+        if (!areFieldsValid()) {
             return false;
         }
 

@@ -1,30 +1,29 @@
 package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
+import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.service.TourLogService;
 import at.fhtw.swen2.tutorial.service.impl.TourLogServiceImpl;
 import javafx.beans.property.*;
+import javafx.scene.control.Alert;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 
 @Component
 @Getter
 @Setter
 public class NewTourLogViewModel {
-
-    TourLogService tourLogService = new TourLogServiceImpl();
-
-    private SimpleStringProperty dateProperty = new SimpleStringProperty();
-    private SimpleStringProperty commentProperty = new SimpleStringProperty();
-    private SimpleStringProperty durationProperty = new SimpleStringProperty();
-    private SimpleStringProperty difficultyProperty = new SimpleStringProperty();
-    private SimpleStringProperty ratingProperty = new SimpleStringProperty();
+    private SimpleStringProperty dateProperty = new SimpleStringProperty("");
+    private SimpleStringProperty commentProperty = new SimpleStringProperty("");
+    private SimpleStringProperty durationProperty = new SimpleStringProperty("");
+    private SimpleStringProperty difficultyProperty = new SimpleStringProperty("");
+    private SimpleStringProperty ratingProperty = new SimpleStringProperty("");
+    private StringProperty feedbackProperty = new SimpleStringProperty("");
 
     @Autowired
     private TourLogListViewModel tourLogListViewModel;
@@ -32,30 +31,83 @@ public class NewTourLogViewModel {
     @Autowired
     private TourListViewModel tourListViewModel;
 
-    private TourLog tourLog;
 
+    TourLogService tourLogService;
 
     public NewTourLogViewModel() {
+        this.tourLogService = new TourLogServiceImpl();
     }
 
-    public NewTourLogViewModel(TourLog tourLog) {
+    private boolean areFieldsEmpty() {
+        if (dateProperty.getValue().isEmpty()) {
+            feedbackProperty.set("Date is required");
+            return true;
+        }
+        if (commentProperty.getValue().isEmpty()) {
+            feedbackProperty.set("Comment is required");
+            return true;
+        }
+        if (durationProperty.getValue().isEmpty()) {
+            feedbackProperty.set("Duration is required");
+            return true;
+        }
+        if (difficultyProperty.getValue().isEmpty()) {
+            feedbackProperty.set("Difficulty is required");
+            return true;
+        }
+        if (ratingProperty.getValue().isEmpty()) {
+            feedbackProperty.set("Rating is required");
+            return true;
+        }
+        return false;
+    }
 
-        setTourLog(tourLog);
+    // TODO: add further validation
+    public boolean areFieldsValid() {
+        try {
+            int duration = Integer.parseInt(durationProperty.getValue());
+            if (duration < 0 || duration > 1000000) {
+                feedbackProperty.set("Duration must be a positive integer smaller than 1000000");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            feedbackProperty.set("Duration must be a given in minutes");
+            return false;
+        }
+        return true;
     }
 
     public boolean addNewTourLog() {
-        // TODO: CHANGED ADDED INTEGER.VALUEOF
-        TourLog tourLog = TourLog.builder().date(getDateProperty().getValue()).comment(getCommentProperty().getValue()).
-                difficulty(getDifficultyProperty().getValue()).rating(Integer.valueOf(getRatingProperty().getValue())).duration(getDurationProperty().getValue()).id(1L).build();
+        if (areFieldsEmpty() || !areFieldsValid()) {
+            return false;
+        }
 
-        Tour tour = tourListViewModel.getSelectedTour().getValue();
+        TourLog tourLog = TourLog.builder()
+                .comment(getCommentProperty().getValue())
+                .difficulty(getDifficultyProperty().getValue())
+                .rating(Integer.valueOf(getRatingProperty().getValue()))
+                .totalTime(Integer.valueOf(getDurationProperty().getValue()))
+                .build();
 
-        System.out.println(tour.getId());
+        try {
+            Tour tour = tourListViewModel.getSelectedTour().getValue();
+            TourLog createdTourLog = tourLogService.saveTourLog(tour.getId(), tourLog);
+            if (createdTourLog != null) {
+                feedbackProperty.set("Tour log successfully saved");
+                tourLogListViewModel.addItem(createdTourLog);
+            } else {
+                feedbackProperty.set("Error while saving tour log");
+            }
+        } catch (BadStatusException e) {
+            feedbackProperty.set("Error while saving tour log");
 
-        TourLog tourLog1 = tourLogService.saveTourLog(tour.getId(), tourLog);
-        System.out.println(tourLog1);
-
-        tourLogListViewModel.addItem(tourLog1);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error while saving tour log");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            return false;
+        }
 
         return true;
     }

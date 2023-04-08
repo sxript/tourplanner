@@ -60,7 +60,7 @@ public class TourListController implements Initializable {
         });
 
         if (listView.getItems().isEmpty()) {
-            listView.setPlaceholder(new Label("Kein Inhalt in der Liste"));
+            listView.setPlaceholder(new Label("No tours available. Please create a new tour."));
         }
         listContainer.getChildren().add(listView);
 

@@ -3,6 +3,7 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.presentation.viewmodel.DetailTourViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
+import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,15 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -51,7 +48,12 @@ public class DetailTourController implements Initializable {
     public Label currentTourFromLabel;
     @FXML
     public Label currentTourDistanceLabel;
-    public Button newTourLog;
+    @FXML
+    public Button createTourLogButton;
+    @FXML
+    public Button deleteTourLogButton;
+    @FXML
+    public Button updateTourLogButton;
 
     @Autowired
     private DetailTourViewModel detailTourViewModel;
@@ -59,8 +61,14 @@ public class DetailTourController implements Initializable {
     @Autowired
     private TourListViewModel tourListViewModel;
 
+    @Autowired
+    private TourLogListViewModel tourLogListViewModel;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        deleteTourLogButton.disableProperty().bind(detailTourViewModel.getIsDeleteButtonEnabled().not());
+        updateTourLogButton.disableProperty().bind(detailTourViewModel.getIsUpdateButtonEnabled().not());
+
         currentTourNameLabel.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourNameLabel());
         currentTourDurationLabel.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourDurationLabel());
         currentTourDescriptionLabel.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourDescriptionLabel());
@@ -71,7 +79,8 @@ public class DetailTourController implements Initializable {
         currentTourDistanceLabel.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourDistanceLabel());
 
 
-        newTourLog.setVisible(false);
+        // TODO: this should not be in the controller
+        createTourLogButton.setVisible(false);
         tourListViewModel.getSelectedTour().addListener((observableValue, oldTour, selectedTour) -> {
             clearTourDetails();
             currentTourNameLabel.textProperty().set(selectedTour.getName());
@@ -81,8 +90,9 @@ public class DetailTourController implements Initializable {
             currentTourToLabel.textProperty().set(selectedTour.getTo());
             currentTourFromLabel.textProperty().set(selectedTour.getFrom());
             currentTourDistanceLabel.textProperty().set(String.valueOf(selectedTour.getDistance()));
-            newTourLog.setVisible(true);
+            createTourLogButton.setVisible(true);
 
+            // TODO: this in own method
             Path imageDir = Paths.get("swen2-template", "src", "main", "resources", "static", "map", "images", selectedTour.getId() + ".jpg");
             String imageDirPath = imageDir.toAbsolutePath().toString();
             log.info("Image path: " + imageDirPath);
@@ -112,5 +122,12 @@ public class DetailTourController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void onDeleteHandle(ActionEvent actionEvent) {
+       tourLogListViewModel.deleteSelectedTourLog();
+    }
+
+    public void onUpdateHandle(ActionEvent actionEvent) {
     }
 }

@@ -1,5 +1,6 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
+import at.fhtw.swen2.tutorial.presentation.viewmodel.DetailTourViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.NewTourLogViewModel;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -10,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -45,9 +47,13 @@ public class NewTourLogController implements Initializable {
     @Autowired
     private NewTourLogViewModel newTourLogViewModel;
 
+    @Autowired
+    private DetailTourViewModel detailTourViewModel;
+
+
+
     @Override
     public void initialize(URL location, ResourceBundle rb) {
-
         ObservableList<String> transportTypes = FXCollections.observableArrayList("1", "2", "3", "4", "5");
         ratingComboBox.setItems(transportTypes);
 

@@ -1,6 +1,7 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.model.TourLog;
+import at.fhtw.swen2.tutorial.presentation.viewmodel.DetailTourViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
 import javafx.fxml.FXML;
@@ -31,6 +32,9 @@ public class TourLogListController implements Initializable{
     @Autowired
     private TourLogListViewModel tourLogListViewModel;
 
+    @Autowired
+    private DetailTourViewModel detailTourViewModel;
+
     @Override
     public void initialize(URL location, ResourceBundle rb){
         tableView.setItems(tourLogListViewModel.getTourLogListItems());
@@ -55,6 +59,15 @@ public class TourLogListController implements Initializable{
         rating.setCellValueFactory(new PropertyValueFactory<>("rating"));
 
         tableView.getColumns().addAll(id, date, comment, duration, difficulty, rating);
+
+        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            log.info("Selected item changed from {} to {}", oldSelection, newSelection);
+            if (newSelection != null) {
+                tourLogListViewModel.getSelectedTourLog().setValue(newSelection);
+            }
+            detailTourViewModel.updateDeleteButtonEnabled();
+            detailTourViewModel.updateUpdateButtonEnabled();
+        });
 
 
         dataContainer.getChildren().add(tableView);

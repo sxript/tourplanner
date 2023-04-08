@@ -25,7 +25,6 @@ import java.util.Objects;
 @Scope("prototype")
 @Slf4j
 public class NewTourViewModel {
-
     private StringProperty nameProperty = new SimpleStringProperty("");
     private StringProperty fromProperty = new SimpleStringProperty("");
     private StringProperty toProperty = new SimpleStringProperty("");

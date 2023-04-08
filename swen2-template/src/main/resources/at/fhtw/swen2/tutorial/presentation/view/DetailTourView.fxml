@@ -55,8 +55,13 @@
             <ImageView fx:id="currentTourImageView" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true"
                        preserveRatio="true"/>
         </HBox>
-        <Button onAction="#onClickCreateNewTourLog" fx:id="newTourLog">newTourLog</Button>
-
+        <HBox>
+            <Button onAction="#onClickCreateNewTourLog" fx:id="createTourLogButton" text="+"/>
+            <Button fx:id="deleteTourLogButton" onAction="#onDeleteHandle" prefHeight="25.0" prefWidth="49.0"
+                    text="-"/>
+            <Button fx:id="updateTourLogButton" onAction="#onUpdateHandle" prefHeight="25.0" prefWidth="49.0"
+                    text="*"/>
+        </HBox>
         <fx:include source="TourLogList.fxml"/>
     </VBox>
 

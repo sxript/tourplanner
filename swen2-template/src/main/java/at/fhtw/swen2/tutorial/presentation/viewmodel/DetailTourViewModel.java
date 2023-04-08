@@ -2,10 +2,7 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 
 import at.fhtw.swen2.tutorial.model.Tour;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -38,10 +35,21 @@ public class DetailTourViewModel {
 
     private final ObjectProperty<Tour> selectedTour = new SimpleObjectProperty<>();
 
+    private final BooleanProperty isDeleteButtonEnabled = new SimpleBooleanProperty(false);
+    private final BooleanProperty isUpdateButtonEnabled = new SimpleBooleanProperty(false);
 
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    TourLogListViewModel tourLogListViewModel;
+    public void updateDeleteButtonEnabled() {
+        isDeleteButtonEnabled.set(tourLogListViewModel.getSelectedTourLog() != null && !tourLogListViewModel.getTourLogListItems().isEmpty());
+    }
+
+    public void updateUpdateButtonEnabled() {
+        isUpdateButtonEnabled.set(tourLogListViewModel.getSelectedTourLog() != null && !tourLogListViewModel.getTourLogListItems().isEmpty());
+    }
 
     public void clear() {
         log.info("Clearing detail view");

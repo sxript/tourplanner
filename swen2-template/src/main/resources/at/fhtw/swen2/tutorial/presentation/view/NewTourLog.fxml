@@ -51,7 +51,10 @@
 
 
         <Separator prefWidth="200.0"/>
-        <Button onAction="#addTourLogsButton">insert</Button>
+        <HBox>
+            <Button onAction="#addTourLogsButton">add</Button>
+        </HBox>
+
         <Text fx:id="feedbackText"/>
     </children>
 

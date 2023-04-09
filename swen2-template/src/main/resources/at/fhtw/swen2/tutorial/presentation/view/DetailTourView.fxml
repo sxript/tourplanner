@@ -62,7 +62,6 @@
             <Button fx:id="updateTourLogButton" onAction="#onUpdateHandle" prefHeight="25.0" prefWidth="49.0"
                     text="*"/>
         </HBox>
-        <fx:include source="TourLogList.fxml"/>
     </VBox>
 
 </AnchorPane>

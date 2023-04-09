@@ -52,6 +52,8 @@ public class TourLogListViewModel {
     public void displayTourLogList(Long tourId) {
         clearItems();
 
+        System.out.println("-------------------------");
+
         tourLogItems = tourLogService.findAllTourLogsByTourId(tourId);
         tourLogListItems.addAll(tourLogItems);
 
@@ -88,7 +90,6 @@ public class TourLogListViewModel {
         System.out.println(getTourLogListItems().size());
 
 
-
         Task<List<TourLog>> task = new Task<>() {
             @Override
             protected List<TourLog> call() throws Exception {
@@ -99,11 +100,11 @@ public class TourLogListViewModel {
                 return tourLogItems
                         .stream()
                         .filter(value -> value.getComment().toLowerCase().contains(searchText.toLowerCase())
-                                        || value.getDifficulty().toLowerCase().contains(searchText.toLowerCase())
-                                        || value.getRating().toString().contains(searchText.toLowerCase())
-                                        || value.getDate().contains(searchText.toLowerCase())
-                                        || value.getId().toString().contains(searchText.toLowerCase())
-//                                || value.getDuration().contains(searchText.toLowerCase())
+                                || value.getDifficulty().toLowerCase().contains(searchText.toLowerCase())
+                                || value.getRating().toString().contains(searchText.toLowerCase())
+                                || value.getDate().contains(searchText.toLowerCase())
+                                || value.getId().toString().contains(searchText.toLowerCase())
+                                || value.getTotalTime().toString().contains(searchText.toLowerCase())
 
                         )
                         .collect(Collectors.toList());

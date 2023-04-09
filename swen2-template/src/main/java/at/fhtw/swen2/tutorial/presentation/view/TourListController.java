@@ -49,6 +49,9 @@ public class TourListController implements Initializable {
 
         listView.setItems(tourListViewModel.getTourListItems());
 
+
+
+
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             log.info("Selected item changed from {} to {}", oldSelection, newSelection);
             if (newSelection != null) {
@@ -61,6 +64,13 @@ public class TourListController implements Initializable {
 
         if (listView.getItems().isEmpty()) {
             listView.setPlaceholder(new Label("No tours available. Please create a new tour."));
+        }else{
+            listView.getSelectionModel().selectFirst();
+            Tour t = listView.getSelectionModel().getSelectedItem();
+
+            tourListViewModel.getSelectedTour().setValue(t);
+            tourListViewModel.selectedTour(t);
+
         }
         listContainer.getChildren().add(listView);
 

@@ -41,7 +41,7 @@ public class TourLogServiceImpl implements TourLogService {
 
     @Override
     public void deleteTourLogById(Long id) {
-        tourLogDao.delete(new TourLog(id, null, null, null, null,null));
+        tourLogDao.delete(new TourLog(id, null, null, null, null,null,null));
     }
 
     @Override

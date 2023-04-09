@@ -18,4 +18,5 @@ public class TourLog {
     private Integer totalTime;
     private String difficulty;
     private Integer rating;
+    private String duration;
 }

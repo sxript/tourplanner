@@ -34,7 +34,7 @@ public class SearchController {
     @FXML
     private void initialize() {
 
-        searchField.textProperty().bindBidirectional(searchViewModel.searchStringProperty());
+        searchField.textProperty().bindBidirectional(searchViewModel.getSearchString());
 
         // search panel
         searchButton.setText("Search");
@@ -49,6 +49,7 @@ public class SearchController {
 
     private void loadData() {
         searchViewModel.search();
+        System.out.println("in loadData");
     }
 
 }

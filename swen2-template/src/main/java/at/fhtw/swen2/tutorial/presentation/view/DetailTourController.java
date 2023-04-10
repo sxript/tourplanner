@@ -1,6 +1,7 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
 
+import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.DetailTourViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
@@ -81,28 +82,47 @@ public class DetailTourController implements Initializable {
 
         // TODO: this should not be in the controller
         createTourLogButton.setVisible(false);
+
+        Tour tour = tourListViewModel.getSelectedTour().getValue();
+        if (tour != null) {
+            clearTourDetails();
+            setCurrentTourAttributes(tour);
+            loadImage(tour);
+
+        }
+
         tourListViewModel.getSelectedTour().addListener((observableValue, oldTour, selectedTour) -> {
             clearTourDetails();
-            currentTourNameLabel.textProperty().set(selectedTour.getName());
-            currentTourDurationLabel.textProperty().set(String.valueOf(selectedTour.getEstimatedTime()));
-            currentTourDescriptionLabel.textProperty().set(selectedTour.getDescription());
-            currentTourTransportTypeLabel.textProperty().set(selectedTour.getTransportType());
-            currentTourToLabel.textProperty().set(selectedTour.getTo());
-            currentTourFromLabel.textProperty().set(selectedTour.getFrom());
-            currentTourDistanceLabel.textProperty().set(String.valueOf(selectedTour.getDistance()));
-            createTourLogButton.setVisible(true);
+            setCurrentTourAttributes(selectedTour);
 
+            loadImage(selectedTour);
             // TODO: this in own method
-            Path imageDir = Paths.get("swen2-template", "src", "main", "resources", "static", "map", "images", selectedTour.getId() + ".jpg");
-            String imageDirPath = imageDir.toAbsolutePath().toString();
-            log.info("Image path: " + imageDirPath);
-            Path path = Paths.get(imageDirPath);
-            if (Files.exists(path)) {
-                log.info("Image found: " + imageDirPath);
-                Image tourImage = new Image(path.toString());
-                currentTourImageView.imageProperty().set(tourImage);
-            }
+
         });
+    }
+
+    private void setCurrentTourAttributes(Tour selectedTour) {
+        currentTourNameLabel.textProperty().set(selectedTour.getName());
+        currentTourDurationLabel.textProperty().set(String.valueOf(selectedTour.getEstimatedTime()));
+        currentTourDescriptionLabel.textProperty().set(selectedTour.getDescription());
+        currentTourTransportTypeLabel.textProperty().set(selectedTour.getTransportType());
+        currentTourToLabel.textProperty().set(selectedTour.getTo());
+        currentTourFromLabel.textProperty().set(selectedTour.getFrom());
+        currentTourDistanceLabel.textProperty().set(String.valueOf(selectedTour.getDistance()));
+        createTourLogButton.setVisible(true);
+    }
+
+
+    private void loadImage(Tour selectedTour) {
+        Path imageDir = Paths.get("swen2-template", "src", "main", "resources", "static", "map", "images", selectedTour.getId() + ".jpg");
+        String imageDirPath = imageDir.toAbsolutePath().toString();
+        log.info("Image path: " + imageDirPath);
+        Path path = Paths.get(imageDirPath);
+        if (Files.exists(path)) {
+            log.info("Image found: " + imageDirPath);
+            Image tourImage = new Image(path.toString());
+            currentTourImageView.imageProperty().set(tourImage);
+        }
     }
 
     private void clearTourDetails() {
@@ -125,7 +145,7 @@ public class DetailTourController implements Initializable {
     }
 
     public void onDeleteHandle(ActionEvent actionEvent) {
-       tourLogListViewModel.deleteSelectedTourLog();
+        tourLogListViewModel.deleteSelectedTourLog();
     }
 
     public void onUpdateHandle(ActionEvent actionEvent) {

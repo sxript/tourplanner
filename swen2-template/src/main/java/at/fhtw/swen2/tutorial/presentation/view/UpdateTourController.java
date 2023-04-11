@@ -1,9 +1,7 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
 
-import at.fhtw.swen2.tutorial.model.Tour;
-import at.fhtw.swen2.tutorial.presentation.viewmodel.NewTourViewModel;
-import at.fhtw.swen2.tutorial.presentation.viewmodel.UpdateTourViewModel;
+import at.fhtw.swen2.tutorial.presentation.viewmodel.UpdateBaseTourViewModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -48,9 +45,9 @@ public class UpdateTourController implements Initializable {
     @FXML
     public ComboBox<String> transportTypeMenu;
 
-    private final UpdateTourViewModel updateTourViewModel;
+    private final UpdateBaseTourViewModel updateTourViewModel;
 
-    public UpdateTourController(UpdateTourViewModel updateTourViewModel) {
+    public UpdateTourController(UpdateBaseTourViewModel updateTourViewModel) {
         this.updateTourViewModel = updateTourViewModel;
     }
 

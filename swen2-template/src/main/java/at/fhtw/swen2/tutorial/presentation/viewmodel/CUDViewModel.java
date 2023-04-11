@@ -1,13 +1,10 @@
 package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
-import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.presentation.view.UpdateTourController;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -18,7 +15,6 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -35,10 +31,10 @@ public class CUDViewModel {
     private BooleanProperty isUpdateButtonEnabled = new SimpleBooleanProperty(false);
 
     private final TourListViewModel tourListViewModel;
-    private final UpdateTourViewModel updateTourViewModel;
+    private final UpdateBaseTourViewModel updateTourViewModel;
     private final ApplicationContext applicationContext;
 
-    public CUDViewModel(TourListViewModel tourListViewModel, UpdateTourViewModel updateTourViewModel, ApplicationContext applicationContext) {
+    public CUDViewModel(TourListViewModel tourListViewModel, UpdateBaseTourViewModel updateTourViewModel, ApplicationContext applicationContext) {
         this.tourListViewModel = tourListViewModel;
         this.updateTourViewModel = updateTourViewModel;
         this.applicationContext = applicationContext;

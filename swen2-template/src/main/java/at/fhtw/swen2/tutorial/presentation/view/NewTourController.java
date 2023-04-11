@@ -1,8 +1,6 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
-import at.fhtw.swen2.tutorial.presentation.StageAware;
-import at.fhtw.swen2.tutorial.presentation.viewmodel.NewTourViewModel;
-import javafx.beans.property.SimpleObjectProperty;
+import at.fhtw.swen2.tutorial.presentation.viewmodel.NewBaseTourViewModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,12 +8,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -48,9 +43,9 @@ public class NewTourController implements Initializable {
     @FXML
     public ComboBox<String> transportTypeMenu;
 
-    private final NewTourViewModel newTourViewModel;
+    private final NewBaseTourViewModel newTourViewModel;
 
-    public NewTourController(NewTourViewModel newTourViewModel) {
+    public NewTourController(NewBaseTourViewModel newTourViewModel) {
         this.newTourViewModel = newTourViewModel;
     }
 

@@ -8,6 +8,7 @@ import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.tutorial.reports.ReportManager;
 import at.fhtw.swen2.tutorial.service.TourLogService;
 import at.fhtw.swen2.tutorial.service.TourService;
+import at.fhtw.swen2.tutorial.util.AlertUtils;
 import at.fhtw.swen2.tutorial.util.DataExportDTO;
 import at.fhtw.swen2.tutorial.util.DataIOUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -106,7 +107,7 @@ public class ApplicationController implements Initializable, StageAware {
 
 
     // TODO: is this the right place for this?
-    public void onFileImport(ActionEvent actionEvent) {
+    public void onFileImport() {
         ObjectMapper objectMapper = new ObjectMapper();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save File");
@@ -131,13 +132,13 @@ public class ApplicationController implements Initializable, StageAware {
                     }
                 }
             } catch (IOException e) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Error reading file", e.getMessage());
+                AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error reading file", e.getMessage());
             }
         }
     }
 
     // TODO: is this the right place for this?
-    public void onFileExport(ActionEvent actionEvent) {
+    public void onFileExport() {
         DataIOUtil dataIOUtil = new DataIOUtil();
         String jsonData = dataIOUtil.exportData();
         FileChooser fileChooser = new FileChooser();
@@ -160,7 +161,7 @@ public class ApplicationController implements Initializable, StageAware {
         }
     }
 
-    public void onTourReport(ActionEvent actionEvent) {
+    public void onTourReport() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save PDF File");
         fileChooser.setInitialFileName("tour-report.pdf");
@@ -173,19 +174,15 @@ public class ApplicationController implements Initializable, StageAware {
 
         if (file == null || selectedTour == null) {
             log.info("No file or tour selected");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error generating report");
-            alert.setContentText("Please select a tour and a file to save the report to.");
-            alert.showAndWait();
+            AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error generating report", "Please select a tour and a file to save the report to.");
             return;
         }
 
         reportManager.generateTourReport(file, selectedTour, tourLogService.findAllTourLogsByTourId(selectedTour.getId()));
-        showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
+        AlertUtils.showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
     }
 
-    public void onSummarizeReport(ActionEvent actionEvent) {
+    public void onSummarizeReport() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save PDF File");
         fileChooser.setInitialFileName("summarize-report.pdf");
@@ -198,19 +195,11 @@ public class ApplicationController implements Initializable, StageAware {
 
         if (file == null) {
             log.info("No file selected");
-            showAlert(Alert.AlertType.ERROR, "Error", "Error generating report", "Please select a file to save the report to.");
+            AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error generating report", "Please select a file to save the report to.");
             return;
         }
 
         reportManager.generateSummarizeReport(file, allTours);
-        showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
-    }
-
-    private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
+        AlertUtils.showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
     }
 }

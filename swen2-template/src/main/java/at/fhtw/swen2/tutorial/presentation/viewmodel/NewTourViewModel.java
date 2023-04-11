@@ -4,6 +4,7 @@ import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.ErrorResponse;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
+import at.fhtw.swen2.tutorial.util.AlertUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.Alert;
@@ -12,8 +13,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 @Component
 @Setter
@@ -43,9 +42,6 @@ public class NewTourViewModel extends BaseTourViewModel {
             }
         } catch (BadStatusException e) {
             getFeedbackProperty().set("Error while creating new tour");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error while creating new tour");
 
             ErrorResponse response = null;
             try {
@@ -61,8 +57,7 @@ public class NewTourViewModel extends BaseTourViewModel {
                 log.warn("Error while parsing error response: {}", e.getMessage());
             }
 
-            alert.setContentText(Objects.requireNonNull(response).getMessage() != null ? response.getMessage() : e.getMessage());
-            alert.showAndWait();
+            AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error while creating new tour", response != null ? response.getMessage() : e.getMessage());
             return false;
         }
         return true;

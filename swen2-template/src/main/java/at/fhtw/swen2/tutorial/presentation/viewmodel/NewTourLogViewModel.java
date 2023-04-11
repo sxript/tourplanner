@@ -4,6 +4,7 @@ import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.service.TourLogService;
+import at.fhtw.swen2.tutorial.util.AlertUtils;
 import javafx.scene.control.Alert;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,11 +41,7 @@ public class NewTourLogViewModel extends BaseTourLogViewModel {
         } catch (BadStatusException e) {
             getFeedbackProperty().set("Error while saving tour log");
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error while saving tour log");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error while saving tour log", e.getMessage());
             return false;
         }
 

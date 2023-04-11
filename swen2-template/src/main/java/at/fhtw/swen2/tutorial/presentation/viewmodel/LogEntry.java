@@ -9,16 +9,16 @@ import java.time.LocalDateTime;
 
 @Getter
 public class LogEntry {
-    public static enum Type {
+    public enum Type {
         ERROR,
         WARNING,
         INFO
     }
 
-    Property<Type> type = new SimpleObjectProperty<>(this, "type");
-    Property<LocalDateTime> date = new SimpleObjectProperty<>(this, "date");
-    Property<String> systemName = new SimpleStringProperty(this, "systemName");
-    Property<String> message = new SimpleStringProperty(this, "message");
+    final Property<Type> type = new SimpleObjectProperty<>(this, "type");
+    final Property<LocalDateTime> date = new SimpleObjectProperty<>(this, "date");
+    final Property<String> systemName = new SimpleStringProperty(this, "systemName");
+    final Property<String> message = new SimpleStringProperty(this, "message");
 
     public LogEntry(Type type, String systemName, String message) {
         this.type.setValue(type);

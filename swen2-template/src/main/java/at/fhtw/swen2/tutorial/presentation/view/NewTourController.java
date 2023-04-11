@@ -21,25 +21,18 @@ import java.util.ResourceBundle;
 @Slf4j
 @Setter
 public class NewTourController implements Initializable {
-
     @FXML
     private TextField nameTextField;
-
     @FXML
     public TextField fromTextField;
-
     @FXML
     public TextField toTextField;
-
     @FXML
     public TextField descriptionTextField;
-
     @FXML
     public Button submitButton;
-
     @FXML
     private Text feedbackText;
-
     @FXML
     public ComboBox<String> transportTypeMenu;
 

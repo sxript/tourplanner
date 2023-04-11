@@ -1,9 +1,7 @@
 package at.technikum.api.service;
 
-import at.technikum.api.configuration.VaultConfiguration;
 import at.technikum.api.exception.ResourceNotFoundException;
 import at.technikum.api.model.Tour;
-import at.technikum.api.model.TourLog;
 import at.technikum.api.repository.TourRepository;
 import at.technikum.api.utils.BeanHelper;
 import jakarta.transaction.Transactional;

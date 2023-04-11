@@ -15,11 +15,11 @@ import javafx.stage.Stage;
 
 public class Swen2TemplateApplication extends Application {
 
-    private Logger logger = LoggerFactory.getLogger(Swen2TemplateApplication.class);
+    private final Logger logger = LoggerFactory.getLogger(Swen2TemplateApplication.class);
     private ConfigurableApplicationContext applicationContext;
     
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         logger.debug("Starting TutorialApplication");
         applicationContext.publishEvent(new ApplicationStartupEvent(this, stage));
     }
@@ -35,7 +35,7 @@ public class Swen2TemplateApplication extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         logger.debug("Stopping TutorialApplication");
         
         applicationContext.close();

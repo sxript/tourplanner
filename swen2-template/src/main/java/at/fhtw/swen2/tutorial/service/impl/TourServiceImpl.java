@@ -5,7 +5,6 @@ import at.fhtw.swen2.tutorial.dal.dao.tour.TourDao;
 import at.fhtw.swen2.tutorial.dal.dao.tour.TourDaoImpl;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

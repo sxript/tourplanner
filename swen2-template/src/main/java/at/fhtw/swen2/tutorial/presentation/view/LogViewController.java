@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 @Slf4j
 public class LogViewController implements Initializable {
-
     @FXML
     TableView<LogEntry> logTable;
     @FXML

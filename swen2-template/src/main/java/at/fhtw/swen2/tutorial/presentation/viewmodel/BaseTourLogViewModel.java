@@ -1,6 +1,5 @@
 package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
-import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.service.TourLogService;
 import javafx.beans.property.SimpleStringProperty;

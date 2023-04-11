@@ -24,7 +24,6 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -70,19 +69,18 @@ public class ApplicationController implements Initializable, StageAware {
     Circle monitorStatusIcon = new Circle(8);
 
     SimpleObjectProperty<Stage> stage = new SimpleObjectProperty<>();
+    private final TourListViewModel tourListViewModel;
 
-    @Autowired
-    TourService tourService;
+    private final TourService tourService;
+    private final TourLogService tourLogService;
 
-    @Autowired
-    TourLogService tourLogService;
 
-    @Autowired
-    private TourListViewModel tourListViewModel;
-
-    public ApplicationController(ApplicationEventPublisher publisher) {
+    public ApplicationController(ApplicationEventPublisher publisher, TourService tourService, TourLogService tourLogService, TourListViewModel tourListViewModel) {
         log.debug("Initializing application controller");
         this.publisher = publisher;
+        this.tourService = tourService;
+        this.tourLogService = tourLogService;
+        this.tourListViewModel = tourListViewModel;
     }
 
     @Override

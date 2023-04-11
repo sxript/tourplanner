@@ -114,7 +114,7 @@ public class ReportManager {
                 table.addCell(cell);
 
                 for (TourLog tourLog : tourLogs) {
-                    table.addCell(tourLog.getDate().toString());
+                    table.addCell(tourLog.getDate());
                     table.addCell(tourLog.getDifficulty());
                     table.addCell(tourLog.getTotalTime().toString());
                     table.addCell(tourLog.getComment());

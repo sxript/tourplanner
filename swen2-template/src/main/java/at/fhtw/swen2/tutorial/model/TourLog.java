@@ -2,8 +2,6 @@ package at.fhtw.swen2.tutorial.model;
 
 import lombok.*;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @Builder

@@ -2,7 +2,6 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.DetailTourViewModel;
-import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +10,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,14 +21,12 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 @Slf4j
 public class TourLogListController implements Initializable{
-
     @FXML
     private final TableView<TourLog> tableView = new TableView<>();
     @FXML
     private VBox dataContainer;
 
     private final TourLogListViewModel tourLogListViewModel;
-
     private final DetailTourViewModel detailTourViewModel;
 
     public TourLogListController(TourLogListViewModel tourLogListViewModel, DetailTourViewModel detailTourViewModel) {
@@ -76,5 +72,4 @@ public class TourLogListController implements Initializable{
         dataContainer.getChildren().add(tableView);
         tourLogListViewModel.initList();
     }
-
 }

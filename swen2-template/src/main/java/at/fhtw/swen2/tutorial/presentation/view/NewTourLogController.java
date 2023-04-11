@@ -1,27 +1,19 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
-import at.fhtw.swen2.tutorial.presentation.viewmodel.DetailTourViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.NewTourLogViewModel;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 //@Scope("prototype")
@@ -41,12 +33,12 @@ public class NewTourLogController implements Initializable {
     private ComboBox<String> difficultyComboBox;
     @FXML
     public ComboBox<String> ratingComboBox;
+
     private final NewTourLogViewModel newTourLogViewModel;
 
     public NewTourLogController(NewTourLogViewModel newTourLogViewModel) {
         this.newTourLogViewModel = newTourLogViewModel;
     }
-
 
     @Override
     public void initialize(URL location, ResourceBundle rb) {

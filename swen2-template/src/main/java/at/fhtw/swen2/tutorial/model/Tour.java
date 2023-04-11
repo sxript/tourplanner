@@ -1,6 +1,5 @@
 package at.fhtw.swen2.tutorial.model;
 
-import at.fhtw.swen2.tutorial.Swen2TemplateApplication;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -10,12 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
-import java.util.Objects;
 
 @Getter
 @Setter

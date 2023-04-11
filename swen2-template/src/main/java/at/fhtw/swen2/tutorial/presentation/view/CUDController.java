@@ -3,12 +3,10 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.presentation.viewmodel.CUDViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
-import at.fhtw.swen2.tutorial.presentation.viewmodel.TourLogListViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -22,13 +20,17 @@ public class CUDController implements Initializable {
 
     @FXML
     public Button deleteButton;
+    @FXML
     public Button updateButton;
 
-    @Autowired
-    private CUDViewModel cudViewModel;
+    private final CUDViewModel cudViewModel;
 
-    @Autowired
-    private TourListViewModel tourListViewModel;
+    private final TourListViewModel tourListViewModel;
+
+    public CUDController(CUDViewModel cudViewModel, TourListViewModel tourListViewModel) {
+        this.cudViewModel = cudViewModel;
+        this.tourListViewModel = tourListViewModel;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

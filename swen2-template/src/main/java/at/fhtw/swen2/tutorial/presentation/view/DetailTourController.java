@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -56,14 +55,17 @@ public class DetailTourController implements Initializable {
     @FXML
     public Button updateTourLogButton;
 
-    @Autowired
-    private DetailTourViewModel detailTourViewModel;
+    private final DetailTourViewModel detailTourViewModel;
 
-    @Autowired
-    private TourListViewModel tourListViewModel;
+    private final TourListViewModel tourListViewModel;
 
-    @Autowired
-    private TourLogListViewModel tourLogListViewModel;
+    private final TourLogListViewModel tourLogListViewModel;
+
+    public DetailTourController(DetailTourViewModel detailTourViewModel, TourListViewModel tourListViewModel, TourLogListViewModel tourLogListViewModel) {
+        this.detailTourViewModel = detailTourViewModel;
+        this.tourListViewModel = tourListViewModel;
+        this.tourLogListViewModel = tourLogListViewModel;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -144,7 +146,7 @@ public class DetailTourController implements Initializable {
         }
     }
 
-    public void onDeleteHandle(ActionEvent actionEvent) {
+    public void onDeleteHandle() {
         tourLogListViewModel.deleteSelectedTourLog();
     }
 

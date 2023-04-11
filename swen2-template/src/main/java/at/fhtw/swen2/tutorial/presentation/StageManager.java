@@ -33,7 +33,7 @@ public class StageManager {
         this.application = application;
         this.viewManager = viewManager;
 
-        this.primaryStage = new SimpleObjectProperty<Stage>(application, PRIMARY_STAGE_PROPERTY);
+        this.primaryStage = new SimpleObjectProperty<>(application, PRIMARY_STAGE_PROPERTY);
     }
 
     public Optional<Stage> getPrimaryStage() {
@@ -52,7 +52,7 @@ public class StageManager {
         primaryStage.setValue(stage);      
     
         try {
-            Parent parent = (Parent) viewManager.load("at/fhtw/swen2/tutorial/presentation/Application", stage);
+            Parent parent = viewManager.load("at/fhtw/swen2/tutorial/presentation/Application", stage);
             stage.setScene(new Scene(parent));
         } catch (IOException e) {
             log.error("Error occurred while creating Application scene", e);
@@ -68,12 +68,10 @@ public class StageManager {
 
     @EventListener 
     public void onApplicationError(ApplicationErrorEvent event) {
-        Platform.runLater(() -> {
-            Notifications.create()
-                .owner(primaryStage.getValue())
-                .text(event.getMessage())
-                .position(Pos.BOTTOM_CENTER)
-                .showError();
-        });
+        Platform.runLater(() -> Notifications.create()
+            .owner(primaryStage.getValue())
+            .text(event.getMessage())
+            .position(Pos.BOTTOM_CENTER)
+            .showError());
     }
 }

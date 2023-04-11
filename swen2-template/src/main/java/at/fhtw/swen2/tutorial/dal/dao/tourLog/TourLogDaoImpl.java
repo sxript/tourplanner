@@ -114,7 +114,7 @@ public class TourLogDaoImpl implements TourLogDao {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                List<TourLog> tourLogs = objectMapper.readValue(responseBody, new TypeReference<List<TourLog>>() {
+                List<TourLog> tourLogs = objectMapper.readValue(responseBody, new TypeReference<>() {
                 });
                 log.info("Found {} tourLogs for tour with id {}", tourLogs.size(), tourId);
                 return tourLogs;

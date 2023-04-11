@@ -2,7 +2,6 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 
 import at.fhtw.swen2.tutorial.model.Tour;
-import at.fhtw.swen2.tutorial.presentation.view.UpdateTourController;
 import at.fhtw.swen2.tutorial.presentation.view.UpdateTourLogController;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
@@ -15,7 +14,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 

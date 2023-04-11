@@ -2,7 +2,6 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.CUDViewModel;
-import at.fhtw.swen2.tutorial.presentation.viewmodel.DetailTourViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -13,7 +12,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -24,16 +22,13 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 @Slf4j
 public class TourListController implements Initializable {
-
-    private final TourListViewModel tourListViewModel;
-
-    private final CUDViewModel cudViewModel;
-
-
     @FXML
-    public ListView<Tour> listView = new ListView<>();
+    public final ListView<Tour> listView = new ListView<>();
     @FXML
     private VBox listContainer;
+
+    private final TourListViewModel tourListViewModel;
+    private final CUDViewModel cudViewModel;
 
     public TourListController(CUDViewModel cudViewModel, TourListViewModel tourListViewModel) {
         this.cudViewModel = cudViewModel;
@@ -44,16 +39,12 @@ public class TourListController implements Initializable {
     public void initialize(URL location, ResourceBundle rb) {
         setupTourListViewCellFactory();
 
-
         tourListViewModel.initList();
 
         ListProperty<Tour> tourListProperty = new SimpleListProperty<>(tourListViewModel.getTourListItems());
         listView.itemsProperty().bindBidirectional(tourListProperty);
 
         listView.setItems(tourListViewModel.getTourListItems());
-
-
-
 
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             log.info("Selected item changed from {} to {}", oldSelection, newSelection);
@@ -67,7 +58,7 @@ public class TourListController implements Initializable {
 
         if (listView.getItems().isEmpty()) {
             listView.setPlaceholder(new Label("No tours available. Please create a new tour."));
-        }else{
+        } else {
             listView.getSelectionModel().selectFirst();
             Tour t = listView.getSelectionModel().getSelectedItem();
 
@@ -76,8 +67,6 @@ public class TourListController implements Initializable {
 
         }
         listContainer.getChildren().add(listView);
-
-
     }
 
     // This method is used to only display the name of the tour in the list view

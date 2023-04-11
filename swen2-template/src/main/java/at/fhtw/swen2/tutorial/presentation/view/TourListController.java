@@ -25,17 +25,20 @@ import java.util.ResourceBundle;
 @Slf4j
 public class TourListController implements Initializable {
 
-    @Autowired
-    private TourListViewModel tourListViewModel;
+    private final TourListViewModel tourListViewModel;
 
-    @Autowired
-    private CUDViewModel cudViewModel;
+    private final CUDViewModel cudViewModel;
 
 
     @FXML
     public ListView<Tour> listView = new ListView<>();
     @FXML
     private VBox listContainer;
+
+    public TourListController(CUDViewModel cudViewModel, TourListViewModel tourListViewModel) {
+        this.cudViewModel = cudViewModel;
+        this.tourListViewModel = tourListViewModel;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle rb) {

@@ -32,8 +32,11 @@ public class UpdateTourLogController implements Initializable {
     @FXML
     public Text feedbackText;
 
-    @Autowired
-    private UpdateTourLogViewModel updateTourLogViewModel;
+    private final UpdateTourLogViewModel updateTourLogViewModel;
+
+    public UpdateTourLogController(UpdateTourLogViewModel updateTourLogViewModel) {
+        this.updateTourLogViewModel = updateTourLogViewModel;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

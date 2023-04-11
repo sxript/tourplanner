@@ -20,12 +20,15 @@ public class SearchController {
 
     public static final int PAGE_ITEMS_COUNT = 10;
 
-    @Autowired
-    private  SearchViewModel searchViewModel;
+    private final SearchViewModel searchViewModel;
     @FXML
     private TextField searchField;
     @FXML
     private Button searchButton;
+
+    public SearchController(SearchViewModel searchViewModel) {
+        this.searchViewModel = searchViewModel;
+    }
 
 
     @FXML

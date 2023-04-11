@@ -34,13 +34,15 @@ public class CUDViewModel {
     private BooleanProperty isDeleteButtonEnabled = new SimpleBooleanProperty(false);
     private BooleanProperty isUpdateButtonEnabled = new SimpleBooleanProperty(false);
 
-    @Autowired
-    private TourListViewModel tourListViewModel;
-    @Autowired
-    private UpdateTourViewModel updateTourViewModel;
+    private final TourListViewModel tourListViewModel;
+    private final UpdateTourViewModel updateTourViewModel;
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    public CUDViewModel(TourListViewModel tourListViewModel, UpdateTourViewModel updateTourViewModel, ApplicationContext applicationContext) {
+        this.tourListViewModel = tourListViewModel;
+        this.updateTourViewModel = updateTourViewModel;
+        this.applicationContext = applicationContext;
+    }
 
     public void updateDeleteButtonEnabled() {
         isDeleteButtonEnabled.set(tourListViewModel.getSelectedTour() != null && !tourListViewModel.getTourListItems().isEmpty());

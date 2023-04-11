@@ -41,15 +41,11 @@ public class NewTourLogController implements Initializable {
     private ComboBox<String> difficultyComboBox;
     @FXML
     public ComboBox<String> ratingComboBox;
+    private final NewTourLogViewModel newTourLogViewModel;
 
-    private SearchController searchController;
-
-    @Autowired
-    private NewTourLogViewModel newTourLogViewModel;
-
-    @Autowired
-    private DetailTourViewModel detailTourViewModel;
-
+    public NewTourLogController(NewTourLogViewModel newTourLogViewModel) {
+        this.newTourLogViewModel = newTourLogViewModel;
+    }
 
 
     @Override

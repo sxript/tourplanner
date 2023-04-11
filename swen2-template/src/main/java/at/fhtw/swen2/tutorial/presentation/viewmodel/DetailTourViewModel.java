@@ -40,11 +40,15 @@ public class DetailTourViewModel {
     private final BooleanProperty isDeleteButtonEnabled = new SimpleBooleanProperty(false);
     private final BooleanProperty isUpdateButtonEnabled = new SimpleBooleanProperty(false);
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    TourLogListViewModel tourLogListViewModel;
+    private final TourLogListViewModel tourLogListViewModel;
+
+    public DetailTourViewModel(TourLogListViewModel tourLogListViewModel, ApplicationContext applicationContext) {
+        this.tourLogListViewModel = tourLogListViewModel;
+        this.applicationContext = applicationContext;
+    }
+
     public void updateDeleteButtonEnabled() {
         isDeleteButtonEnabled.set(tourLogListViewModel.getSelectedTourLog() != null && !tourLogListViewModel.getTourLogListItems().isEmpty());
     }

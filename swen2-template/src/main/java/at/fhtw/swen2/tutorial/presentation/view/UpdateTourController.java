@@ -48,11 +48,11 @@ public class UpdateTourController implements Initializable {
     @FXML
     public ComboBox<String> transportTypeMenu;
 
-    @Autowired
-    private SearchController searchController;
+    private final UpdateTourViewModel updateTourViewModel;
 
-    @Autowired
-    private UpdateTourViewModel updateTourViewModel;
+    public UpdateTourController(UpdateTourViewModel updateTourViewModel) {
+        this.updateTourViewModel = updateTourViewModel;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

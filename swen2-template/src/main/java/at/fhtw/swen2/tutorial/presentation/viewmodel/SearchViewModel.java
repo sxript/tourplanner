@@ -11,13 +11,12 @@ import org.springframework.stereotype.Component;
 @Getter
 public class SearchViewModel {
 
-    @Autowired
     private final TourLogListViewModel tourLogListViewModel;
 
-    private SimpleStringProperty searchString = new SimpleStringProperty();
+    private final SimpleStringProperty searchString = new SimpleStringProperty();
 
-    public SearchViewModel() {
-        this.tourLogListViewModel = new TourLogListViewModel();
+    public SearchViewModel(TourLogListViewModel tourLogListViewModel) {
+        this.tourLogListViewModel = tourLogListViewModel;
     }
 
     public void search() {

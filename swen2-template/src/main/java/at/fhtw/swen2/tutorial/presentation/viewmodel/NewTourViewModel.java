@@ -32,13 +32,13 @@ public class NewTourViewModel {
     private StringProperty transportTypeProperty = new SimpleStringProperty("");
     private StringProperty feedbackProperty = new SimpleStringProperty("");
 
-    @Autowired
-    private TourListViewModel tourListViewModel;
+    private final TourListViewModel tourListViewModel;
 
     private final TourService tourService;
 
-    public NewTourViewModel() {
-        this.tourService = new TourServiceImpl();
+    public NewTourViewModel(TourListViewModel tourListViewModel, TourService tourService) {
+        this.tourService = tourService;
+        this.tourListViewModel = tourListViewModel;
     }
 
     private boolean areFieldsValid() {

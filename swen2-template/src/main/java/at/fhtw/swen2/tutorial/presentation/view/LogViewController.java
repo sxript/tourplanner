@@ -31,14 +31,13 @@ public class LogViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initializeTable();
-        initilizeClearButton();
+        initializeClearButton();
     }
 
-    void initilizeClearButton() {
+    void initializeClearButton() {
         clearButton.disableProperty().bind(Bindings.isEmpty(logTable.getItems()));
     }
 
-    @SuppressWarnings("unchecked")
     void initializeTable() {
         ObservableList<LogEntry> entries = FXCollections.observableArrayList();
         logTable.setItems(entries); // TODO load real log data

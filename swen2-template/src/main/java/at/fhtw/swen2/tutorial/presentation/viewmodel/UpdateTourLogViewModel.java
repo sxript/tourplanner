@@ -26,13 +26,13 @@ public class UpdateTourLogViewModel {
     private SimpleStringProperty ratingProperty = new SimpleStringProperty("");
     private StringProperty feedbackProperty = new SimpleStringProperty("");
 
-    @Autowired
-    private TourLogListViewModel tourLogListViewModel;
+    private final TourLogListViewModel tourLogListViewModel;
 
     private final TourLogService tourLogService;
 
-    public UpdateTourLogViewModel() {
-        this.tourLogService = new TourLogServiceImpl();
+    public UpdateTourLogViewModel(TourLogListViewModel tourLogListViewModel, TourLogService tourLogService) {
+        this.tourLogService = tourLogService;
+        this.tourLogListViewModel = tourLogListViewModel;
     }
 
     private boolean areFieldsEmpty() {

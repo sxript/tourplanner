@@ -25,15 +25,18 @@ import java.util.ResourceBundle;
 public class TourLogListController implements Initializable{
 
     @FXML
-    private TableView<TourLog> tableView = new TableView<>();
+    private final TableView<TourLog> tableView = new TableView<>();
     @FXML
     private VBox dataContainer;
 
-    @Autowired
-    private TourLogListViewModel tourLogListViewModel;
+    private final TourLogListViewModel tourLogListViewModel;
 
-    @Autowired
-    private DetailTourViewModel detailTourViewModel;
+    private final DetailTourViewModel detailTourViewModel;
+
+    public TourLogListController(TourLogListViewModel tourLogListViewModel, DetailTourViewModel detailTourViewModel) {
+        this.tourLogListViewModel = tourLogListViewModel;
+        this.detailTourViewModel = detailTourViewModel;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle rb){

@@ -28,10 +28,10 @@ public class TourLogListViewModel {
     private final ObservableList<TourLog> tourLogListItems = FXCollections.observableArrayList();
     private final ObjectProperty<TourLog> selectedTourLog = new SimpleObjectProperty<>();
     private List<TourLog> tourLogItems = new LinkedList<>();//master Data
-    @Autowired
-    private TourLogService tourLogService;
+    private final TourLogService tourLogService;
 
-    public TourLogListViewModel() {
+    public TourLogListViewModel(TourLogService tourLogService) {
+        this.tourLogService = tourLogService;
     }
 
     public void addItem(TourLog tourLog) {

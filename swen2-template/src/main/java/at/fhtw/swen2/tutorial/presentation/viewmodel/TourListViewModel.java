@@ -28,17 +28,16 @@ public class TourListViewModel {
     private LinkedList<Tour> masterItems = new LinkedList<>();
     private final ObjectProperty<Tour> selectedTour = new SimpleObjectProperty<>();
 
-    @Autowired
-    private TourLogListViewModel tourLogListViewModel;
+    private final TourLogListViewModel tourLogListViewModel;
 
-    @Autowired
-    private DetailTourViewModel detailTourViewModel;
+    private final DetailTourViewModel detailTourViewModel;
 
-    @Autowired
-    private TourService tourService;
+    private final TourService tourService;
 
-    public TourListViewModel() {
-        this.tourService = new TourServiceImpl();
+    public TourListViewModel(TourLogListViewModel tourLogListViewModel, DetailTourViewModel detailTourViewModel, TourService tourService) {
+        this.tourLogListViewModel = tourLogListViewModel;
+        this.detailTourViewModel = detailTourViewModel;
+        this.tourService = tourService;
     }
 
     public void addItem(Tour tour) {

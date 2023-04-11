@@ -20,17 +20,19 @@ public class FullSearchController {
 
     public static final int PAGE_ITEMS_COUNT = 10;
 
-    @Autowired
-    private FullSearchViewModel searchViewModel;
+    private final FullSearchViewModel searchViewModel;
     @FXML
     private TextField searchField;
     @FXML
     private Button searchButton;
 
+    public FullSearchController(FullSearchViewModel searchViewModel) {
+        this.searchViewModel = searchViewModel;
+    }
+
 
     @FXML
     private void initialize() {
-
         searchField.textProperty().bindBidirectional(searchViewModel.getSearchString());
 
         // search panel

@@ -31,10 +31,10 @@ public class CUDViewModel {
     private BooleanProperty isUpdateButtonEnabled = new SimpleBooleanProperty(false);
 
     private final TourListViewModel tourListViewModel;
-    private final UpdateBaseTourViewModel updateTourViewModel;
+    private final UpdateTourViewModel updateTourViewModel;
     private final ApplicationContext applicationContext;
 
-    public CUDViewModel(TourListViewModel tourListViewModel, UpdateBaseTourViewModel updateTourViewModel, ApplicationContext applicationContext) {
+    public CUDViewModel(TourListViewModel tourListViewModel, UpdateTourViewModel updateTourViewModel, ApplicationContext applicationContext) {
         this.tourListViewModel = tourListViewModel;
         this.updateTourViewModel = updateTourViewModel;
         this.applicationContext = applicationContext;

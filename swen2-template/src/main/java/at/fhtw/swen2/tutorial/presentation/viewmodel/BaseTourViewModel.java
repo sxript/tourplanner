@@ -1,4 +1,4 @@
-package at.fhtw.swen2.tutorial.presentation.view;
+package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
@@ -17,16 +17,16 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 @Slf4j
 public abstract class BaseTourViewModel {
-    protected StringProperty nameProperty = new SimpleStringProperty("");
-    protected StringProperty fromProperty = new SimpleStringProperty("");
-    protected StringProperty toProperty = new SimpleStringProperty("");
-    protected StringProperty descriptionProperty = new SimpleStringProperty("");
-    protected StringProperty transportTypeProperty = new SimpleStringProperty("");
-    protected StringProperty feedbackProperty = new SimpleStringProperty("");
+    private StringProperty nameProperty = new SimpleStringProperty("");
+    private StringProperty fromProperty = new SimpleStringProperty("");
+    private StringProperty toProperty = new SimpleStringProperty("");
+    private StringProperty descriptionProperty = new SimpleStringProperty("");
+    private StringProperty transportTypeProperty = new SimpleStringProperty("");
+    private StringProperty feedbackProperty = new SimpleStringProperty("");
 
-    protected final TourListViewModel tourListViewModel;
+    private final TourListViewModel tourListViewModel;
 
-    protected final TourService tourService;
+    private final TourService tourService;
 
     protected BaseTourViewModel(TourListViewModel tourListViewModel, TourService tourService) {
         this.tourService = tourService;

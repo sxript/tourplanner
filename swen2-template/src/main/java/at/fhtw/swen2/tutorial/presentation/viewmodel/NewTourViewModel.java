@@ -3,7 +3,6 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.ErrorResponse;
 import at.fhtw.swen2.tutorial.model.Tour;
-import at.fhtw.swen2.tutorial.presentation.view.BaseTourViewModel;
 import at.fhtw.swen2.tutorial.service.TourService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,8 +20,8 @@ import java.util.Objects;
 @Getter
 @Scope("prototype")
 @Slf4j
-public class NewBaseTourViewModel extends BaseTourViewModel {
-    public NewBaseTourViewModel(TourListViewModel tourListViewModel, TourService tourService) {
+public class NewTourViewModel extends BaseTourViewModel {
+    public NewTourViewModel(TourListViewModel tourListViewModel, TourService tourService) {
         super(tourListViewModel, tourService);
     }
 

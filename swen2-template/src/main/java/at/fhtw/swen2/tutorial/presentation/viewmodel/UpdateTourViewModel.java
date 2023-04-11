@@ -2,7 +2,6 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 
 import at.fhtw.swen2.tutorial.model.Tour;
-import at.fhtw.swen2.tutorial.presentation.view.BaseTourViewModel;
 import at.fhtw.swen2.tutorial.service.TourService;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,8 +16,8 @@ import java.util.Optional;
 @Getter
 @Scope("prototype")
 @Slf4j
-public class UpdateBaseTourViewModel extends BaseTourViewModel {
-    public UpdateBaseTourViewModel(TourListViewModel tourListViewModel, TourService tourService) {
+public class UpdateTourViewModel extends BaseTourViewModel {
+    public UpdateTourViewModel(TourListViewModel tourListViewModel, TourService tourService) {
         super(tourListViewModel, tourService);
     }
 

@@ -3,6 +3,7 @@ package at.fhtw.swen2.tutorial.dal.dao.tourLog;
 import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.model.TourLog;
+import at.fhtw.swen2.tutorial.util.RetryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -11,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -32,6 +34,7 @@ public class TourLogDaoImpl implements TourLogDao {
         return null;
     }
 
+    // TODO: add global controller advice for Retry Error (maybe custom exception)?
     @Override
     public Mono<TourLog> findById(Long id) {
         return webClient.get()
@@ -41,6 +44,7 @@ public class TourLogDaoImpl implements TourLogDao {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
                 .bodyToMono(TourLog.class)
                 .doOnSuccess(tourLog -> log.info("Found tourLog with id {}", id))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(error -> {
                     log.error("Failed to retrieve tourLog with id {}", id, error);
                     return Mono.empty();
@@ -57,6 +61,7 @@ public class TourLogDaoImpl implements TourLogDao {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
                 .bodyToMono(TourLog.class)
                 .doOnSuccess(tourLog -> log.info("Updated tourLog with id {}", entity.getId()))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(error -> {
                     log.error("Failed to update tourLog with id {}: {}", entity.getId(), error.getMessage());
                     throw new BadStatusException("Failed to update tourLog with id " + entity.getId());
@@ -78,6 +83,7 @@ public class TourLogDaoImpl implements TourLogDao {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
                 .bodyToMono(Void.class)
                 .doOnSuccess(unused -> log.info("Deleted tourLog with id {}", entity.getId()))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(error -> {
                     log.error("Failed to delete tourLog with id {}: {}", entity.getId(), error.getMessage());
                     throw new BadStatusException("Failed to delete tourLog with id " + entity.getId());
@@ -93,6 +99,7 @@ public class TourLogDaoImpl implements TourLogDao {
                 })
                 .doOnSuccess(tourLogs -> log.info("Found {} tourLogs for tour with id {}", tourLogs.size(), tourId))
                 .switchIfEmpty(Mono.error(new BadStatusException("Failed to retrieve tourLogs for tour with id " + tourId)))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(e -> {
                     log.error("Error retrieving tourLogs for tour with id {}: {}", tourId, e.getMessage());
                     return Mono.empty();
@@ -109,6 +116,7 @@ public class TourLogDaoImpl implements TourLogDao {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
                 .bodyToMono(TourLog.class)
                 .doOnSuccess(savedTourLog -> log.info("Saved tourLog with id {}", savedTourLog.getId()))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(error -> {
                     log.error("Failed to save tourLog for tour with id {}: {}", tourId, error.getMessage());
                     throw new BadStatusException("Failed to save tourLog for tour with id " + tourId);
@@ -124,6 +132,7 @@ public class TourLogDaoImpl implements TourLogDao {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
                 .bodyToMono(Void.class)
                 .doOnSuccess(unused -> log.info("Deleted all tourLogs for tour with id {}", tourId))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(error -> {
                     log.error("Failed to delete all tourLogs for tour with id {}: {}", tourId, error.getMessage());
                     throw new BadStatusException("Failed to delete all tourLogs for tour with id " + tourId);

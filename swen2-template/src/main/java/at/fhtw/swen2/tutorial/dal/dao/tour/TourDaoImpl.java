@@ -2,6 +2,7 @@ package at.fhtw.swen2.tutorial.dal.dao.tour;
 
 import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.Tour;
+import at.fhtw.swen2.tutorial.util.RetryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,7 +37,6 @@ public class TourDaoImpl implements TourDao {
 
     @Override
     public Flux<Tour> findAll() {
-        // TODO: use this retry everywhere
         return webClient.get()
                 .uri(API_TOURS_ENDPOINT)
                 .retrieve()
@@ -44,10 +44,7 @@ public class TourDaoImpl implements TourDao {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server Error")))
                 .bodyToFlux(Tour.class)
                 .doOnNext(tour -> log.info("Found tour: {}", tour))
-                .retryWhen(Retry.backoff(3, Duration.ofSeconds(1))
-                        .maxBackoff(Duration.ofSeconds(10))
-                        .jitter(0.5)
-                        .doBeforeRetry(retrySignal -> log.warn("Retrying due to {}", retrySignal.failure().getMessage())))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(error -> {
                     log.error("Failed to retrieve tours", error);
                     return Flux.empty();
@@ -63,6 +60,7 @@ public class TourDaoImpl implements TourDao {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server Error")))
                 .bodyToMono(Tour.class)
                 .doOnSuccess(tour -> log.info("Found tour with id {}", id))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(error -> {
                     log.error("Failed to retrieve tour with id {}", id, error);
                     return Mono.empty();
@@ -80,6 +78,7 @@ public class TourDaoImpl implements TourDao {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server Error")))
                 .bodyToMono(Tour.class)
                 .doOnSuccess(updatedTour -> log.info("Updated tour with id {}", tour.getId()))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(error -> {
                     log.error("Failed to update tour with id {}", tour.getId(), error);
                     return Mono.empty();
@@ -98,6 +97,7 @@ public class TourDaoImpl implements TourDao {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server Error")))
                 .bodyToMono(Tour.class)
                 .doOnSuccess(createdTour -> log.info("Created tour with id {}", createdTour.getId()))
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .doOnError(error -> {
                     log.error("Failed to save tour", error);
                     throw new RuntimeException(error);
@@ -116,6 +116,7 @@ public class TourDaoImpl implements TourDao {
                     log.info("Deleted tour with id {}", entity.getId());
                     deleteImage(entity);
                 })
+                .transform(tourFlux -> RetryUtils.wrapWithRetry(tourFlux, 3, Duration.ofSeconds(1)))
                 .onErrorResume(error -> {
                     log.error("Failed to delete tour with id {}", entity.getId(), error);
                     throw new RuntimeException("Failed to delete Tour with id: " + entity.getId());

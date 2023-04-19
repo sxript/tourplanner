@@ -1,5 +1,6 @@
 package at.fhtw.swen2.tutorial.dal.dao.tourLog;
 
+import at.fhtw.swen2.tutorial.configuration.PropertyConfiguration;
 import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.model.TourLog;
@@ -7,7 +8,7 @@ import at.fhtw.swen2.tutorial.util.RetryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,16 +17,23 @@ import java.time.Duration;
 import java.util.List;
 
 @Slf4j
-@Service
+@Component
 public class TourLogDaoImpl implements TourLogDao {
     // TODO: remove this and move all into service
-    private static final String API_BASE_URL = "http://localhost:8080/api/v1";
-    private static final String API_TOURS_ENDPOINT = "/tours";
-    private static final String API_TOURLOGS_ENDPOINT = "/logs";
+    private final String apiBaseUrl;
+
+    private final String apiToursEndpoint;
+
+    private final String apiTourLogsEndpoint;
+
     private final WebClient webClient;
 
-    public TourLogDaoImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(API_BASE_URL).build();
+    public TourLogDaoImpl(PropertyConfiguration propertyConfiguration, WebClient.Builder webClientBuilder) {
+        apiBaseUrl = propertyConfiguration.getApiBaseUrl();
+        apiToursEndpoint = propertyConfiguration.getApiToursEndpoint();
+        apiTourLogsEndpoint = propertyConfiguration.getApiTourLogsEndpoint();
+        System.out.println("apiBaseUrl: " + apiBaseUrl);
+        this.webClient = webClientBuilder.baseUrl(apiBaseUrl).build();
     }
 
 
@@ -38,7 +46,7 @@ public class TourLogDaoImpl implements TourLogDao {
     @Override
     public Mono<TourLog> findById(Long id) {
         return webClient.get()
-                .uri(API_TOURLOGS_ENDPOINT + "/" + id)
+                .uri(apiTourLogsEndpoint + "/" + id)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to retrieve tourLog with id " + id)))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
@@ -54,7 +62,7 @@ public class TourLogDaoImpl implements TourLogDao {
     @Override
     public Mono<TourLog> update(TourLog entity) {
         return webClient.put()
-                .uri(API_TOURLOGS_ENDPOINT + "/" + entity.getId())
+                .uri(apiTourLogsEndpoint + "/" + entity.getId())
                 .body(Mono.just(entity), TourLog.class)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to update tourLog with id " + entity.getId())))
@@ -77,7 +85,7 @@ public class TourLogDaoImpl implements TourLogDao {
     @Override
     public Mono<Void> delete(TourLog entity) {
         return webClient.delete()
-                .uri(API_TOURLOGS_ENDPOINT + "/" + entity.getId())
+                .uri(apiTourLogsEndpoint + "/" + entity.getId())
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to delete tourLog with id " + entity.getId())))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
@@ -93,7 +101,7 @@ public class TourLogDaoImpl implements TourLogDao {
     @Override
     public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId) {
         return webClient.get()
-                .uri(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT)
+                .uri(apiBaseUrl + apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<TourLog>>() {
                 })
@@ -109,7 +117,7 @@ public class TourLogDaoImpl implements TourLogDao {
     @Override
     public Mono<TourLog> saveTourLog(Long tourId, TourLog tourLog) {
         return webClient.post()
-                .uri(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT)
+                .uri(apiBaseUrl + apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
                 .body(Mono.just(tourLog), TourLog.class)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to save tourLog for tour with id " + tourId)))
@@ -126,7 +134,7 @@ public class TourLogDaoImpl implements TourLogDao {
     @Override
     public Mono<Void> deleteAllTourLogsByTourId(Long tourId) {
         return webClient.delete()
-                .uri(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT)
+                .uri(apiBaseUrl + apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to delete all tourLogs for tour with id " + tourId)))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))

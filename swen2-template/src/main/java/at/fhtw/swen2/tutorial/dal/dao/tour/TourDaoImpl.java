@@ -1,5 +1,6 @@
 package at.fhtw.swen2.tutorial.dal.dao.tour;
 
+import at.fhtw.swen2.tutorial.configuration.PropertyConfiguration;
 import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.util.RetryUtils;
@@ -10,14 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.retry.Retry;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -27,18 +22,22 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class TourDaoImpl implements TourDao {
-    private static final String API_BASE_URL = "http://localhost:8080/api/v1";
-    private static final String API_TOURS_ENDPOINT = "/tours";
+    private final String apiBaseUrl;
+
+    private final String apiToursEndpoint;
+
     private final WebClient webClient;
 
-    public TourDaoImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(API_BASE_URL).build();
+    public TourDaoImpl(PropertyConfiguration propertyConfiguration, WebClient.Builder webClientBuilder) {
+        apiBaseUrl = propertyConfiguration.getApiBaseUrl();
+        apiToursEndpoint = propertyConfiguration.getApiToursEndpoint();
+        this.webClient = webClientBuilder.baseUrl(apiBaseUrl).build();
     }
 
     @Override
     public Flux<Tour> findAll() {
         return webClient.get()
-                .uri(API_TOURS_ENDPOINT)
+                .uri(apiToursEndpoint)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to retrieve tours")))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server Error")))
@@ -54,7 +53,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public Mono<Tour> findById(Long id) {
         return webClient.get()
-                .uri(API_TOURS_ENDPOINT + "/" + id)
+                .uri(apiToursEndpoint + "/" + id)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to retrieve tour")))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server Error")))
@@ -70,7 +69,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public Mono<Tour> update(Tour tour) {
         return webClient.put()
-                .uri(API_TOURS_ENDPOINT + "/" + tour.getId())
+                .uri(apiToursEndpoint + "/" + tour.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(tour), Tour.class)
                 .retrieve()
@@ -89,7 +88,7 @@ public class TourDaoImpl implements TourDao {
     public Mono<Tour> save(Tour entity) {
         log.info("Saving tour: {}", entity);
         return webClient.post()
-                .uri(API_TOURS_ENDPOINT)
+                .uri(apiToursEndpoint)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(entity), Tour.class)
                 .retrieve()
@@ -107,7 +106,7 @@ public class TourDaoImpl implements TourDao {
     @Override
     public Mono<Void> delete(Tour entity) {
         return webClient.delete()
-                .uri(API_TOURS_ENDPOINT + "/" + entity.getId())
+                .uri(apiToursEndpoint + "/" + entity.getId())
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to delete tour")))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server Error")))

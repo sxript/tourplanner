@@ -1,6 +1,11 @@
 package at.fhtw.swen2.tutorial.util;
 
+import at.fhtw.swen2.tutorial.exception.ServiceException;
+import javafx.scene.control.Alert;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.reactive.function.client.WebClientException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,7 +24,7 @@ public class RetryUtils {
                 .filter(WebClientException.class::isInstance)
                 .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
                     log.error("Failed to retrieve data", retrySignal.failure().getMessage());
-                    return new RuntimeException("Failed to retrieve data: " + retrySignal.failure().getMessage());
+                    return new ServiceException("Failed to retrieve data after max retries:  " + retrySignal.failure().getMessage(), HttpStatus.SERVICE_UNAVAILABLE.value());
                 }));
     }
 
@@ -31,7 +36,7 @@ public class RetryUtils {
                 .filter(WebClientException.class::isInstance)
                 .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
                     log.error("Failed to retrieve data", retrySignal.failure().getMessage());
-                    return new RuntimeException("Failed to retrieve data: " + retrySignal.failure().getMessage());
+                    return new ServiceException("Failed to retrieve data after max retries:  " + retrySignal.failure().getMessage(), HttpStatus.SERVICE_UNAVAILABLE.value());
                 }));
     }
 }

@@ -2,6 +2,7 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.service.TourLogService;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -10,9 +11,12 @@ import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 @Component
 @Slf4j
@@ -46,11 +50,11 @@ public class TourLogListViewModel {
         clearItems();
 
         System.out.println("-------------------------");
-
-        tourLogItems = tourLogService.findAllTourLogsByTourId(tourId);
-        tourLogListItems.addAll(tourLogItems);
-
-        System.out.println(tourLogListItems.size());
+        tourLogService.findAllTourLogsByTourId(tourId)
+                .flatMapMany(Flux::fromIterable)
+                .subscribeOn(Schedulers.boundedElastic())
+                .publishOn(Schedulers.parallel())
+                .subscribe(tourLog -> Platform.runLater(() -> addItem(tourLog)), error -> log.error("Error while loading tour logs", error));
     }
 
     public void clearItems() {
@@ -60,7 +64,12 @@ public class TourLogListViewModel {
     public void initList() {
         // TODO: this is only temporal to display some data for now this should be deleted since no element is selected at start
         if (!tourLogListItems.isEmpty())
-            tourLogService.findAllTourLogsByTourId(tourLogListItems.get(0).getId()).forEach(this::addItem);
+            tourLogService.findAllTourLogsByTourId(tourLogListItems.get(0).getId())
+                    .subscribeOn(Schedulers.boundedElastic())
+                    .publishOn(Schedulers.parallel())
+                    .flatMapIterable(tourLogs -> tourLogs)
+                    .subscribe(tourLog -> Platform.runLater(() -> addItem(tourLog)), error -> log.error("Error while loading tour logs", error));
+
 
         log.info(String.valueOf(tourLogListItems.size()));
     }

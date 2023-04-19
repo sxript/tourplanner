@@ -1,172 +1,132 @@
 package at.fhtw.swen2.tutorial.dal.dao.tourLog;
 
 import at.fhtw.swen2.tutorial.exception.BadStatusException;
+import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.model.TourLog;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
+@Service
 public class TourLogDaoImpl implements TourLogDao {
+    // TODO: remove this and move all into service
     private static final String API_BASE_URL = "http://localhost:8080/api/v1";
     private static final String API_TOURS_ENDPOINT = "/tours";
     private static final String API_TOURLOGS_ENDPOINT = "/logs";
-    private final HttpClient httpClient;
-    private final ObjectMapper objectMapper;
+    private final WebClient webClient;
 
-    public TourLogDaoImpl() {
-        this.httpClient = HttpClient.newHttpClient();
-        this.objectMapper = new ObjectMapper();
+    public TourLogDaoImpl(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl(API_BASE_URL).build();
     }
 
 
     @Override
-    public List<TourLog> findAll() {
+    public Flux<Tour> findAll() {
         return null;
     }
 
     @Override
-    public Optional<TourLog> findById(Long id) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_BASE_URL + API_TOURLOGS_ENDPOINT + "/" + id))
-                .build();
-
-        try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            String responseBody = response.body();
-            if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                TourLog tourLog = objectMapper.readValue(responseBody, TourLog.class);
-                log.info("Found tourLog with id {}", id);
-                return Optional.ofNullable(tourLog);
-            }
-        } catch (IOException | InterruptedException e) {
-            log.error("Failed to retrieve tourLog with id {}", id, e);
-            throw new RuntimeException(e);
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<TourLog> update(TourLog entity) {
-        try {
-            String requestBody = objectMapper.writeValueAsString(entity);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_BASE_URL + API_TOURLOGS_ENDPOINT + "/" + entity.getId()))
-                    .header("Content-Type", "application/json")
-                    .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            String responseBody = response.body();
-            if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                TourLog tourLog = objectMapper.readValue(responseBody, TourLog.class);
-                log.info("Updated tourLog with id {}", entity.getId());
-                return Optional.ofNullable(tourLog);
-            } else {
-                log.error("Failed to update tourLog with id {}: {}", entity.getId(), responseBody);
-                throw new BadStatusException("Failed to update tourLog with id " + entity.getId());
-            }
-        } catch (IOException | InterruptedException e) {
-            log.error("Failed to update tourLog with id {}", entity.getId(), e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public TourLog save(TourLog entity) {
-        return null;
-    }
-
-    @Override
-    public void delete(TourLog entity) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_BASE_URL + API_TOURLOGS_ENDPOINT + "/" + entity.getId()))
-                .DELETE()
-                .build();
-
-        try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                log.info("Deleted tourLog with id {}", entity.getId());
-            }
-        } catch (IOException | InterruptedException e) {
-            log.error("Failed to delete tourLog with id {}", entity.getId(), e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<TourLog> findAllTourLogsByTourId(Long tourId) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT))
-                .build();
-
-        try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            String responseBody = response.body();
-            if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                List<TourLog> tourLogs = objectMapper.readValue(responseBody, new TypeReference<>() {
+    public Mono<TourLog> findById(Long id) {
+        return webClient.get()
+                .uri(API_TOURLOGS_ENDPOINT + "/" + id)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to retrieve tourLog with id " + id)))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
+                .bodyToMono(TourLog.class)
+                .doOnSuccess(tourLog -> log.info("Found tourLog with id {}", id))
+                .onErrorResume(error -> {
+                    log.error("Failed to retrieve tourLog with id {}", id, error);
+                    return Mono.empty();
                 });
-                log.info("Found {} tourLogs for tour with id {}", tourLogs.size(), tourId);
-                return tourLogs;
-            }
-        } catch (IOException | InterruptedException e) {
-            log.error("Failed to retrieve tourLogs", e);
-            throw new RuntimeException(e);
-        }
-        return Collections.emptyList();
     }
 
     @Override
-    public TourLog saveTourLog(Long tourId, TourLog tourLog) {
-        try {
-            String requestBody = objectMapper.writeValueAsString(tourLog);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
+    public Mono<TourLog> update(TourLog entity) {
+        return webClient.put()
+                .uri(API_TOURLOGS_ENDPOINT + "/" + entity.getId())
+                .body(Mono.just(entity), TourLog.class)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to update tourLog with id " + entity.getId())))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
+                .bodyToMono(TourLog.class)
+                .doOnSuccess(tourLog -> log.info("Updated tourLog with id {}", entity.getId()))
+                .onErrorResume(error -> {
+                    log.error("Failed to update tourLog with id {}: {}", entity.getId(), error.getMessage());
+                    throw new BadStatusException("Failed to update tourLog with id " + entity.getId());
+                });
 
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            String responseBody = response.body();
-            if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                TourLog savedTourLog = objectMapper.readValue(responseBody, TourLog.class);
-                log.info("Saved tourLog with id {}", savedTourLog.getId());
-                return savedTourLog;
-            } else {
-                log.error("Failed to save tourLog: {}", responseBody);
-                throw new BadStatusException("Failed to save tourLog");
-            }
-        } catch (IOException | InterruptedException e) {
-            log.error("Failed to save tourLog", e);
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
-    public void deleteAllTourLogsByTourId(Long tourId) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT))
-                .DELETE()
-                .build();
+    public Mono<Tour> save(TourLog entity) {
+        return null;
+    }
 
-        try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                log.info("Deleted all tourLogs for tour with id {}", tourId);
-            }
-        } catch (IOException | InterruptedException e) {
-            log.error("Failed to delete all tourLogs for tour with id {}", tourId, e);
-            throw new RuntimeException(e);
-        }
+    @Override
+    public Mono<Void> delete(TourLog entity) {
+        return webClient.delete()
+                .uri(API_TOURLOGS_ENDPOINT + "/" + entity.getId())
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to delete tourLog with id " + entity.getId())))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
+                .bodyToMono(Void.class)
+                .doOnSuccess(unused -> log.info("Deleted tourLog with id {}", entity.getId()))
+                .onErrorResume(error -> {
+                    log.error("Failed to delete tourLog with id {}: {}", entity.getId(), error.getMessage());
+                    throw new BadStatusException("Failed to delete tourLog with id " + entity.getId());
+                });
+    }
+
+    @Override
+    public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId) {
+        return webClient.get()
+                .uri(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<TourLog>>() {
+                })
+                .doOnSuccess(tourLogs -> log.info("Found {} tourLogs for tour with id {}", tourLogs.size(), tourId))
+                .switchIfEmpty(Mono.error(new BadStatusException("Failed to retrieve tourLogs for tour with id " + tourId)))
+                .onErrorResume(e -> {
+                    log.error("Error retrieving tourLogs for tour with id {}: {}", tourId, e.getMessage());
+                    return Mono.empty();
+                });
+    }
+
+    @Override
+    public Mono<TourLog> saveTourLog(Long tourId, TourLog tourLog) {
+        return webClient.post()
+                .uri(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT)
+                .body(Mono.just(tourLog), TourLog.class)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to save tourLog for tour with id " + tourId)))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
+                .bodyToMono(TourLog.class)
+                .doOnSuccess(savedTourLog -> log.info("Saved tourLog with id {}", savedTourLog.getId()))
+                .onErrorResume(error -> {
+                    log.error("Failed to save tourLog for tour with id {}: {}", tourId, error.getMessage());
+                    throw new BadStatusException("Failed to save tourLog for tour with id " + tourId);
+                });
+    }
+
+    @Override
+    public Mono<Void> deleteAllTourLogsByTourId(Long tourId) {
+        return webClient.delete()
+                .uri(API_BASE_URL + API_TOURS_ENDPOINT + "/" + tourId + API_TOURLOGS_ENDPOINT)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to delete all tourLogs for tour with id " + tourId)))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))
+                .bodyToMono(Void.class)
+                .doOnSuccess(unused -> log.info("Deleted all tourLogs for tour with id {}", tourId))
+                .onErrorResume(error -> {
+                    log.error("Failed to delete all tourLogs for tour with id {}: {}", tourId, error.getMessage());
+                    throw new BadStatusException("Failed to delete all tourLogs for tour with id " + tourId);
+                });
     }
 }

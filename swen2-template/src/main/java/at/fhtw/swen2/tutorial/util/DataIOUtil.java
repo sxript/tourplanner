@@ -6,23 +6,34 @@ import at.fhtw.swen2.tutorial.service.impl.TourLogServiceImpl;
 import at.fhtw.swen2.tutorial.service.impl.TourServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+@Component
 public class DataIOUtil {
     public static final String FILE_EXTENSION = ".json";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final TourService tourService = new TourServiceImpl();
-    private final TourLogService tourLogService = new TourLogServiceImpl();
+    private final TourService tourService;
+    private final TourLogService tourLogService;
+
+    public DataIOUtil(TourServiceImpl tourService, TourLogServiceImpl tourLogService) {
+        this.tourService = tourService;
+        this.tourLogService = tourLogService;
+    }
 
     public String exportData() {
-        List<DataExportDTO> data = tourService.findAllTours().stream()
-                .map(tour -> DataExportDTO.builder()
-                        .tour(tour)
-                        .tourLogs(tourLogService.findAllTourLogsByTourId(tour.getId()))
-                        .build())
-                .toList();
+        Mono<List<DataExportDTO>> dataMono = tourService.findAllTours()
+                .flatMap(tour -> tourLogService.findAllTourLogsByTourId(tour.getId())
+                        .map(tourLogs -> DataExportDTO.builder()
+                                .tour(tour)
+                                .tourLogs(tourLogs)
+                                .build()))
+                .collectList();
+
+        List<DataExportDTO> data = dataMono.block();
 
         String jsonData = null;
         try {

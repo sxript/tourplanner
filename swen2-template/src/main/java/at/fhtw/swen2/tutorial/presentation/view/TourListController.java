@@ -5,6 +5,7 @@ import at.fhtw.swen2.tutorial.presentation.viewmodel.CUDViewModel;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -46,6 +47,18 @@ public class TourListController implements Initializable {
 
         listView.setItems(tourListViewModel.getTourListItems());
 
+        listView.getItems().addListener((ListChangeListener<Tour>) change -> {
+            if (listView.getItems().isEmpty()) {
+                listView.setPlaceholder(new Label("No tours available. Please create a new tour."));
+            } else {
+                while (change.next()) {
+                    if (change.wasAdded()) {
+                        int lastIndex = change.getAddedSubList().size() - 1;
+                        listView.getSelectionModel().select(change.getFrom() + lastIndex);
+                    }
+                }
+            }
+        });
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             log.info("Selected item changed from {} to {}", oldSelection, newSelection);
             if (newSelection != null) {

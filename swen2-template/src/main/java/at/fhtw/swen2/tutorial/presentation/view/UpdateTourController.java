@@ -2,6 +2,7 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 
 import at.fhtw.swen2.tutorial.presentation.viewmodel.UpdateTourViewModel;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import reactor.core.scheduler.Schedulers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -69,10 +71,13 @@ public class UpdateTourController implements Initializable {
         updateTourViewModel.setTourProperties();
     }
     public void onSubmitUpdate(ActionEvent actionEvent) {
-        boolean success = updateTourViewModel.updateTour();
-        if (success) {
-            nameTextField.getScene().getWindow().hide();
-        }
+        updateTourViewModel.updateTour()
+                .subscribeOn(Schedulers.boundedElastic())
+                .subscribe(success -> Platform.runLater(() -> {
+                    if (success) {
+                        nameTextField.getScene().getWindow().hide();
+                    }
+                }));
     }
 
 }

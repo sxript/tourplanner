@@ -1,6 +1,7 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.presentation.viewmodel.NewTourLogViewModel;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import reactor.core.scheduler.Schedulers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -59,9 +61,14 @@ public class NewTourLogController implements Initializable {
     }
 
     public void addTourLogsButton(ActionEvent event) {
-        boolean successful = newTourLogViewModel.addNewTourLog();
-        if (successful) {
-            commentTextField.getScene().getWindow().hide();
-        }
+        newTourLogViewModel.addNewTourLog()
+                .subscribeOn(Schedulers.boundedElastic())
+                .subscribe(successful -> {
+                    Platform.runLater(() -> {
+                        if (Boolean.TRUE.equals(successful)) {
+                            commentTextField.getScene().getWindow().hide();
+                        }
+                    });
+                });
     }
 }

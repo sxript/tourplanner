@@ -2,6 +2,7 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +10,7 @@ import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -59,11 +61,10 @@ public class TourListViewModel {
     }
 
     public void initList() {
-        try {
-            tourService.findAllTours().forEach(this::addItem);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        tourService.findAllTours()
+                .subscribeOn(Schedulers.boundedElastic())
+                .publishOn(Schedulers.parallel())
+                .subscribe(tour -> Platform.runLater(() -> addItem(tour)));
     }
 
     public void updateTour(Tour tour) {

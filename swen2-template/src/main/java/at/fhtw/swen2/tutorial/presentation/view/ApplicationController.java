@@ -13,6 +13,7 @@ import at.fhtw.swen2.tutorial.util.DataExportDTO;
 import at.fhtw.swen2.tutorial.util.DataIOUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,7 +43,7 @@ import java.util.ResourceBundle;
 @Slf4j
 public class ApplicationController implements Initializable, StageAware {
 
-    private final ReportManager reportManager = new ReportManager();
+    private final ReportManager reportManager;
     ApplicationEventPublisher publisher;
 
     @FXML
@@ -75,13 +76,16 @@ public class ApplicationController implements Initializable, StageAware {
     private final TourService tourService;
     private final TourLogService tourLogService;
 
+    private final DataIOUtil dataIOUtil;
 
-    public ApplicationController(ApplicationEventPublisher publisher, TourService tourService, TourLogService tourLogService, TourListViewModel tourListViewModel) {
+    public ApplicationController(ReportManager reportManager, ApplicationEventPublisher publisher, TourService tourService, TourLogService tourLogService, TourListViewModel tourListViewModel, DataIOUtil dataIOUtil) {
         log.debug("Initializing application controller");
         this.publisher = publisher;
         this.tourService = tourService;
         this.tourLogService = tourLogService;
         this.tourListViewModel = tourListViewModel;
+        this.reportManager = reportManager;
+        this.dataIOUtil = dataIOUtil;
     }
 
     @Override
@@ -124,12 +128,15 @@ public class ApplicationController implements Initializable, StageAware {
                 });
                 // Loop through each exported data item and create a Callable for it
                 for (DataExportDTO dataItem : data) {
-                    Tour importedTour = tourService.saveTour(dataItem.getTour());
-                    tourListViewModel.addItem(importedTour);
-                    // Loop through each tour log in the exported data item and import it
-                    for (TourLog tourLog : dataItem.getTourLogs()) {
-                        tourLogService.saveTourLog(importedTour.getId(), tourLog);
-                    }
+                    tourService.saveTour(dataItem.getTour())
+                            .subscribe(importedTour -> {
+                                Platform.runLater(() -> tourListViewModel.addItem(importedTour));
+
+                                // Loop through each tour log in the exported data item and import it
+                                for (TourLog tourLog : dataItem.getTourLogs()) {
+                                    tourLogService.saveTourLog(importedTour.getId(), tourLog).block();
+                                }
+                            }, error -> AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error importing tour", error.getMessage()));
                 }
             } catch (IOException e) {
                 AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error reading file", e.getMessage());
@@ -139,7 +146,6 @@ public class ApplicationController implements Initializable, StageAware {
 
     // TODO: is this the right place for this?
     public void onFileExport() {
-        DataIOUtil dataIOUtil = new DataIOUtil();
         String jsonData = dataIOUtil.exportData();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save File");
@@ -178,7 +184,7 @@ public class ApplicationController implements Initializable, StageAware {
             return;
         }
 
-        reportManager.generateTourReport(file, selectedTour, tourLogService.findAllTourLogsByTourId(selectedTour.getId()));
+        reportManager.generateTourReport(file, selectedTour, tourLogService.findAllTourLogsByTourId(selectedTour.getId()).block());
         AlertUtils.showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
     }
 

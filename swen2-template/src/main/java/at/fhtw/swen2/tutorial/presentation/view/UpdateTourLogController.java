@@ -1,6 +1,7 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.presentation.viewmodel.UpdateTourLogViewModel;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import reactor.core.scheduler.Schedulers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -52,13 +54,17 @@ public class UpdateTourLogController implements Initializable {
         ratingComboBox.valueProperty().bindBidirectional(updateTourLogViewModel.getRatingProperty());
     }
 
-   public void setProperties() {
+    public void setProperties() {
         updateTourLogViewModel.setTourLogProperties();
-   }
+    }
+
     public void onUpdateTourLog(ActionEvent actionEvent) {
-        boolean success = updateTourLogViewModel.updateTourLog();
-        if (success) {
-            ratingComboBox.getScene().getWindow().hide();
-        }
+        updateTourLogViewModel.updateTourLog()
+                .subscribeOn(Schedulers.boundedElastic())
+                .subscribe(success -> Platform.runLater(() -> {
+                    if (success) {
+                        ratingComboBox.getScene().getWindow().hide();
+                    }
+                }));
     }
 }

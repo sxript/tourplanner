@@ -3,11 +3,14 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
+import javafx.application.Platform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.Optional;
 
@@ -30,22 +33,28 @@ public class UpdateTourViewModel extends BaseTourViewModel {
         getTransportTypeProperty().set(tour.getTransportType());
     }
 
-    public boolean updateTour() {
-        if (areFieldsValid()) {
-            try {
-                Tour tour = buildTour();
-                tour.setId(getTourListViewModel().getSelectedTour().getValue().getId());
-                Optional<Tour> optionalTour = getTourService().updateTour(tour);
-                if (optionalTour.isPresent()) {
-                    Tour updatedTour = optionalTour.get();
-                    getTourListViewModel().updateTour(updatedTour);
-                    getFeedbackProperty().set("Tour updated");
-                    return true;
-                }
-            } catch (Exception e) {
-                getFeedbackProperty().set("Error updating tour");
-            }
+    public Mono<Boolean> updateTour() {
+        if (!areFieldsValid()) {
+            return Mono.just(false);
         }
-        return false;
+        Tour tour = buildTour();
+        tour.setId(getTourListViewModel().getSelectedTour().getValue().getId());
+
+        return getTourService().updateTour(tour)
+                .subscribeOn(Schedulers.boundedElastic())
+                .map(updatedTour -> {
+                    Platform.runLater(() -> {
+                        getFeedbackProperty().set("Tour updated");
+                        getTourListViewModel().updateTour(updatedTour);
+                    });
+                    return true;
+                })
+                .onErrorResume(error -> {
+                    Platform.runLater(() -> {
+                        getFeedbackProperty().set("Error updating Tour");
+                        log.error("Error updating Tour", error);
+                    });
+                    return Mono.just(false);
+                });
     }
 }

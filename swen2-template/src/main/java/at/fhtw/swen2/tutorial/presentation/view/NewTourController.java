@@ -1,6 +1,7 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.presentation.viewmodel.NewTourViewModel;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import reactor.core.scheduler.Schedulers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -57,10 +59,13 @@ public class NewTourController implements Initializable {
     }
 
     public void onSubmitCreateTour(ActionEvent actionEvent) {
-        boolean successful = newTourViewModel.addNewTour();
-        if (successful) {
-            nameTextField.getScene().getWindow().hide();
-        }
+        newTourViewModel.addNewTour()
+                .subscribeOn(Schedulers.boundedElastic())
+                .subscribe(successful -> Platform.runLater(() -> {
+                    if (successful) {
+                        nameTextField.getScene().getWindow().hide();
+                    }
+                }));
     }
 }
 

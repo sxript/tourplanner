@@ -41,7 +41,6 @@
             </VBox>
             <Button HBox.hgrow="ALWAYS" fx:id="submitButton" onAction="#onSubmitCreateTour" text="insert"/>
         </HBox>
-
         <Separator prefWidth="200.0"/>
         <Text fx:id="feedbackText"/>
     </children>

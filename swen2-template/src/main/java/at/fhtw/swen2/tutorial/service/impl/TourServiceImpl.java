@@ -6,43 +6,43 @@ import at.fhtw.swen2.tutorial.dal.dao.tour.TourDaoImpl;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class TourServiceImpl implements TourService {
     private final TourDao tourDao;
 
-    public TourServiceImpl() {
-        this.tourDao = new TourDaoImpl();
+    public TourServiceImpl(TourDaoImpl tourDao) {
+        this.tourDao = tourDao;
     }
 
 
     @Override
-    public List<Tour> findAllTours() {
+    public Flux<Tour> findAllTours() {
         return tourDao.findAll();
     }
 
     @Override
-    public Optional<Tour> findTourById(Long id) {
+    public Mono<Tour> findTourById(Long id) {
         return tourDao.findById(id);
     }
 
     @Override
-    public Optional<Tour> updateTour(Tour tour) {
+    public Mono<Tour> updateTour(Tour tour) {
         return tourDao.update(tour);
     }
 
     @Override
-    public Tour saveTour(Tour tour) {
+    public Mono<Tour> saveTour(Tour tour) {
         return tourDao.save(tour);
     }
 
     @Override
     public void deleteTour(Tour tour) {
-        tourDao.delete(tour);
+        tourDao.delete(tour).block();
     }
 }

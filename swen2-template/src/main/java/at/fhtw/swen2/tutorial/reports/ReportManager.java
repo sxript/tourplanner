@@ -9,6 +9,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.scene.text.TextAlignment;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,8 +19,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
+@Component
 public class ReportManager {
+    private final TourLogService tourLogService;
+
+    public ReportManager(TourLogServiceImpl tourLogService) {
+        this.tourLogService = tourLogService;
+    }
+
 
     // a tour-report which contains all information of a single tour and all its associated tour logs
     public void generateTourReport(File file, Tour tour, List<TourLog> tourLogs) {
@@ -131,7 +142,6 @@ public class ReportManager {
 
     // a summarize-report for statistical analysis, which for each tour provides the average time, -distance and rating over all associated tour-logs
     public void generateSummarizeReport(File file, List<Tour> tours) {
-        TourLogService tourLogService = new TourLogServiceImpl();
         try {
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(file));
@@ -196,23 +206,25 @@ public class ReportManager {
                 table.addCell(tour.getId().toString());
                 table.addCell(tour.getName());
 
-                double totalTime = 0;
-                double totalRating = 0;
-                int count = 0;
+                AtomicReference<Double> totalTime = new AtomicReference<>((double) 0);
+                AtomicReference<Double> totalRating = new AtomicReference<>((double) 0);
+                AtomicInteger count = new AtomicInteger();
 
-                List<TourLog> tourLogs = tourLogService.findAllTourLogsByTourId(tour.getId());
-                for (TourLog tourLog : tourLogs) {
-                    totalTime += tourLog.getTotalTime();
-                    totalRating += tourLog.getRating();
-                    count++;
-                }
+                tourLogService.findAllTourLogsByTourId(tour.getId())
+                        .flatMapMany(Flux::fromIterable)
+                        .subscribe(tourLog -> {
+                            totalTime.updateAndGet(v -> (v + tourLog.getTotalTime()));
+                            totalRating.updateAndGet(v -> (v + tourLog.getRating()));
+                            count.getAndIncrement();
 
-                if (count == 0) {
+                        });
+
+                if (count.get() == 0) {
                     table.addCell("No Tour Logs available");
                     table.addCell("No Tour Logs available");
                 } else {
-                    table.addCell(String.valueOf(totalTime / count));
-                    table.addCell(String.valueOf(totalRating / count));
+                    table.addCell(String.valueOf(totalTime.get() / count.get()));
+                    table.addCell(String.valueOf(totalRating.get() / count.get()));
                 }
             }
 

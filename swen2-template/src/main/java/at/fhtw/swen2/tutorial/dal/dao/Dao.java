@@ -1,12 +1,13 @@
 package at.fhtw.swen2.tutorial.dal.dao;
 
-import java.util.List;
-import java.util.Optional;
+import at.fhtw.swen2.tutorial.model.Tour;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface Dao<T> {
-    List<T> findAll();
-    Optional<T> findById(Long id);
-    Optional<T> update(T entity);
-    T save(T entity);
-    void delete(T entity);
+    Flux<Tour> findAll();
+    Mono<T> findById(Long id);
+    Mono<T> update(T entity);
+    Mono<Tour> save(T entity);
+    Mono<Void> delete(T entity);
 }

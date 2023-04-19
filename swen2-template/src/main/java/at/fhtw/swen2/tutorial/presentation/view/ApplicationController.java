@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -112,6 +113,7 @@ public class ApplicationController implements Initializable, StageAware {
 
     // TODO: is this the right place for this?
     public void onFileImport() {
+        // TODO: loading indicator
         ObjectMapper objectMapper = new ObjectMapper();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save File");
@@ -129,12 +131,16 @@ public class ApplicationController implements Initializable, StageAware {
                 // Loop through each exported data item and create a Callable for it
                 for (DataExportDTO dataItem : data) {
                     tourService.saveTour(dataItem.getTour())
+                            .subscribeOn(Schedulers.boundedElastic())
                             .subscribe(importedTour -> {
                                 Platform.runLater(() -> tourListViewModel.addItem(importedTour));
 
                                 // Loop through each tour log in the exported data item and import it
+                                log.info("Importing {} tour logs for tour {}", dataItem.getTourLogs().size(), importedTour.getName());
                                 for (TourLog tourLog : dataItem.getTourLogs()) {
-                                    tourLogService.saveTourLog(importedTour.getId(), tourLog).block();
+                                    tourLogService.saveTourLog(importedTour.getId(), tourLog)
+                                            .subscribeOn(Schedulers.boundedElastic())
+                                            .subscribe(savedTourLog -> log.info("Imported tour log {}", savedTourLog.getId()));
                                 }
                             }, error -> AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error importing tour", error.getMessage()));
                 }

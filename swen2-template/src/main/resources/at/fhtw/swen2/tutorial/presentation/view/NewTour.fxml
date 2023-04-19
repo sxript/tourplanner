@@ -10,37 +10,43 @@
       fx:controller="at.fhtw.swen2.tutorial.presentation.view.NewTourController">
 
     <children>
-        <Label text="Creating new Tours">
-            <font>
-                <Font size="14.0"/>
-            </font>
-        </Label>
-        <Separator prefWidth="200.0"/>
-        <VBox>
-            <Label text="Name"/>
-            <TextField fx:id="nameTextField"/>
-        </VBox>
-        <HBox alignment="CENTER">
-            <VBox HBox.hgrow="ALWAYS">
-                <Label text="From"/>
-                <TextField fx:id="fromTextField"/>
+        <StackPane>
+            <VBox>
+                <Label text="Creating new Tours">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
+                <Separator prefWidth="200.0"/>
+                <VBox>
+                    <Label text="Name"/>
+                    <TextField fx:id="nameTextField"/>
+                </VBox>
+                <HBox alignment="CENTER">
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label text="From"/>
+                        <TextField fx:id="fromTextField"/>
+                    </VBox>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label text="To"/>
+                        <TextField fx:id="toTextField"/>
+                    </VBox>
+                </HBox>
+                <VBox>
+                    <Label text="Description"/>
+                    <TextField fx:id="descriptionTextField"/>
+                </VBox>
+                <HBox alignment="CENTER">
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label text="Transport Type"/>
+                        <ComboBox fx:id="transportTypeMenu"/>
+                    </VBox>
+                    <Button HBox.hgrow="ALWAYS" fx:id="submitButton" onAction="#onSubmitCreateTour" text="insert"/>
+                </HBox>
             </VBox>
-            <VBox HBox.hgrow="ALWAYS">
-                <Label text="To"/>
-                <TextField fx:id="toTextField"/>
-            </VBox>
-        </HBox>
-        <VBox>
-            <Label text="Description"/>
-            <TextField fx:id="descriptionTextField"/>
-        </VBox>
-        <HBox alignment="CENTER">
-            <VBox HBox.hgrow="ALWAYS">
-                <Label text="Transport Type"/>
-                <ComboBox fx:id="transportTypeMenu"/>
-            </VBox>
-            <Button HBox.hgrow="ALWAYS" fx:id="submitButton" onAction="#onSubmitCreateTour" text="insert"/>
-        </HBox>
+            <ProgressIndicator fx:id="progressIndicator" minHeight="-Infinity"
+                               minWidth="-Infinity" prefHeight="100.0" prefWidth="100.0" visible="false"/>
+        </StackPane>
         <Separator prefWidth="200.0"/>
         <Text fx:id="feedbackText"/>
     </children>

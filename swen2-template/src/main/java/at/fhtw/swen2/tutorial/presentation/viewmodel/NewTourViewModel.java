@@ -25,6 +25,7 @@ import reactor.core.scheduler.Schedulers;
 @Scope("prototype")
 @Slf4j
 public class NewTourViewModel extends BaseTourViewModel {
+    private BooleanProperty isLoadingProperty = new SimpleBooleanProperty(false);
     public NewTourViewModel(TourListViewModel tourListViewModel, TourService tourService) {
         super(tourListViewModel, tourService);
     }
@@ -36,6 +37,7 @@ public class NewTourViewModel extends BaseTourViewModel {
         }
 
         Tour tour = buildTour();
+        isLoadingProperty.set(true);
         return getTourService().saveTour(tour)
                 .subscribeOn(Schedulers.boundedElastic())
                 .map(createdTour -> {
@@ -46,6 +48,7 @@ public class NewTourViewModel extends BaseTourViewModel {
                             log.error("Error while creating new tour with : {}", tour);
                             getFeedbackProperty().set("Error while creating new tour");
                         }
+                        isLoadingProperty.set(false);
                     });
                     return true;
                 }).onErrorResume(error -> {
@@ -67,6 +70,7 @@ public class NewTourViewModel extends BaseTourViewModel {
                         }
 
                         AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error while creating new tour", response != null ? response.getMessage() : error.getMessage());
+                        isLoadingProperty.set(false);
                     });
                     return Mono.just(false);
                 });

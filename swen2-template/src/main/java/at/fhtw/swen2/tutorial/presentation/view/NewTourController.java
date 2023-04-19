@@ -24,6 +24,8 @@ import java.util.ResourceBundle;
 @Setter
 public class NewTourController implements Initializable {
     @FXML
+    public ProgressIndicator progressIndicator;
+    @FXML
     private TextField nameTextField;
     @FXML
     public TextField fromTextField;
@@ -46,6 +48,7 @@ public class NewTourController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle rb) {
+        progressIndicator.visibleProperty().bindBidirectional(newTourViewModel.getIsLoadingProperty());
         nameTextField.textProperty().bindBidirectional(newTourViewModel.getNameProperty());
         fromTextField.textProperty().bindBidirectional(newTourViewModel.getFromProperty());
         toTextField.textProperty().bindBidirectional(newTourViewModel.getToProperty());

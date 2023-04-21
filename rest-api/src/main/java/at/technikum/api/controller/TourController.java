@@ -3,22 +3,15 @@ package at.technikum.api.controller;
 import at.technikum.api.exception.BadRequestException;
 import at.technikum.api.exception.ResourceNotFoundException;
 import at.technikum.api.map.MapQuestLookupService;
-import at.technikum.api.map.MapResult;
 import at.technikum.api.model.Tour;
 import at.technikum.api.service.TourService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClientException;
-import org.springframework.web.servlet.function.ServerResponse;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -30,19 +23,17 @@ import java.util.List;
 @Validated
 @RequestMapping("/api/v1/")
 public class TourController {
-    private static final Logger logger = LoggerFactory.getLogger(TourController.class);
     private final TourService tourService;
     private final MapQuestLookupService mapQuestLookupService;
 
-    @Autowired
     public TourController(TourService tourService, MapQuestLookupService mapQuestLookupService) {
         this.tourService = tourService;
         this.mapQuestLookupService = mapQuestLookupService;
     }
 
     @GetMapping("/tours")
-    public ResponseEntity<List<Tour>> getAllTours() {
-        return ResponseEntity.ok(tourService.getAllTours());
+    public ResponseEntity<List<Tour>> getAllTours(@RequestParam(required = false) String searchQuery) {
+        return ResponseEntity.ok(tourService.getAllTours(searchQuery));
     }
 
     @GetMapping("/tours/{id}")
@@ -51,11 +42,11 @@ public class TourController {
                 .orElseThrow(() -> new ResourceNotFoundException("No Tour with Id: " + id));
     }
 
-    @PostMapping("/tours")
+    @PostMapping(value = "/tours", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<Tour>> createTour(@Valid @RequestBody Tour newTour) {
         return mapQuestLookupService.getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType())
                 .flatMap(mapResult -> {
-                    logger.info("STATUS CODE: {}", mapResult.getInfo().getStatusCode());
+                    log.info("STATUS CODE: {}", mapResult.getInfo().getStatusCode());
                     if (mapResult.getInfo().getStatusCode() != 0) {
                         return Mono.error(new BadRequestException("StatusCode:" + mapResult.getInfo().getStatusCode() + " Messages" + mapResult.getInfo().getMessages()));
                     }
@@ -67,12 +58,12 @@ public class TourController {
                                 newTour.setEstimatedTime(mapResult.getRealTime());
                                 newTour.setDistance(mapResult.getDistance());
                                 tourService.createTour(newTour);
-                                return ResponseEntity.ok().body(newTour);
+                                return ResponseEntity.status(HttpStatus.CREATED).body(newTour);
                             });
                 });
     }
 
-    @PutMapping("/tours/{id}")
+    @PutMapping(value = "/tours/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<Tour>> updateTour(@Valid @RequestBody Tour newTour, @PathVariable Long id) {
         return mapQuestLookupService
                 .getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType())

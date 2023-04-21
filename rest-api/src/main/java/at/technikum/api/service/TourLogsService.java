@@ -1,13 +1,17 @@
 package at.technikum.api.service;
 
 import at.technikum.api.exception.ResourceNotFoundException;
+import at.technikum.api.model.Tour;
 import at.technikum.api.model.TourLog;
 import at.technikum.api.repository.TourLogsRepository;
 import at.technikum.api.repository.TourRepository;
+import at.technikum.api.specifiaction.TourLogSpecifications;
 import at.technikum.api.utils.BeanHelper;
+import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,11 +29,19 @@ public class TourLogsService {
        this.tourRepository = tourRepository;
    }
 
-   public List<TourLog> findAllTourLogsByTourId(Long id) {
+   public List<TourLog> findAllTourLogsByTourId(Long id, String searchQuery) {
        if(!tourRepository.existsById(id)) {
            throw new ResourceNotFoundException("No Tour with id = " + id);
        }
-       return tourLogsRepository.findByTourId(id);
+       if (searchQuery == null) {
+           return tourLogsRepository.findByTourId(id);
+       }
+       Specification<TourLog> spec = Specification.where(TourLogSpecifications.search(searchQuery)).and((root, query, criteriaBuilder) -> {
+           Join<TourLog, Tour> tourJoin = root.join("tour");
+           return criteriaBuilder.equal(tourJoin.get("id"), id);
+       });
+
+       return tourLogsRepository.findAll(spec);
    }
 
    public Optional<TourLog> findTourLogById(Long id) {

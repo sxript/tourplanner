@@ -4,6 +4,8 @@ import at.technikum.api.model.Tour;
 import org.springframework.data.jpa.domain.Specification;
 
 public class TourSpecifications {
+    private TourSpecifications() {
+    }
     public static Specification<Tour> search(String query) {
         return (root, query1, criteriaBuilder) -> {
             if (query == null || query.trim().isEmpty()) {

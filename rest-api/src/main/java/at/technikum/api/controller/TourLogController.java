@@ -23,8 +23,9 @@ public class TourLogController {
     }
 
     @GetMapping("/tours/{tourId}/logs")
-    public ResponseEntity<List<TourLog>> getAllLogsByTourId(@PathVariable(value = "tourId") Long tourId) {
-        return ResponseEntity.ok(tourLogsService.findAllTourLogsByTourId(tourId));
+    public ResponseEntity<List<TourLog>> getAllLogsByTourId(@PathVariable(value = "tourId") Long tourId,
+                                                            @RequestParam(required = false) String searchQuery) {
+        return ResponseEntity.ok(tourLogsService.findAllTourLogsByTourId(tourId, searchQuery));
     }
 
     @GetMapping("/logs/{id}")

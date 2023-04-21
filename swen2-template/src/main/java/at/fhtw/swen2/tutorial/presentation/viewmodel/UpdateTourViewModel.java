@@ -4,6 +4,8 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @Scope("prototype")
 @Slf4j
 public class UpdateTourViewModel extends BaseTourViewModel {
+    private BooleanProperty isLoadingProperty = new SimpleBooleanProperty(false);
     public UpdateTourViewModel(TourListViewModel tourListViewModel, TourService tourService) {
         super(tourListViewModel, tourService);
     }
@@ -40,12 +43,14 @@ public class UpdateTourViewModel extends BaseTourViewModel {
         Tour tour = buildTour();
         tour.setId(getTourListViewModel().getSelectedTour().getValue().getId());
 
+        isLoadingProperty.set(true);
         return getTourService().updateTour(tour)
                 .subscribeOn(Schedulers.boundedElastic())
                 .map(updatedTour -> {
                     Platform.runLater(() -> {
                         getFeedbackProperty().set("Tour updated");
                         getTourListViewModel().updateTour(updatedTour);
+                        isLoadingProperty.set(false);
                     });
                     return true;
                 })
@@ -53,6 +58,7 @@ public class UpdateTourViewModel extends BaseTourViewModel {
                     Platform.runLater(() -> {
                         getFeedbackProperty().set("Error updating Tour");
                         log.error("Error updating Tour", error);
+                        isLoadingProperty.set(false);
                     });
                     return Mono.just(false);
                 });

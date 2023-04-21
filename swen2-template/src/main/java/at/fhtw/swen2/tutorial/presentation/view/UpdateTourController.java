@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import lombok.Setter;
@@ -26,6 +27,8 @@ import java.util.ResourceBundle;
 @Slf4j
 @Setter
 public class UpdateTourController implements Initializable {
+    @FXML
+    public ProgressIndicator progressIndicator;
     @FXML
     private TextField nameTextField;
 
@@ -55,6 +58,7 @@ public class UpdateTourController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        progressIndicator.visibleProperty().bindBidirectional(updateTourViewModel.getIsLoadingProperty());
         nameTextField.textProperty().bindBidirectional(updateTourViewModel.getNameProperty());
         fromTextField.textProperty().bindBidirectional(updateTourViewModel.getFromProperty());
         toTextField.textProperty().bindBidirectional(updateTourViewModel.getToProperty());

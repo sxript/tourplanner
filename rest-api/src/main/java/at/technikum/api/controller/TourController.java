@@ -11,9 +11,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClientException;
+import org.springframework.web.servlet.function.ServerResponse;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.Base64;
 import java.util.List;
@@ -45,39 +52,44 @@ public class TourController {
     }
 
     @PostMapping("/tours")
-    public ResponseEntity<Tour> createTour(@Valid @RequestBody Tour newTour) {
-        MapResult mapResult = mapQuestLookupService
-                .getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType())
-                .join();
-        logger.info("STATUS CODE: {}", mapResult.getInfo().getStatusCode());
-        if (mapResult.getInfo().getStatusCode() != 0) {
-            throw new BadRequestException("StatusCode:" + mapResult.getInfo().getStatusCode() + " Messages" + mapResult.getInfo().getMessages());
-        }
-
-        byte[] image = mapQuestLookupService.getStaticMap(newTour.getTo(), mapResult).join();
-        newTour.setMapImage(Base64.getEncoder().encodeToString(image));
-        newTour.setEstimatedTime(mapResult.getRealTime());
-        newTour.setDistance(mapResult.getDistance());
-
-        tourService.createTour(newTour);
-        return ResponseEntity.ok().body(newTour);
+    public Mono<ResponseEntity<Tour>> createTour(@Valid @RequestBody Tour newTour) {
+        return mapQuestLookupService.getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType())
+                .flatMap(mapResult -> {
+                    logger.info("STATUS CODE: {}", mapResult.getInfo().getStatusCode());
+                    if (mapResult.getInfo().getStatusCode() != 0) {
+                        return Mono.error(new BadRequestException("StatusCode:" + mapResult.getInfo().getStatusCode() + " Messages" + mapResult.getInfo().getMessages()));
+                    }
+                    return mapQuestLookupService.getStaticMap(newTour.getTo(), mapResult)
+                            .publishOn(Schedulers.boundedElastic())
+                            .map(image -> {
+                                log.info("Image size: {}", image.length);
+                                newTour.setMapImage(Base64.getEncoder().encodeToString(image));
+                                newTour.setEstimatedTime(mapResult.getRealTime());
+                                newTour.setDistance(mapResult.getDistance());
+                                tourService.createTour(newTour);
+                                return ResponseEntity.ok().body(newTour);
+                            });
+                });
     }
 
     @PutMapping("/tours/{id}")
-    public ResponseEntity<Tour> updateTour(@Valid @RequestBody Tour newTour, @PathVariable Long id) {
-        MapResult mapResult = mapQuestLookupService
+    public Mono<ResponseEntity<Tour>> updateTour(@Valid @RequestBody Tour newTour, @PathVariable Long id) {
+        return mapQuestLookupService
                 .getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType())
-                .join();
-        logger.info("STATUS CODE: {}", mapResult.getInfo().getStatusCode());
-        if (mapResult.getInfo().getStatusCode() != 0) {
-            throw new BadRequestException("StatusCode:" + mapResult.getInfo().getStatusCode() + " Messages" + mapResult.getInfo().getMessages());
-        }
+                .flatMap(mapResult -> {
+                    if (mapResult.getInfo().getStatusCode() != 0) {
+                        return Mono.error(new BadRequestException("StatusCode:" + mapResult.getInfo().getStatusCode() + " Messages" + mapResult.getInfo().getMessages()));
+                    }
 
-        byte[] image = mapQuestLookupService.getStaticMap(newTour.getTo(), mapResult).join();
-        newTour.setMapImage(Base64.getEncoder().encodeToString(image));
-        newTour.setEstimatedTime(mapResult.getRealTime());
-        newTour.setDistance(mapResult.getDistance());
-        return ResponseEntity.ok(tourService.updateTour(newTour, id));
+                    return mapQuestLookupService.getStaticMap(newTour.getTo(), mapResult)
+                            .publishOn(Schedulers.boundedElastic())
+                            .map(image -> {
+                                newTour.setMapImage(Base64.getEncoder().encodeToString(image));
+                                newTour.setEstimatedTime(mapResult.getRealTime());
+                                newTour.setDistance(mapResult.getDistance());
+                                return ResponseEntity.ok(tourService.updateTour(newTour, id));
+                            });
+                });
     }
 
     @DeleteMapping("/tours/{id}")

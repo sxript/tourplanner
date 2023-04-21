@@ -51,6 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception e, WebRequest request) {
         log.info("inside exception type: " + e.getClass().getName());
+        log.info(e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), request.getDescription(false), null);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

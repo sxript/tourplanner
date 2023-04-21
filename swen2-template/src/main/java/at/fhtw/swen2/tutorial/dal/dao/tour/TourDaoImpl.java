@@ -22,14 +22,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class TourDaoImpl implements TourDao {
-    private final String apiBaseUrl;
 
     private final String apiToursEndpoint;
 
     private final WebClient webClient;
 
     public TourDaoImpl(PropertyConfiguration propertyConfiguration, WebClient.Builder webClientBuilder) {
-        apiBaseUrl = propertyConfiguration.getApiBaseUrl();
+        String apiBaseUrl = propertyConfiguration.getApiBaseUrl();
         apiToursEndpoint = propertyConfiguration.getApiToursEndpoint();
         this.webClient = webClientBuilder.baseUrl(apiBaseUrl).build();
     }

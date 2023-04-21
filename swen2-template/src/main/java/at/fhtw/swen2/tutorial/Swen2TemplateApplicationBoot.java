@@ -9,10 +9,6 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class Swen2TemplateApplicationBoot {
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder) {
-		return builder.build();
-	}
 	public static void main(String[] args) {
 		Application.launch(Swen2TemplateApplication.class, args);
 	}

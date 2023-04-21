@@ -20,8 +20,6 @@ import java.util.List;
 @Component
 public class TourLogDaoImpl implements TourLogDao {
     // TODO: remove this and move all into service
-    private final String apiBaseUrl;
-
     private final String apiToursEndpoint;
 
     private final String apiTourLogsEndpoint;
@@ -29,7 +27,7 @@ public class TourLogDaoImpl implements TourLogDao {
     private final WebClient webClient;
 
     public TourLogDaoImpl(PropertyConfiguration propertyConfiguration, WebClient.Builder webClientBuilder) {
-        apiBaseUrl = propertyConfiguration.getApiBaseUrl();
+        String apiBaseUrl = propertyConfiguration.getApiBaseUrl();
         apiToursEndpoint = propertyConfiguration.getApiToursEndpoint();
         apiTourLogsEndpoint = propertyConfiguration.getApiTourLogsEndpoint();
         System.out.println("apiBaseUrl: " + apiBaseUrl);
@@ -101,7 +99,7 @@ public class TourLogDaoImpl implements TourLogDao {
     @Override
     public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId) {
         return webClient.get()
-                .uri(apiBaseUrl + apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
+                .uri(apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<TourLog>>() {
                 })
@@ -117,7 +115,7 @@ public class TourLogDaoImpl implements TourLogDao {
     @Override
     public Mono<TourLog> saveTourLog(Long tourId, TourLog tourLog) {
         return webClient.post()
-                .uri(apiBaseUrl + apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
+                .uri(apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
                 .body(Mono.just(tourLog), TourLog.class)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to save tourLog for tour with id " + tourId)))
@@ -134,7 +132,7 @@ public class TourLogDaoImpl implements TourLogDao {
     @Override
     public Mono<Void> deleteAllTourLogsByTourId(Long tourId) {
         return webClient.delete()
-                .uri(apiBaseUrl + apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
+                .uri(apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to delete all tourLogs for tour with id " + tourId)))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server error")))

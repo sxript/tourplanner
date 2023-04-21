@@ -99,11 +99,6 @@
                         </SplitPane>
                     </content>
                 </Tab>
-                <Tab text="%tab.logs.title">
-                    <content>
-                        <fx:include fx:id="logViewPane" source="view/LogViewPane.fxml"/>
-                    </content>
-                </Tab>
             </tabs>
         </TabPane>
     </center>

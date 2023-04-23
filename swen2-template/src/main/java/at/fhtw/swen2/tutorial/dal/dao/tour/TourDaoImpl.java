@@ -16,6 +16,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -33,10 +34,21 @@ public class TourDaoImpl implements TourDao {
         this.webClient = webClientBuilder.baseUrl(apiBaseUrl).build();
     }
 
+
+
     @Override
-    public Flux<Tour> findAll() {
+    public Flux<Tour> findAll(Optional<String> searchQuery) {
+
+        System.out.println("TourDaoImpl");
+        System.out.println(searchQuery);
+        System.out.printf("----------------------");
+
+
         return webClient.get()
-                .uri(apiToursEndpoint)
+                .uri(uriBuilder -> uriBuilder
+                        .path(apiToursEndpoint)
+                        .queryParamIfPresent("searchQuery", Optional.ofNullable(searchQuery))
+                        .build())
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to retrieve tours")))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server Error")))

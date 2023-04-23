@@ -5,15 +5,19 @@ import lombok.Getter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @Component
 @Scope("prototype")
 @Getter
 public abstract class BaseSearchViewModel {
     private final SimpleStringProperty searchString = new SimpleStringProperty();
 
-    public abstract void filterList(String searchString);
+    public abstract void filterList(Optional<String> searchString);
 
     public void search() {
-        filterList(getSearchString().getValue());
+        System.out.print(getSearchString().getValue());
+        filterList(Optional.of(getSearchString().getValue()));
     }
 }

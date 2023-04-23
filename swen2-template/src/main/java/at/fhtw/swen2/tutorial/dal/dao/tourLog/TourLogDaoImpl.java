@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -35,8 +36,9 @@ public class TourLogDaoImpl implements TourLogDao {
     }
 
 
+
     @Override
-    public Flux<Tour> findAll() {
+    public Flux<Tour> findAll(Optional<String> searchQuery) {
         return null;
     }
 

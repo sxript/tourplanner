@@ -4,8 +4,12 @@ import at.fhtw.swen2.tutorial.model.Tour;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 public interface TourService {
-    Flux<Tour> findAllTours();
+
+
+    Flux<Tour> findAllTours(Optional<String> serchText);
 
     Mono<Tour> findTourById(Long id);
 

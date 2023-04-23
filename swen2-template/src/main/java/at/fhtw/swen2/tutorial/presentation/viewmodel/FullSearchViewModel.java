@@ -4,6 +4,8 @@ import at.fhtw.swen2.tutorial.presentation.view.BaseSearchViewModel;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 
 @Component
 @Getter
@@ -14,7 +16,8 @@ public class FullSearchViewModel extends BaseSearchViewModel {
     }
 
     @Override
-    public void filterList(String searchString) {
-        tourListViewModel.filterList(getSearchString().getValue());
+    public void filterList(Optional<String> searchString) {
+        System.out.println(getSearchString().getValue());
+        tourListViewModel.filterList(searchString);
     }
 }

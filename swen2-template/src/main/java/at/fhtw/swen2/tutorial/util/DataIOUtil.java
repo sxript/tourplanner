@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DataIOUtil {
@@ -25,7 +26,7 @@ public class DataIOUtil {
     }
 
     public String exportData() {
-        Mono<List<DataExportDTO>> dataMono = tourService.findAllTours()
+        Mono<List<DataExportDTO>> dataMono = tourService.findAllTours(Optional.empty())
                 .flatMap(tour -> tourLogService.findAllTourLogsByTourId(tour.getId())
                         .map(tourLogs -> DataExportDTO.builder()
                                 .tour(tour)

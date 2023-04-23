@@ -4,6 +4,7 @@ import at.fhtw.swen2.tutorial.presentation.view.BaseSearchViewModel;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 
 
 @Component
@@ -16,7 +17,7 @@ public class SearchViewModel extends BaseSearchViewModel {
     }
 
     @Override
-    public void filterList(String searchString) {
+    public void filterList(Optional<String> searchString) {
         tourLogListViewModel.filterList(getSearchString().getValue());
     }
 }

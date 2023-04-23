@@ -14,6 +14,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Component
@@ -61,7 +62,7 @@ public class TourListViewModel {
     }
 
     public void initList() {
-        tourService.findAllTours()
+        tourService.findAllTours(Optional.empty())
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())
                 .subscribe(tour -> Platform.runLater(() -> addItem(tour)));
@@ -76,28 +77,11 @@ public class TourListViewModel {
     }
 
 
-    public void filterList(String searchText) {
-        Task<List<Tour>> task = new Task<>() {
-            @Override
-            protected List<Tour> call() {
-                updateMessage("Loading data");
-
-                return masterItems.stream()
-                        .filter(value -> value.getName().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getTo().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getFrom().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getDescription().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getTransportType().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getEstimatedTime().toString().contains(searchText.toLowerCase())
-                                || value.getDistance().toString().contains(searchText.toLowerCase())
-                        ).toList();
-            }
-        };
-
-        task.setOnSucceeded(event -> tourListItems.setAll(task.getValue()));
-
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
+    public void filterList(Optional<String> searchText) {
+        tourListItems.clear();
+        tourService.findAllTours(searchText)
+                .subscribeOn(Schedulers.boundedElastic())
+                .publishOn(Schedulers.parallel())
+                .subscribe(tour -> Platform.runLater(() -> tourListItems.add(tour)));
     }
 }

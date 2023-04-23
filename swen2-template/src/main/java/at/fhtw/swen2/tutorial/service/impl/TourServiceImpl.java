@@ -10,6 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,9 +23,10 @@ public class TourServiceImpl implements TourService {
 
 
     @Override
-    public Flux<Tour> findAllTours() {
-        return tourDao.findAll();
+    public Flux<Tour> findAllTours(Optional<String> searchText) {
+        return tourDao.findAll(searchText);
     }
+
 
     @Override
     public Mono<Tour> findTourById(Long id) {

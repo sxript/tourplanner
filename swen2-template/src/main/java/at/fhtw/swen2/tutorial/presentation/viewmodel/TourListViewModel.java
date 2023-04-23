@@ -24,7 +24,6 @@ import java.util.Optional;
 @Slf4j
 public class TourListViewModel {
     private final ObservableList<Tour> tourListItems = FXCollections.observableArrayList();
-    private LinkedList<Tour> masterItems = new LinkedList<>();
     private final ObjectProperty<Tour> selectedTour = new SimpleObjectProperty<>();
 
     private final TourLogListViewModel tourLogListViewModel;
@@ -40,7 +39,6 @@ public class TourListViewModel {
 
     public void addItem(Tour tour) {
         tourListItems.add(tour);
-        masterItems.add(tour);
     }
 
     public void selectedTour(Tour tour) {
@@ -54,7 +52,6 @@ public class TourListViewModel {
         }
         detailTourViewModel.clear();
         tourListItems.remove(selectedTourToDelete);
-        masterItems.remove(selectedTourToDelete);
 
         tourService.deleteTour(selectedTourToDelete);
     }
@@ -72,9 +69,7 @@ public class TourListViewModel {
 
     public void updateTour(Tour tour) {
         tourListItems.remove(selectedTour.get());
-        masterItems.remove(selectedTour.get());
         tourListItems.add(tour);
-        masterItems.add(tour);
         selectedTour.set(tour);
     }
 

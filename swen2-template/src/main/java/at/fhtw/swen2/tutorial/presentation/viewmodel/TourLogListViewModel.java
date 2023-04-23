@@ -24,7 +24,6 @@ import java.util.Optional;
 public class TourLogListViewModel {
     private final ObservableList<TourLog> tourLogListItems = FXCollections.observableArrayList();
     private final ObjectProperty<TourLog> selectedTourLog = new SimpleObjectProperty<>();
-    private final List<TourLog> tourLogItems = new LinkedList<>(); //master Data
     private final TourLogService tourLogService;
 
     private final TourListViewModel tourListViewModel;
@@ -35,7 +34,6 @@ public class TourLogListViewModel {
 
     public void addItem(TourLog tourLog) {
         tourLogListItems.add(tourLog);
-        tourLogItems.add(tourLog);
     }
 
     public void deleteSelectedTourLog() {
@@ -44,13 +42,11 @@ public class TourLogListViewModel {
             return;
         }
         tourLogListItems.remove(selectedTourLogToDelete);
-        tourLogItems.remove(selectedTourLogToDelete);
         tourLogService.deleteTourLogById(selectedTourLogToDelete.getId());
     }
 
     public void displayTourLogList(Long tourId) {
         clearItems();
-
         tourLogService.findAllTourLogsByTourId(tourId, Optional.empty())
                 .flatMapMany(Flux::fromIterable)
                 .subscribeOn(Schedulers.boundedElastic())
@@ -63,6 +59,7 @@ public class TourLogListViewModel {
     }
 
     public void initList() {
+        clearItems();
         // TODO: this is only temporal to display some data for now this should be deleted since no element is selected at start
         if (!tourLogListItems.isEmpty())
             tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), Optional.empty())
@@ -77,18 +74,13 @@ public class TourLogListViewModel {
 
     public void updateTourLog(TourLog tourLog) {
         tourLogListItems.remove(selectedTourLog.get());
-        tourLogItems.remove(selectedTourLog.get());
         tourLogListItems.add(tourLog);
-        tourLogItems.add(tourLog);
         selectedTourLog.set(tourLog);
     }
 
     public void filterList(String searchText) {
         log.info("Filtering list with search text: " + searchText);
-
-        System.out.println(searchText);
-        System.out.println("-------------------");
-
+        
         tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), Optional.ofNullable(searchText))
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())

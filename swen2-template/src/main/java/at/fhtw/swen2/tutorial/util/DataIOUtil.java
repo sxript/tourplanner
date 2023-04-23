@@ -26,8 +26,8 @@ public class DataIOUtil {
     }
 
     public String exportData() {
-        Mono<List<DataExportDTO>> dataMono = tourService.findAllTours(Optional.empty())
-                .flatMap(tour -> tourLogService.findAllTourLogsByTourId(tour.getId())
+        Mono<List<DataExportDTO>> dataMono = tourService.findToursBySearchQuery(Optional.empty())
+                .flatMap(tour -> tourLogService.findAllTourLogsByTourId(tour.getId(),Optional.empty())
                         .map(tourLogs -> DataExportDTO.builder()
                                 .tour(tour)
                                 .tourLogs(tourLogs)

@@ -64,7 +64,7 @@ public class TourListViewModel {
     }
 
     public void initList() {
-        tourService.findAllTours(Optional.empty())
+        tourService.findToursBySearchQuery(Optional.empty())
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())
                 .subscribe(tour -> Platform.runLater(() -> addItem(tour)));
@@ -81,7 +81,7 @@ public class TourListViewModel {
 
     public void filterList(Optional<String> searchText) {
         tourListItems.clear();
-        tourService.findAllTours(searchText)
+        tourService.findToursBySearchQuery(searchText)
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())
                 .subscribe(tour -> Platform.runLater(() -> tourListItems.add(tour)));

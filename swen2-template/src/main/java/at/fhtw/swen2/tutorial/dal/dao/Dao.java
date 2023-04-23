@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 import java.util.Optional;
 
 public interface Dao<T> {
-    Flux<Tour> findAll(Optional<String> searchQuery);
+    Flux<Tour> findBySearchQuery(Optional<String> searchQuery);
     Mono<T> findById(Long id);
     Mono<T> update(T entity);
     Mono<Tour> save(T entity);

@@ -4,9 +4,10 @@ import at.fhtw.swen2.tutorial.model.TourLog;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TourLogService {
-    Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, String searchQuery);
+    Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, Optional<String> searchQuery);
 
     Mono<TourLog> findTourLogById(Long id);
 

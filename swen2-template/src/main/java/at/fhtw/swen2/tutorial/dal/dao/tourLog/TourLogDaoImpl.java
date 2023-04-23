@@ -36,9 +36,8 @@ public class TourLogDaoImpl implements TourLogDao {
     }
 
 
-
     @Override
-    public Flux<Tour> findAll(Optional<String> searchQuery) {
+    public Flux<Tour> findBySearchQuery(Optional<String> searchQuery) {
         return null;
     }
 
@@ -99,14 +98,18 @@ public class TourLogDaoImpl implements TourLogDao {
     }
 
     @Override
-    public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, String searchQuery) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint);
-        if (searchQuery != null) {
-            builder.queryParam("searchQuery", searchQuery);
-        }
-        log.info("URL for findAllTourLogsByTourId: {}", builder.toUriString());
+    public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, Optional<String> searchQuery) {
+
+        System.out.println(searchQuery);
+        System.out.println(tourId);
+
+        System.out.println(apiTourLogsEndpoint+"/"+tourId);
+
         return webClient.get()
-                .uri(builder.toUriString())
+                .uri(uriBuilder -> uriBuilder
+                        .path(apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
+                        .queryParamIfPresent("searchQuery", Optional.ofNullable(searchQuery))
+                        .build())
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<TourLog>>() {
                 })

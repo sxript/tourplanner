@@ -16,6 +16,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -50,7 +51,7 @@ public class TourLogListViewModel {
     public void displayTourLogList(Long tourId) {
         clearItems();
 
-        tourLogService.findAllTourLogsByTourId(tourId, null)
+        tourLogService.findAllTourLogsByTourId(tourId, Optional.empty())
                 .flatMapMany(Flux::fromIterable)
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())
@@ -64,8 +65,7 @@ public class TourLogListViewModel {
     public void initList() {
         // TODO: this is only temporal to display some data for now this should be deleted since no element is selected at start
         if (!tourLogListItems.isEmpty())
-
-            tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), null)
+            tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), Optional.empty())
                     .subscribeOn(Schedulers.boundedElastic())
                     .publishOn(Schedulers.parallel())
                     .flatMapIterable(tourLogs -> tourLogs)
@@ -85,7 +85,11 @@ public class TourLogListViewModel {
 
     public void filterList(String searchText) {
         log.info("Filtering list with search text: " + searchText);
-        tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), searchText)
+
+        System.out.println(searchText);
+        System.out.println("-------------------");
+
+        tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), Optional.ofNullable(searchText))
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())
                 .subscribe(tourLogs -> Platform.runLater(() -> tourLogListItems.setAll(tourLogs)), error -> log.error("Error while loading tour logs", error));

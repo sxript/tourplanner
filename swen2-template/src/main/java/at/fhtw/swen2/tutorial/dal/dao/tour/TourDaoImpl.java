@@ -40,12 +40,7 @@ public class TourDaoImpl implements TourDao {
 
 
     @Override
-    public Flux<Tour> findAll(Optional<String> searchQuery) {
-
-        System.out.println("TourDaoImpl");
-        System.out.println(searchQuery);
-        System.out.printf("----------------------");
-
+    public Flux<Tour> findBySearchQuery(Optional<String> searchQuery) {
 
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface TourService {
 
 
-    Flux<Tour> findAllTours(Optional<String> serchText);
+    Flux<Tour> findToursBySearchQuery(Optional<String> serchText);
 
     Mono<Tour> findTourById(Long id);
 

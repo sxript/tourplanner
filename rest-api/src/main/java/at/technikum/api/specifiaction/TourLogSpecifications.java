@@ -14,12 +14,15 @@ public class TourLogSpecifications {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (searchQuery != null && !searchQuery.isEmpty()) {
+
+                String pattern = searchQuery.toLowerCase();
+
                 predicates.add(criteriaBuilder.or(
-                        criteriaBuilder.like(root.get("date").as(String.class), "%" + searchQuery + "%"),
-                        criteriaBuilder.like(root.get("comment").as(String.class), "%" + searchQuery + "%"),
-                        criteriaBuilder.like(root.get("totalTime").as(String.class), "%" + searchQuery + "%"),
-                        criteriaBuilder.like(root.get("difficulty").as(String.class), "%" + searchQuery + "%"),
-                        criteriaBuilder.like(root.get("rating").as(String.class), "%" + searchQuery + "%")
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("date").as(String.class)), "%" + pattern + "%"),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("comment").as(String.class)), "%" + pattern + "%"),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("totalTime").as(String.class)), "%" + pattern + "%"),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("difficulty").as(String.class)), "%" + pattern + "%"),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("rating").as(String.class)), "%" + pattern + "%")
                 ));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

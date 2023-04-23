@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -21,7 +22,7 @@ public class TourLogServiceImpl implements TourLogService {
     }
 
     @Override
-    public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, String searchQuery) {
+    public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, Optional<String> searchQuery) {
         return tourLogDao.findAllTourLogsByTourId(tourId, searchQuery);
     }
 

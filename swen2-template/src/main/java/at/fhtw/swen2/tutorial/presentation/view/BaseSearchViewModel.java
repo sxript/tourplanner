@@ -18,6 +18,6 @@ public abstract class BaseSearchViewModel {
 
     public void search() {
         System.out.print(getSearchString().getValue());
-        filterList(Optional.of(getSearchString().getValue()));
+        filterList(Optional.ofNullable(getSearchString().getValue()));
     }
 }

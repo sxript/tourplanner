@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.scheduler.Schedulers;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Component
 @Getter
 @Setter
+@Slf4j
 public class TourListViewModel {
     private final ObservableList<Tour> tourListItems = FXCollections.observableArrayList();
     private LinkedList<Tour> masterItems = new LinkedList<>();

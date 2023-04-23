@@ -1,0 +1,7 @@
+{
+  "api_key_map": "YOUR_API_KEY",
+  "api_url": "https://www.mapquestapi.com/",
+  "spring.datasource.database": "postgres",
+  "spring.datasource.password": "postgres",
+  "spring.datasource.username": "postgres"
+}

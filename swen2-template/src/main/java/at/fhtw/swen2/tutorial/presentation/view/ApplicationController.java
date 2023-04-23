@@ -190,7 +190,7 @@ public class ApplicationController implements Initializable, StageAware {
             return;
         }
 
-        reportManager.generateTourReport(file, selectedTour, tourLogService.findAllTourLogsByTourId(selectedTour.getId()).block());
+        reportManager.generateTourReport(file, selectedTour, tourLogService.findAllTourLogsByTourId(selectedTour.getId(), null).block());
         AlertUtils.showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
     }
 

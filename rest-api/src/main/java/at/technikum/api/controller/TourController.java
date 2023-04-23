@@ -32,7 +32,7 @@ public class TourController {
     }
 
     @GetMapping("/tours")
-    public ResponseEntity<List<Tour>> getAllTours(@RequestParam(required = false) String searchQuery) {
+    public ResponseEntity<List<Tour>> getToursBySearchQuery(@RequestParam(required = false) String searchQuery) {
         return ResponseEntity.ok(tourService.getAllTours(searchQuery));
     }
 
@@ -45,6 +45,7 @@ public class TourController {
     @PostMapping(value = "/tours", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<Tour>> createTour(@Valid @RequestBody Tour newTour) {
         return mapQuestLookupService.getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType())
+                .publishOn(Schedulers.boundedElastic())
                 .flatMap(mapResult -> {
                     log.info("STATUS CODE: {}", mapResult.getInfo().getStatusCode());
                     if (mapResult.getInfo().getStatusCode() != 0) {
@@ -67,6 +68,7 @@ public class TourController {
     public Mono<ResponseEntity<Tour>> updateTour(@Valid @RequestBody Tour newTour, @PathVariable Long id) {
         return mapQuestLookupService
                 .getRouteDirections(newTour.getFrom(), newTour.getTo(), newTour.getTransportType())
+                .publishOn(Schedulers.boundedElastic())
                 .flatMap(mapResult -> {
                     if (mapResult.getInfo().getStatusCode() != 0) {
                         return Mono.error(new BadRequestException("StatusCode:" + mapResult.getInfo().getStatusCode() + " Messages" + mapResult.getInfo().getMessages()));

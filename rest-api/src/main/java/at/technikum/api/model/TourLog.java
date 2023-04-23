@@ -5,20 +5,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 @Entity
 @Table(name = "tour_logs")
 public class TourLog {
@@ -29,7 +27,7 @@ public class TourLog {
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Date date;
+    private LocalDateTime date;
 
     @NotNull
     private String comment;
@@ -53,6 +51,6 @@ public class TourLog {
     private Tour tour;
     @PrePersist
     protected void onCreate() {
-        date = new Date();
+        date = LocalDateTime.now();
     }
 }

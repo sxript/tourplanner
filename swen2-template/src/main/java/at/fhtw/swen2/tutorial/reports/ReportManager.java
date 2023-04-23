@@ -210,7 +210,7 @@ public class ReportManager {
                 AtomicReference<Double> totalRating = new AtomicReference<>((double) 0);
                 AtomicInteger count = new AtomicInteger();
 
-                tourLogService.findAllTourLogsByTourId(tour.getId())
+                tourLogService.findAllTourLogsByTourId(tour.getId(), null)
                         .flatMapMany(Flux::fromIterable)
                         .subscribe(tourLog -> {
                             totalTime.updateAndGet(v -> (v + tourLog.getTotalTime()));

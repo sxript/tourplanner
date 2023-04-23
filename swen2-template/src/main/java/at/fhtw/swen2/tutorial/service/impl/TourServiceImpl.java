@@ -22,8 +22,8 @@ public class TourServiceImpl implements TourService {
 
 
     @Override
-    public Flux<Tour> findAllTours() {
-        return tourDao.findAll();
+    public Flux<Tour> findToursBySearchQuery(String searchQuery) {
+        return tourDao.findBySearchQuery(searchQuery);
     }
 
     @Override

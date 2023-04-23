@@ -63,12 +63,10 @@ public class NewTourLogController implements Initializable {
     public void addTourLogsButton(ActionEvent event) {
         newTourLogViewModel.addNewTourLog()
                 .subscribeOn(Schedulers.boundedElastic())
-                .subscribe(successful -> {
-                    Platform.runLater(() -> {
-                        if (Boolean.TRUE.equals(successful)) {
-                            commentTextField.getScene().getWindow().hide();
-                        }
-                    });
-                });
+                .subscribe(successful -> Platform.runLater(() -> {
+                    if (Boolean.TRUE.equals(successful)) {
+                        commentTextField.getScene().getWindow().hide();
+                    }
+                }));
     }
 }

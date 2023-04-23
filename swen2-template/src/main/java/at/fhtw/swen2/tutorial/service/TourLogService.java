@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface TourLogService {
-    Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId);
+    Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, String searchQuery);
 
     Mono<TourLog> findTourLogById(Long id);
 

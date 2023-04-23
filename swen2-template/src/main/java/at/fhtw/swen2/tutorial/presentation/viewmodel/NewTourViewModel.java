@@ -1,6 +1,5 @@
 package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
-import at.fhtw.swen2.tutorial.exception.BadStatusException;
 import at.fhtw.swen2.tutorial.model.ErrorResponse;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
@@ -30,7 +29,6 @@ public class NewTourViewModel extends BaseTourViewModel {
         super(tourListViewModel, tourService);
     }
 
-    // TODO: add progress indicator
     public Mono<Boolean> addNewTour() {
         if (!areFieldsValid()) {
             return Mono.just(false);

@@ -13,5 +13,24 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=swen_db
+  vault:
+    container_name: vault
+    image: vault:latest
+    restart: on-failure
+    ports:
+      - "8989:8201"
+    environment:
+      VAULT_ADDR: 'http://0.0.0.0:8201'
+      VAULT_LOCAL_CONFIG: '{"listener": [{"tcp":{"address": "0.0.0.0:8201","tls_disable":"1"}}], "default_lease_ttl": "168h", "max_lease_ttl": "720h"}, "ui": true}'
+      VAULT_DEV_ROOT_TOKEN_ID: '00000000-0000-0000-0000-000000000000'
+      VAULT_TOKEN: '00000000-0000-0000-0000-000000000000'
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault-volume:/data
+    healthcheck:
+      retries: 5
+    command: server -dev -dev-root-token-id="00000000-0000-0000-0000-000000000000"
 volumes:
   swen_db:
+  vault-volume:

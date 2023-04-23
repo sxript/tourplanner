@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.scheduler.Schedulers;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @Component
 @Getter
 @Setter
+@Slf4j
 public class TourListViewModel {
     private final ObservableList<Tour> tourListItems = FXCollections.observableArrayList();
     private LinkedList<Tour> masterItems = new LinkedList<>();
@@ -61,7 +63,7 @@ public class TourListViewModel {
     }
 
     public void initList() {
-        tourService.findAllTours()
+        tourService.findToursBySearchQuery(null)
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())
                 .subscribe(tour -> Platform.runLater(() -> addItem(tour)));
@@ -77,27 +79,10 @@ public class TourListViewModel {
 
 
     public void filterList(String searchText) {
-        Task<List<Tour>> task = new Task<>() {
-            @Override
-            protected List<Tour> call() {
-                updateMessage("Loading data");
-
-                return masterItems.stream()
-                        .filter(value -> value.getName().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getTo().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getFrom().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getDescription().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getTransportType().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getEstimatedTime().toString().contains(searchText.toLowerCase())
-                                || value.getDistance().toString().contains(searchText.toLowerCase())
-                        ).toList();
-            }
-        };
-
-        task.setOnSucceeded(event -> tourListItems.setAll(task.getValue()));
-
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
+        clearItems();
+        tourService.findToursBySearchQuery(searchText)
+                .subscribeOn(Schedulers.boundedElastic())
+                .publishOn(Schedulers.parallel())
+                .subscribe(tour -> Platform.runLater(() -> addItem(tour)));
     }
 }

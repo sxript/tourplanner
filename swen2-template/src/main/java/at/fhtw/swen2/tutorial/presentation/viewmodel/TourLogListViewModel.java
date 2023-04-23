@@ -7,16 +7,15 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 
 @Component
 @Slf4j
@@ -24,11 +23,13 @@ import java.util.function.Function;
 public class TourLogListViewModel {
     private final ObservableList<TourLog> tourLogListItems = FXCollections.observableArrayList();
     private final ObjectProperty<TourLog> selectedTourLog = new SimpleObjectProperty<>();
-    private List<TourLog> tourLogItems = new LinkedList<>(); //master Data
+    private final List<TourLog> tourLogItems = new LinkedList<>(); //master Data
     private final TourLogService tourLogService;
 
-    public TourLogListViewModel(TourLogService tourLogService) {
+    private final TourListViewModel tourListViewModel;
+    public TourLogListViewModel(TourLogService tourLogService, @Lazy TourListViewModel tourListViewModel) {
         this.tourLogService = tourLogService;
+        this.tourListViewModel = tourListViewModel;
     }
 
     public void addItem(TourLog tourLog) {
@@ -49,8 +50,7 @@ public class TourLogListViewModel {
     public void displayTourLogList(Long tourId) {
         clearItems();
 
-        System.out.println("-------------------------");
-        tourLogService.findAllTourLogsByTourId(tourId)
+        tourLogService.findAllTourLogsByTourId(tourId, null)
                 .flatMapMany(Flux::fromIterable)
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())
@@ -64,7 +64,8 @@ public class TourLogListViewModel {
     public void initList() {
         // TODO: this is only temporal to display some data for now this should be deleted since no element is selected at start
         if (!tourLogListItems.isEmpty())
-            tourLogService.findAllTourLogsByTourId(tourLogListItems.get(0).getId())
+
+            tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), null)
                     .subscribeOn(Schedulers.boundedElastic())
                     .publishOn(Schedulers.parallel())
                     .flatMapIterable(tourLogs -> tourLogs)
@@ -84,26 +85,9 @@ public class TourLogListViewModel {
 
     public void filterList(String searchText) {
         log.info("Filtering list with search text: " + searchText);
-        Task<List<TourLog>> task = new Task<>() {
-            @Override
-            protected List<TourLog> call() {
-                updateMessage("Loading data");
-
-                return tourLogItems.stream()
-                        .filter(value -> value.getComment().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getDifficulty().toLowerCase().contains(searchText.toLowerCase())
-                                || value.getRating().toString().contains(searchText.toLowerCase())
-                                || value.getDate().contains(searchText.toLowerCase())
-                                || value.getId().toString().contains(searchText.toLowerCase())
-                                || value.getTotalTime().toString().contains(searchText.toLowerCase())
-                        ).toList();
-            }
-        };
-
-        task.setOnSucceeded(event -> tourLogListItems.setAll(task.getValue()));
-
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
+        tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), searchText)
+                .subscribeOn(Schedulers.boundedElastic())
+                .publishOn(Schedulers.parallel())
+                .subscribe(tourLogs -> Platform.runLater(() -> tourLogListItems.setAll(tourLogs)), error -> log.error("Error while loading tour logs", error));
     }
 }

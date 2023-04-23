@@ -5,7 +5,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface TourService {
-    Flux<Tour> findAllTours();
+    Flux<Tour> findToursBySearchQuery(String searchQuery);
 
     Mono<Tour> findTourById(Long id);
 

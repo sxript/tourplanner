@@ -44,6 +44,5 @@ public abstract class BaseSearchController {
     }
     private void loadData() {
         baseSearchViewModel.search();
-        System.out.println("in loadData");
     }
 }

@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -34,9 +37,13 @@ public class TourDaoImpl implements TourDao {
     }
 
     @Override
-    public Flux<Tour> findAll() {
+    public Flux<Tour> findBySearchQuery(String searchQuery) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(apiToursEndpoint);
+        if (searchQuery != null) {
+            uriComponentsBuilder.queryParam("searchQuery", searchQuery);
+        }
         return webClient.get()
-                .uri(apiToursEndpoint)
+                .uri(uriComponentsBuilder.build().toUriString())
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new BadStatusException("Failed to retrieve tours")))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new BadStatusException("Server Error")))

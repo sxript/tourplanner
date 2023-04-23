@@ -21,8 +21,8 @@ public class TourLogServiceImpl implements TourLogService {
     }
 
     @Override
-    public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId) {
-        return tourLogDao.findAllTourLogsByTourId(tourId);
+    public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, String searchQuery) {
+        return tourLogDao.findAllTourLogsByTourId(tourId, searchQuery);
     }
 
     @Override

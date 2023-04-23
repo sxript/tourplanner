@@ -10,6 +10,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,13 +31,12 @@ public class TourLogDaoImpl implements TourLogDao {
         String apiBaseUrl = propertyConfiguration.getApiBaseUrl();
         apiToursEndpoint = propertyConfiguration.getApiToursEndpoint();
         apiTourLogsEndpoint = propertyConfiguration.getApiTourLogsEndpoint();
-        System.out.println("apiBaseUrl: " + apiBaseUrl);
         this.webClient = webClientBuilder.baseUrl(apiBaseUrl).build();
     }
 
 
     @Override
-    public Flux<Tour> findAll() {
+    public Flux<Tour> findBySearchQuery(String searchQuery) {
         return null;
     }
 
@@ -97,9 +97,14 @@ public class TourLogDaoImpl implements TourLogDao {
     }
 
     @Override
-    public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId) {
+    public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, String searchQuery) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint);
+        if (searchQuery != null) {
+            builder.queryParam("searchQuery", searchQuery);
+        }
+        log.info("URL for findAllTourLogsByTourId: {}", builder.toUriString());
         return webClient.get()
-                .uri(apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)
+                .uri(builder.toUriString())
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<TourLog>>() {
                 })

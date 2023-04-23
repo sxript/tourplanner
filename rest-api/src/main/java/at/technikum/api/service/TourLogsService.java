@@ -21,63 +21,61 @@ import java.util.Optional;
 @Service
 @Transactional
 public class TourLogsService {
-   private final TourLogsRepository tourLogsRepository;
-   private final TourRepository tourRepository;
-   @Autowired
+    private final TourLogsRepository tourLogsRepository;
+    private final TourRepository tourRepository;
+
     public TourLogsService(TourLogsRepository tourLogsRepository, TourRepository tourRepository) {
         this.tourLogsRepository = tourLogsRepository;
-       this.tourRepository = tourRepository;
-   }
+        this.tourRepository = tourRepository;
+    }
 
-   public List<TourLog> findAllTourLogsByTourId(Long id, String searchQuery) {
-       if(!tourRepository.existsById(id)) {
-           throw new ResourceNotFoundException("No Tour with id = " + id);
-       }
-       if (searchQuery == null) {
-           return tourLogsRepository.findByTourId(id);
-       }
-       Specification<TourLog> spec = Specification.where(TourLogSpecifications.search(searchQuery)).and((root, query, criteriaBuilder) -> {
-           Join<TourLog, Tour> tourJoin = root.join("tour");
-           return criteriaBuilder.equal(tourJoin.get("id"), id);
-       });
+    public List<TourLog> findAllTourLogsByTourId(Long id, String searchQuery) {
+        if (!tourRepository.existsById(id)) {
+            throw new ResourceNotFoundException("No Tour with id = " + id);
+        }
+        if (searchQuery == null) {
+            return tourLogsRepository.findByTourId(id);
+        }
+        Specification<TourLog> spec = Specification.where(TourLogSpecifications.search(searchQuery)).and((root, query, criteriaBuilder) -> {
+            Join<TourLog, Tour> tourJoin = root.join("tour");
+            return criteriaBuilder.equal(tourJoin.get("id"), id);
+        });
 
-       return tourLogsRepository.findAll(spec);
-   }
+        return tourLogsRepository.findAll(spec);
+    }
 
-   public Optional<TourLog> findTourLogById(Long id) {
-       return tourLogsRepository.findById(id);
-   }
+    public Optional<TourLog> findTourLogById(Long id) {
+        return tourLogsRepository.findById(id);
+    }
 
-   public TourLog createTourLog(Long tourId, TourLog tourLog) {
-       return tourRepository.findById(tourId).map(tour -> {
-           tourLog.setTour(tour);
-           return tourLogsRepository.save(tourLog);
-       }).orElseThrow(() -> new ResourceNotFoundException("No tour with id = " + tourId));
-   }
+    public TourLog createTourLog(Long tourId, TourLog tourLog) {
+        return tourRepository.findById(tourId).map(tour -> {
+            tourLog.setTour(tour);
+            return tourLogsRepository.save(tourLog);
+        }).orElseThrow(() -> new ResourceNotFoundException("No tour with id = " + tourId));
+    }
 
-   public TourLog updateTourLog(Long id, TourLog tourLog) {
-       TourLog updatedTourLog = tourLogsRepository.findById(id)
-               .orElseThrow(() -> new ResourceNotFoundException("No TourLog with id = " + id));
+    public TourLog updateTourLog(Long id, TourLog tourLog) {
+        TourLog updatedTourLog = tourLogsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No TourLog with id = " + id));
 
-       // TODO: check where this Method is used and check if it is called correctly
-       //  this was called incorrectly before and caused a bug
-       BeanHelper.copyNonNullProperties(tourLog, updatedTourLog);
-       tourLog.setId(updatedTourLog.getId());
-       tourLog.setTour(updatedTourLog.getTour());
-       tourLog.setDate(updatedTourLog.getDate());
+        BeanHelper.copyNonNullProperties(tourLog, updatedTourLog);
+        tourLog.setId(updatedTourLog.getId());
+        tourLog.setTour(updatedTourLog.getTour());
+        tourLog.setDate(updatedTourLog.getDate());
 
-       return tourLogsRepository.save(tourLog);
-   }
+        return tourLogsRepository.save(tourLog);
+    }
 
-   public int deleteTourLogById(Long id) {
-       return tourLogsRepository.deleteTourLogById(id);
-   }
+    public int deleteTourLogById(Long id) {
+        return tourLogsRepository.deleteTourLogById(id);
+    }
 
-   public List<TourLog> deleteAllTourLogsFromTourById(Long tourId) {
-       if(!tourRepository.existsById(tourId)) {
-           throw new ResourceNotFoundException("No Tour with id = " + tourId);
-       }
+    public List<TourLog> deleteAllTourLogsFromTourById(Long tourId) {
+        if (!tourRepository.existsById(tourId)) {
+            throw new ResourceNotFoundException("No Tour with id = " + tourId);
+        }
 
-       return tourLogsRepository.deleteByTourId(tourId);
-   }
+        return tourLogsRepository.deleteByTourId(tourId);
+    }
 }

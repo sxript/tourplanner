@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -43,6 +44,8 @@ public class TourLog {
     @Range(min = 1, max = 5)
     private Integer rating;
 
+
+
     // FetchType.EAGER includes the Tour but this is slower than LAZY
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tour_id")
@@ -53,4 +56,6 @@ public class TourLog {
     protected void onCreate() {
         date = LocalDateTime.now();
     }
+
+
 }

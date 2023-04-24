@@ -9,7 +9,7 @@ up: ## Run a local development environment with Docker Compose.
 	@docker compose up -d --build --force-recreate 
 
 down: ## Stop the Docker Compose local development environment.
-	@docker compose down  
+	@docker compose stop
 
 recreate: ## Recreate and run development docker compose
 	@docker compose up --build --force-recreate 

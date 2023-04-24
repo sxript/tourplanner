@@ -49,6 +49,10 @@ public class DetailTourController implements Initializable {
     @FXML
     public Label currentTourDistanceLabel;
     @FXML
+    public Label currentTourPopularity;
+    @FXML
+    public Label currentTourChildFriendliness;
+    @FXML
     public Button createTourLogButton;
     @FXML
     public Button deleteTourLogButton;
@@ -80,6 +84,8 @@ public class DetailTourController implements Initializable {
         currentTourFromLabel.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourFromLabel());
         currentTourImageView.imageProperty().bindBidirectional(detailTourViewModel.getCurrTourImage());
         currentTourDistanceLabel.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourDistanceLabel());
+        currentTourPopularity.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourPopularity());
+        currentTourChildFriendliness.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourChildFriendliness());
 
 
         // TODO: this should not be in the controller
@@ -94,6 +100,7 @@ public class DetailTourController implements Initializable {
         }
 
         tourListViewModel.getSelectedTour().addListener((observableValue, oldTour, selectedTour) -> {
+            System.out.println("Selected tour changed: " + selectedTour);
             clearTourDetails();
             setCurrentTourAttributes(selectedTour);
 
@@ -111,6 +118,8 @@ public class DetailTourController implements Initializable {
         currentTourToLabel.textProperty().set(selectedTour.getTo());
         currentTourFromLabel.textProperty().set(selectedTour.getFrom());
         currentTourDistanceLabel.textProperty().set(String.valueOf(selectedTour.getDistance()));
+        currentTourPopularity.textProperty().set(String.valueOf(selectedTour.getPopularity()));
+        currentTourChildFriendliness.textProperty().set(String.valueOf(selectedTour.getChildFriendliness()));
         createTourLogButton.setVisible(true);
     }
 
@@ -118,7 +127,6 @@ public class DetailTourController implements Initializable {
     private void loadImage(Tour selectedTour) {
         Path imageDir = Paths.get("swen2-template", "src", "main", "resources", "static", "map", "images", selectedTour.getId() + ".jpg");
         String imageDirPath = imageDir.toAbsolutePath().toString();
-        log.info("Image path: " + imageDirPath);
         Path path = Paths.get(imageDirPath);
         if (Files.exists(path)) {
             log.info("Image found: " + imageDirPath);

@@ -51,6 +51,16 @@
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
+                <Label fx:id="currentTourPopularity">
+                    <font>
+                        <Font name="Arial" size="16.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="currentTourChildFriendliness">
+                    <font>
+                        <Font name="Arial" size="16.0"/>
+                    </font>
+                </Label>
             </VBox>
             <ImageView fx:id="currentTourImageView" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true"
                        preserveRatio="true"/>

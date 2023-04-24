@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -37,6 +39,12 @@ public class Tour {
     @Transient
     private String mapImage;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Integer popularity = 0;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Integer childFriendliness = 0;
+
     public Tour(String name,
                 String from,
                 String to,
@@ -53,5 +61,30 @@ public class Tour {
         this.distance = distance;
         this.estimatedTime = estimatedTime;
         this.mapImage = mapImage;
+    }
+
+    public void computePopularity(List<TourLog> tourLogs) {
+        this.popularity = tourLogs.size();
+    }
+
+    public void computeChildFriendliness(List<TourLog> tourLogs) {
+        int totalDifficulty = 0;
+        int totalDuration = 0;
+        int totalDistance = 0;
+
+        for (TourLog log : tourLogs) {
+            totalDifficulty += log.getDifficulty().ordinal();
+            totalDuration += log.getTotalTime();
+            totalDistance += log.getTour().getDistance().intValue();
+        }
+
+        double difficultyScore = (double) totalDifficulty / tourLogs.size();
+        double durationScore = (double) totalDuration / tourLogs.size();
+        double distanceScore = (double) totalDistance / tourLogs.size();
+        double childFriendlinessScore = (difficultyScore + (durationScore * 0.1) + (distanceScore * 0.01)) / 3;
+
+        // Map the child-friendliness score to a value between 1 and 5
+        double mappedScore = 5 - (childFriendlinessScore * 4);
+        this.childFriendliness = (int) Math.max(1, Math.min(5, mappedScore));
     }
 }

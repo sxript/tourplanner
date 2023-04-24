@@ -31,6 +31,8 @@ public class DetailTourViewModel {
     private final StringProperty currentTourToLabel = new SimpleStringProperty("");
     private final StringProperty currentTourFromLabel = new SimpleStringProperty("");
     private final StringProperty currentTourDistanceLabel = new SimpleStringProperty("");
+    private final StringProperty currentTourPopularity = new SimpleStringProperty("");
+    private final StringProperty currentTourChildFriendliness = new SimpleStringProperty("");
     private final ObjectProperty<Image> currTourImage = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Tour> selectedTour = new SimpleObjectProperty<>();
@@ -65,6 +67,11 @@ public class DetailTourViewModel {
         currentTourFromLabel.set("");
         currentTourDistanceLabel.set("");
         currTourImage.set(null);
+    }
+
+    public void updateSpecialAttributes(Tour tour) {
+        currentTourPopularity.set(String.valueOf(tour.getPopularity()));
+        currentTourChildFriendliness.set(String.valueOf(tour.getChildFriendliness()));
     }
 
 

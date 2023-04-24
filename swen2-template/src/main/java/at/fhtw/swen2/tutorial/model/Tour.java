@@ -30,6 +30,8 @@ public class Tour {
     private String description;
     private Double distance;
     private Integer estimatedTime;
+    private Integer popularity;
+    private Integer childFriendliness;
 
     // This is only used for JSON deserialization after that
     // the mapImage is stored as a file so we don't need it anymore

@@ -49,10 +49,13 @@ public class TourLogsService {
     }
 
     public TourLog createTourLog(Long tourId, TourLog tourLog) {
-        return tourRepository.findById(tourId).map(tour -> {
+        TourLog createdTourLog = tourRepository.findById(tourId).map(tour -> {
             tourLog.setTour(tour);
             return tourLogsRepository.save(tourLog);
         }).orElseThrow(() -> new ResourceNotFoundException("No tour with id = " + tourId));
+
+        updateTourSpecialAttributes(createdTourLog.getTour().getId());
+        return createdTourLog;
     }
 
     public TourLog updateTourLog(Long id, TourLog tourLog) {
@@ -64,7 +67,16 @@ public class TourLogsService {
         tourLog.setTour(updatedTourLog.getTour());
         tourLog.setDate(updatedTourLog.getDate());
 
+        updateTourSpecialAttributes(updatedTourLog.getTour().getId());
         return tourLogsRepository.save(tourLog);
+    }
+
+    private void updateTourSpecialAttributes(Long tourId) {
+        Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("No Tour with id = " + tourId));
+        List<TourLog> tourLogs = tourLogsRepository.findByTourId(tourId);
+        tour.computeChildFriendliness(tourLogs);
+        tour.computePopularity(tourLogs);
+        tourRepository.save(tour);
     }
 
     public int deleteTourLogById(Long id) {

@@ -54,7 +54,6 @@ public class TourController {
                     return mapQuestLookupService.getStaticMap(newTour.getTo(), mapResult)
                             .publishOn(Schedulers.boundedElastic())
                             .map(image -> {
-                                log.info("Image size: {}", image.length);
                                 newTour.setMapImage(Base64.getEncoder().encodeToString(image));
                                 newTour.setEstimatedTime(mapResult.getRealTime());
                                 newTour.setDistance(mapResult.getDistance());

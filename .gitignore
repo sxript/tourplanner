@@ -85,5 +85,4 @@ nb-configuration.xml
 .DS_Store
 
 ##############################
-swen2-template/src/main/resources/static/*
-/static/map/images/*
+swen2-template/src/main/resources/static/map/images/*

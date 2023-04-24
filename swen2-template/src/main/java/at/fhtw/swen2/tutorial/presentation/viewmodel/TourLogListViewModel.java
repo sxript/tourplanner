@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
@@ -27,6 +28,9 @@ public class TourLogListViewModel {
     private final TourLogService tourLogService;
 
     private final TourListViewModel tourListViewModel;
+
+    private Disposable disposable;
+
     public TourLogListViewModel(TourLogService tourLogService, @Lazy TourListViewModel tourListViewModel) {
         this.tourLogService = tourLogService;
         this.tourListViewModel = tourListViewModel;
@@ -46,8 +50,11 @@ public class TourLogListViewModel {
     }
 
     public void displayTourLogList(Long tourId) {
+        if (disposable != null) {
+            disposable.dispose();
+        }
         clearItems();
-        tourLogService.findAllTourLogsByTourId(tourId, Optional.empty())
+        disposable = tourLogService.findAllTourLogsByTourId(tourId, Optional.empty())
                 .flatMapMany(Flux::fromIterable)
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())
@@ -80,7 +87,7 @@ public class TourLogListViewModel {
 
     public void filterList(String searchText) {
         log.info("Filtering list with search text: " + searchText);
-        
+
         tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), Optional.ofNullable(searchText))
                 .subscribeOn(Schedulers.boundedElastic())
                 .publishOn(Schedulers.parallel())

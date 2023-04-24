@@ -67,6 +67,8 @@ public class DetailTourViewModel {
         currentTourFromLabel.set("");
         currentTourDistanceLabel.set("");
         currTourImage.set(null);
+        currentTourPopularity.set("");
+        currentTourChildFriendliness.set("");
     }
 
     public void updateSpecialAttributes(Tour tour) {

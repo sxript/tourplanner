@@ -54,7 +54,7 @@ public class TourListController implements Initializable {
                 while (change.next()) {
                     if (change.wasAdded()) {
                         int lastIndex = change.getAddedSubList().size() - 1;
-                        listView.getSelectionModel().select(change.getFrom() + lastIndex);
+                        listView.getSelectionModel().select(lastIndex);
                     }
                 }
             }

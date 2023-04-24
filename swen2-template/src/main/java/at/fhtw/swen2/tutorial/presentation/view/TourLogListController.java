@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -57,7 +58,7 @@ public class TourLogListController implements Initializable{
         TableColumn<TourLog, Integer> rating = new TableColumn<>("Rating");
         rating.setCellValueFactory(new PropertyValueFactory<>("rating"));
 
-        tableView.getColumns().addAll(id, date, comment, duration, difficulty, rating);
+        tableView.getColumns().addAll(Arrays.asList(id, date, comment, duration, difficulty, rating));
 
         tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             log.info("Selected item changed from {} to {}", oldSelection, newSelection);

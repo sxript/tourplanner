@@ -11,7 +11,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter

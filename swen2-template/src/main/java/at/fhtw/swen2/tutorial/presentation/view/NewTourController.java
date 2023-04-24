@@ -61,11 +61,11 @@ public class NewTourController implements Initializable {
         feedbackText.textProperty().bindBidirectional(newTourViewModel.getFeedbackProperty());
     }
 
-    public void onSubmitCreateTour(ActionEvent actionEvent) {
+    public void onSubmitCreateTour() {
         newTourViewModel.addNewTour()
                 .subscribeOn(Schedulers.boundedElastic())
                 .subscribe(successful -> Platform.runLater(() -> {
-                    if (successful) {
+                    if (Boolean.TRUE.equals(successful)) {
                         nameTextField.getScene().getWindow().hide();
                     }
                 }));

@@ -1,4 +1,4 @@
-package at.fhtw.swen2.tutorial.dal.dao.tourLog;
+package at.fhtw.swen2.tutorial.dal.dao.tourlog;
 
 import at.fhtw.swen2.tutorial.dal.dao.Dao;
 import at.fhtw.swen2.tutorial.model.TourLog;

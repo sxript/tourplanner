@@ -1,4 +1,4 @@
-package at.fhtw.swen2.tutorial.dal.dao.tourLog;
+package at.fhtw.swen2.tutorial.dal.dao.tourlog;
 
 import at.fhtw.swen2.tutorial.configuration.PropertyConfiguration;
 import at.fhtw.swen2.tutorial.exception.BadStatusException;
@@ -10,7 +10,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -21,7 +20,6 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class TourLogDaoImpl implements TourLogDao {
-    // TODO: remove this and move all into service
     private final String apiToursEndpoint;
 
     private final String apiTourLogsEndpoint;
@@ -41,7 +39,6 @@ public class TourLogDaoImpl implements TourLogDao {
         return null;
     }
 
-    // TODO: add global controller advice for Retry Error (maybe custom exception)?
     @Override
     public Mono<TourLog> findById(Long id) {
         return webClient.get()

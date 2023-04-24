@@ -1,5 +1,6 @@
 package at.fhtw.swen2.tutorial.model;
 
+import at.fhtw.swen2.tutorial.exception.DataIOException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,7 @@ public class Tour {
             ImageIO.write(bufferedImage, "jpg", outputFile);
         } catch (IOException e) {
             log.error("Failed to decode map image", e);
-            throw new RuntimeException(e);
+            throw new DataIOException("Failed to decode map image", e);
         }
         mapImage = new byte[]{};
     }

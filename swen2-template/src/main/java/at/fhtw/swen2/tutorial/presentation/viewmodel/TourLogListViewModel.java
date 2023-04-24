@@ -67,14 +67,13 @@ public class TourLogListViewModel {
 
     public void initList() {
         clearItems();
-        // TODO: this is only temporal to display some data for now this should be deleted since no element is selected at start
-        if (!tourLogListItems.isEmpty())
+        if (!tourLogListItems.isEmpty()) {
             tourLogService.findAllTourLogsByTourId(tourListViewModel.getSelectedTour().get().getId(), Optional.empty())
                     .subscribeOn(Schedulers.boundedElastic())
                     .publishOn(Schedulers.parallel())
                     .flatMapIterable(tourLogs -> tourLogs)
                     .subscribe(tourLog -> Platform.runLater(() -> addItem(tourLog)), error -> log.error("Error while loading tour logs", error));
-
+        }
 
         log.info(String.valueOf(tourLogListItems.size()));
     }

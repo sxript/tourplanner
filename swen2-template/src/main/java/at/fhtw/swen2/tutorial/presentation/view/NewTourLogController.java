@@ -60,7 +60,7 @@ public class NewTourLogController implements Initializable {
         feedbackText.textProperty().bindBidirectional(newTourLogViewModel.getFeedbackProperty());
     }
 
-    public void addTourLogsButton(ActionEvent event) {
+    public void addTourLogsButton() {
         newTourLogViewModel.addNewTourLog()
                 .subscribeOn(Schedulers.boundedElastic())
                 .subscribe(successful -> Platform.runLater(() -> {

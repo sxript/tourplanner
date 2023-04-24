@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
@@ -39,7 +41,7 @@ public class LogViewController implements Initializable {
 
     void initializeTable() {
         ObservableList<LogEntry> entries = FXCollections.observableArrayList();
-        logTable.setItems(entries); // TODO load real log data
+        logTable.setItems(entries);
         logTable.setPlaceholder(new Label(""));
 
         TableColumn<LogEntry, LocalDateTime> dateColumn = new TableColumn<>("Date");
@@ -69,7 +71,7 @@ public class LogViewController implements Initializable {
         messageColumn.setCellValueFactory(value -> value.getValue().getMessage());
         messageColumn.setMaxWidth(Double.MAX_VALUE);
 
-        logTable.getColumns().addAll(dateColumn, typeColumn, systemColumn, messageColumn);
+        logTable.getColumns().addAll(Arrays.asList(dateColumn, typeColumn, systemColumn, messageColumn));
     }
 
     @FXML

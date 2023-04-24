@@ -58,11 +58,11 @@ public class UpdateTourLogController implements Initializable {
         updateTourLogViewModel.setTourLogProperties();
     }
 
-    public void onUpdateTourLog(ActionEvent actionEvent) {
+    public void onUpdateTourLog() {
         updateTourLogViewModel.updateTourLog()
                 .subscribeOn(Schedulers.boundedElastic())
                 .subscribe(success -> Platform.runLater(() -> {
-                    if (success) {
+                    if (Boolean.TRUE.equals(success)) {
                         ratingComboBox.getScene().getWindow().hide();
                     }
                 }));

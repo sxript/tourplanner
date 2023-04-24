@@ -100,13 +100,11 @@ public class DetailTourController implements Initializable {
         }
 
         tourListViewModel.getSelectedTour().addListener((observableValue, oldTour, selectedTour) -> {
-            System.out.println("Selected tour changed: " + selectedTour);
+            log.info("Selected tour changed: " + selectedTour);
             clearTourDetails();
             setCurrentTourAttributes(selectedTour);
 
             loadImage(selectedTour);
-            // TODO: this in own method
-
         });
     }
 

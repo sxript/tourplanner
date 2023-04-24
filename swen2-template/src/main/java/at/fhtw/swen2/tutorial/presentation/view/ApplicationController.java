@@ -1,5 +1,6 @@
 package at.fhtw.swen2.tutorial.presentation.view;
 
+import at.fhtw.swen2.tutorial.exception.DataIOException;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.presentation.StageAware;
@@ -168,7 +169,7 @@ public class ApplicationController implements Initializable, StageAware {
                 fileWriter.write(jsonData);
                 fileWriter.flush();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new DataIOException("Error writing file", e);
             }
         }
     }

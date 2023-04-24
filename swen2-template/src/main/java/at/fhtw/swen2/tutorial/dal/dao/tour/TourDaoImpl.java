@@ -2,6 +2,7 @@ package at.fhtw.swen2.tutorial.dal.dao.tour;
 
 import at.fhtw.swen2.tutorial.configuration.PropertyConfiguration;
 import at.fhtw.swen2.tutorial.exception.BadStatusException;
+import at.fhtw.swen2.tutorial.exception.DataIOException;
 import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.util.RetryUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -147,7 +148,7 @@ public class TourDaoImpl implements TourDao {
                     timeout *= 2;
                     retries--;
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    throw new DataIOException("Failed to delete image", e);
                 }
             }
         });

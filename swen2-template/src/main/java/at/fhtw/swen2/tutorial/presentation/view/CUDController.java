@@ -47,7 +47,7 @@ public class CUDController implements Initializable {
     }
 
 
-    public void onDeleteHandle(ActionEvent actionEvent) {
+    public void onDeleteHandle() {
         tourListViewModel.deleteSelectedTour();
     }
 

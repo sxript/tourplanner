@@ -17,7 +17,6 @@ public abstract class BaseSearchViewModel {
     public abstract void filterList(Optional<String> searchString);
 
     public void search() {
-        System.out.print(getSearchString().getValue());
         filterList(Optional.ofNullable(getSearchString().getValue()));
     }
 }

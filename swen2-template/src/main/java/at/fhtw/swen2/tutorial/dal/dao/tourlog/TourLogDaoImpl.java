@@ -96,12 +96,6 @@ public class TourLogDaoImpl implements TourLogDao {
 
     @Override
     public Mono<List<TourLog>> findAllTourLogsByTourId(Long tourId, Optional<String> searchQuery) {
-
-        System.out.println(searchQuery);
-        System.out.println(tourId);
-
-        System.out.println(apiTourLogsEndpoint+"/"+tourId);
-
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(apiToursEndpoint + "/" + tourId + apiTourLogsEndpoint)

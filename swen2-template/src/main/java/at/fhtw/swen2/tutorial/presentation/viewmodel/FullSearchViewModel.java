@@ -17,7 +17,6 @@ public class FullSearchViewModel extends BaseSearchViewModel {
 
     @Override
     public void filterList(Optional<String> searchString) {
-        System.out.println(getSearchString().getValue());
         tourListViewModel.filterList(searchString);
     }
 }

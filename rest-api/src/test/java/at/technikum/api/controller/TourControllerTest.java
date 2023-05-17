@@ -1,5 +1,6 @@
 package at.technikum.api.controller;
 
+import at.technikum.api.exception.ResourceNotFoundException;
 import at.technikum.api.map.MapQuestLookupService;
 import at.technikum.api.model.Tour;
 import at.technikum.api.service.TourService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -24,10 +26,8 @@ import static org.mockito.Mockito.*;
 class TourControllerTest {
     @Mock
     private TourService tourService;
-
     @Mock
     private MapQuestLookupService mapQuestLookupService;
-
     private TourController tourController;
 
     @BeforeEach
@@ -75,41 +75,57 @@ class TourControllerTest {
             verifyNoMoreInteractions(tourService);
         }
     }
+    @Nested
+    @DisplayName("GET /api/v1/tours/{id}")
+    class GetTourById{
+        @Test
+        public void shouldReturnsTour() {
+            Long id = 1L;
+            Tour tour = new Tour("Tour 1", "From 1", "To 1", "Transport Type 1", "Description 1", 1.0, 1, null);
+            when(tourService.getTourById(id)).thenReturn(Optional.of(tour));
 
-//    @Test
-//    void getTourById() {
-//        tours.add(new Tour("Tour 1", "From 1", "To 1", "Transport Type 1", "Description 1", 1.0, 1, null));
-//
-//        when(tourService.getTourById(1L)).thenReturn(java.util.Optional.of(tour));
-//
-//        tourController = new TourController(tourService, mapQuestLookupService);
-//        ResponseEntity<Tour> responseEntity = tourController.getTourById(1L);
-//
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(responseEntity.getBody()).isEqualTo(tour);
-//    }
-//
-//    @Test
-//    void getTourById_NotFound() {
-//        when(tourService.getTourById(1L)).thenReturn(java.util.Optional.empty());
-//
-//        tourController = new TourController(tourService, mapQuestLookupService);
-//        assertThrows(ResourceNotFoundException.class, () -> tourController.getTourById(1L));
-//    }
-//
-//    @Test
-//    void createTour() {
-//        Tour newTour = new Tour(null, "New Tour", "From", "To", "Transport Type");
-//        Tour createdTour = new Tour(1L, "New Tour", "From", "To", "Transport Type");
-//
-//        when(mapQuestLookupService.getRouteDirections(any(), any(), any())).thenReturn(Mono.just(new MapReque()));
-//        when(mapQuestLookupService.getStaticMap(any(), any())).thenReturn(Mono.just(new byte[0]));
-//        when(tourService.createTour(any())).thenReturn(createdTour);
-//
-//        tourController = new TourController(tourService, mapQuestLookupService);
-//        ResponseEntity<Tour> responseEntity = tourController.createTour(newTour).block();
-//
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-//        assertThat(responseEntity.getBody()).isEqualTo(createdTour);
-//    }
+            ResponseEntity<Tour> response = tourController.getTourById(id);
+
+            verify(tourService, times(1)).getTourById(id);
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals(tour, response.getBody());
+        }
+
+        @Test
+        public void shouldThrowResourceNotFoundException() {
+            Long id = 1L;
+            when(tourService.getTourById(id)).thenReturn(Optional.empty());
+
+            assertThrows(ResourceNotFoundException.class, () -> tourController.getTourById(id));
+            verify(tourService, times(1)).getTourById(id);
+        }
+    }
+
+    @Nested
+    @DisplayName("Delete /api/v1/tours/{id}")
+    class DeleteTour{
+        @Test
+        public void deleteTour_ExistingTourId_ReturnsNoContentResponse() {
+            Long id = 1L;
+            when(tourService.deleteTour(id)).thenReturn(1);
+
+            ResponseEntity<Tour> response = tourController.deleteTour(id);
+
+            verify(tourService, times(1)).deleteTour(id);
+            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+            assertEquals(null, response.getBody());
+        }
+
+        @Test
+        public void deleteTour_NonExistingTourId_ThrowsResourceNotFoundException() {
+            Long id = 1L;
+            when(tourService.deleteTour(id)).thenReturn(0);
+
+            assertThrows(ResourceNotFoundException.class, () -> tourController.deleteTour(id));
+
+            verify(tourService, times(1)).deleteTour(id);
+        }
+
+    }
+
 }

@@ -13,6 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 				description = "SWEN Project REST API"
 		)
 )
+// TODO: Generating report or summary does not work with alot of data
+
 public class RestApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RestApiApplication.class, args);

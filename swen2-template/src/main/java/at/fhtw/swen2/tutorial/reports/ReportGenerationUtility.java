@@ -24,10 +24,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Component
-public class ReportManager {
+public class ReportGenerationUtility {
     private final TourLogService tourLogService;
 
-    public ReportManager(TourLogServiceImpl tourLogService) {
+    public ReportGenerationUtility(TourLogServiceImpl tourLogService) {
         this.tourLogService = tourLogService;
     }
 

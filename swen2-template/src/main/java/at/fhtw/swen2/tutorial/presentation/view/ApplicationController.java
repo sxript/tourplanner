@@ -6,7 +6,7 @@ import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.presentation.StageAware;
 import at.fhtw.swen2.tutorial.presentation.event.ApplicationShutdownEvent;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
-import at.fhtw.swen2.tutorial.reports.ReportManager;
+import at.fhtw.swen2.tutorial.reports.ReportGenerationUtility;
 import at.fhtw.swen2.tutorial.service.TourLogService;
 import at.fhtw.swen2.tutorial.service.TourService;
 import at.fhtw.swen2.tutorial.util.AlertUtils;
@@ -45,7 +45,7 @@ import java.util.ResourceBundle;
 @Slf4j
 public class ApplicationController implements Initializable, StageAware {
 
-    private final ReportManager reportManager;
+    private final ReportGenerationUtility reportGenerationUtility;
     ApplicationEventPublisher publisher;
 
     @FXML
@@ -80,13 +80,13 @@ public class ApplicationController implements Initializable, StageAware {
 
     private final DataIOUtil dataIOUtil;
 
-    public ApplicationController(ReportManager reportManager, ApplicationEventPublisher publisher, TourService tourService, TourLogService tourLogService, TourListViewModel tourListViewModel, DataIOUtil dataIOUtil) {
+    public ApplicationController(ReportGenerationUtility reportGenerationUtility, ApplicationEventPublisher publisher, TourService tourService, TourLogService tourLogService, TourListViewModel tourListViewModel, DataIOUtil dataIOUtil) {
         log.debug("Initializing application controller");
         this.publisher = publisher;
         this.tourService = tourService;
         this.tourLogService = tourLogService;
         this.tourListViewModel = tourListViewModel;
-        this.reportManager = reportManager;
+        this.reportGenerationUtility = reportGenerationUtility;
         this.dataIOUtil = dataIOUtil;
     }
 
@@ -191,7 +191,7 @@ public class ApplicationController implements Initializable, StageAware {
             return;
         }
 
-        reportManager.generateTourReport(file, selectedTour, tourLogService.findAllTourLogsByTourId(selectedTour.getId(), null).block());
+        reportGenerationUtility.generateTourReport(file, selectedTour, tourLogService.findAllTourLogsByTourId(selectedTour.getId(), null).block());
         AlertUtils.showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
     }
 
@@ -212,7 +212,7 @@ public class ApplicationController implements Initializable, StageAware {
             return;
         }
 
-        reportManager.generateSummarizeReport(file, allTours);
+        reportGenerationUtility.generateSummarizeReport(file, allTours);
         AlertUtils.showAlert(Alert.AlertType.INFORMATION, "Report Generated", "Report Generated", "The report was generated successfully.");
     }
 }

@@ -6,6 +6,8 @@ import at.fhtw.swen2.tutorial.service.TourLogService;
 import at.fhtw.swen2.tutorial.service.TourService;
 import at.fhtw.swen2.tutorial.util.AlertUtils;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Alert;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +22,7 @@ import reactor.core.scheduler.Schedulers;
 public class NewTourLogViewModel extends BaseTourLogViewModel {
     private final TourListViewModel tourListViewModel;
     private final TourService tourService;
+
     public NewTourLogViewModel(TourLogListViewModel tourLogListViewModel, TourListViewModel tourListViewModel, TourLogService tourLogService, TourService tourService) {
         super(tourLogListViewModel, tourLogService);
         this.tourListViewModel = tourListViewModel;
@@ -33,6 +36,7 @@ public class NewTourLogViewModel extends BaseTourLogViewModel {
 
         TourLog tourLog = buildTourLog();
         Tour tour = tourListViewModel.getSelectedTour().getValue();
+
 
         return getTourLogService().saveTourLog(tour.getId(), tourLog)
                 .subscribeOn(Schedulers.boundedElastic())

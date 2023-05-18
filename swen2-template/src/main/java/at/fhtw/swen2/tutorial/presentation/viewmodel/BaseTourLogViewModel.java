@@ -33,10 +33,6 @@ public abstract class BaseTourLogViewModel {
     }
 
     protected boolean areFieldsEmpty() {
-        if (dateProperty.getValue().isEmpty()) {
-            feedbackProperty.set("Date is required");
-            return true;
-        }
         if (commentProperty.getValue().isEmpty()) {
             feedbackProperty.set("Comment is required");
             return true;

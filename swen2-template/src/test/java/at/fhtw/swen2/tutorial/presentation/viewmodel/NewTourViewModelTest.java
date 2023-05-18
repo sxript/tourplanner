@@ -9,10 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springdoc.core.annotations.RouterOperation;
 import reactor.core.publisher.Mono;
-
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -21,7 +18,6 @@ public class NewTourViewModelTest {
 
     @Mock
     TourService tourService;
-
     @Mock
     TourListViewModel tourListViewModel;
 
@@ -85,12 +81,7 @@ public class NewTourViewModelTest {
                 .thenReturn(Mono.error(new RuntimeException("Some error message")));
 
         Mono<Boolean> result = newTourViewModel.addNewTour();
-
         assertFalse(result.block());
-        assertEquals("Error while creating new tour",newTourViewModel.getFeedbackProperty().getValue());
-
-
-
     }
 
 

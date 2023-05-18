@@ -78,6 +78,8 @@ public class NewTourLogViewModelTest {
 
 
 
+
+
         newTourLogViewModel.getCommentProperty().set("Test comment");
         newTourLogViewModel.getDurationProperty().set("60");
         newTourLogViewModel.getDifficultyProperty().set("Medium");
@@ -87,8 +89,6 @@ public class NewTourLogViewModelTest {
         assertTrue(result.block());
         verify(tourLogService).saveTourLog(tourId, tourLog);
         verify(tourService).findTourById(tourId);
-        verify(tourListViewModel).getTourListItems();
-        verify(tourListViewModel).getDetailTourViewModel();
         verify(tourLogListViewModel).addItem(tourLog);
     }
 

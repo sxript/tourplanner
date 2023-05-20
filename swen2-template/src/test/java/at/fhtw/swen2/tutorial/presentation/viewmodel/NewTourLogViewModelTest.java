@@ -77,9 +77,6 @@ public class NewTourLogViewModelTest {
         when(tourListViewModel.getTourListItems()).thenReturn(FXCollections.observableArrayList());
 
 
-
-
-
         newTourLogViewModel.getCommentProperty().set("Test comment");
         newTourLogViewModel.getDurationProperty().set("60");
         newTourLogViewModel.getDifficultyProperty().set("Medium");

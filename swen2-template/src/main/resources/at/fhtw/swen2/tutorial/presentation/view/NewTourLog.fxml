@@ -24,11 +24,6 @@
         </Label>
         <Separator prefWidth="200.0"/>
         <VBox>
-            <Label text="Date"/>
-            <TextField fx:id="dateTextField"/>
-        </VBox>
-
-        <VBox>
             <Label text="Comment"/>
             <TextField fx:id="commentTextField"/>
         </VBox>

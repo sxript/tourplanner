@@ -86,13 +86,14 @@
                                     <children>
                                         <fx:include source="view/DetailTourView.fxml" AnchorPane.bottomAnchor="0.0"
                                                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                    AnchorPane.topAnchor="100.0"/>
+                                                    AnchorPane.topAnchor="50.0"/>
                                     </children>
+
 
                                     <children>
                                         <fx:include source="view/TourLogList.fxml" AnchorPane.bottomAnchor="0.0"
                                                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                    AnchorPane.topAnchor="290.0"/>
+                                                    AnchorPane.topAnchor="400.0"/>
                                     </children>
                                 </AnchorPane>
                             </items>

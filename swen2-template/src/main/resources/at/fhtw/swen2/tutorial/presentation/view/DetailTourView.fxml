@@ -14,56 +14,68 @@
     <VBox>
         <HBox>
             <VBox>
+                <Label>Name</Label>
                 <Label fx:id="currentTourNameLabel">
                     <font>
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
+                <Label>From</Label>
                 <Label fx:id="currentTourFromLabel">
                     <font>
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
+                <Label>To</Label>
                 <Label fx:id="currentTourToLabel">
                     <font>
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
+                <Label>TransportType</Label>
                 <Label fx:id="currentTourTransportTypeLabel">
                     <font>
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
 
+                <Label>Description</Label>
                 <Label fx:id="currentTourDescriptionLabel">
                     <font>
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
+                <Label>Distance</Label>
                 <Label fx:id="currentTourDistanceLabel">
                     <font>
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
 
+                <Label>Duration</Label>
                 <Label fx:id="currentTourDurationLabel">
                     <font>
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
+                <Label>Popularity</Label>
                 <Label fx:id="currentTourPopularity">
                     <font>
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
+                <Label>Child Friendliness</Label>
                 <Label fx:id="currentTourChildFriendliness">
                     <font>
                         <Font name="Arial" size="16.0"/>
                     </font>
                 </Label>
             </VBox>
-            <ImageView fx:id="currentTourImageView" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true"
-                       preserveRatio="true"/>
+
+            <VBox>
+                <ImageView fx:id="currentTourImageView" fitHeight="400.0" fitWidth="400.0" pickOnBounds="true"
+                           preserveRatio="true"/>
+            </VBox>
         </HBox>
         <HBox>
             <Button onAction="#onClickCreateNewTourLog" fx:id="createTourLogButton" text="+"/>

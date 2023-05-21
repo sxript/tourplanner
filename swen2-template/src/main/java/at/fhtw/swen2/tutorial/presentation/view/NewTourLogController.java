@@ -51,7 +51,7 @@ public class NewTourLogController implements Initializable {
         difficultyComboBox.setItems(difficulties);
 
         commentTextField.textProperty().bindBidirectional(newTourLogViewModel.getCommentProperty());
-        dateTextField.textProperty().bindBidirectional(newTourLogViewModel.getDateProperty());
+//        dateTextField.textProperty().bindBidirectional(newTourLogViewModel.getDateProperty());
         difficultyComboBox.valueProperty().bindBidirectional(newTourLogViewModel.getDifficultyProperty());
         ratingComboBox.valueProperty().bindBidirectional(newTourLogViewModel.getRatingProperty());
 

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
@@ -23,12 +24,8 @@ public class TourLogControllerTest {
     @Mock
     private TourLogsService tourLogsService;
 
+    @InjectMocks
     private TourLogController tourLogController;
-
-    @BeforeEach
-    void setup() {
-        tourLogController = new TourLogController(tourLogsService);
-    }
 
     @Test
     public void shouldCreateTourLog() {

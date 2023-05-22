@@ -18,8 +18,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.AssertTrue;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,43 +47,48 @@ public class NewTourLogViewModelTest {
     }
 
 
-    @Test //add new tourTolg
-    void shouldReturnFalseWhenFieldsAreEmpty() {
+    @Nested
+    @DisplayName("addNewTourLog")
+    class AddNewTourLog{
+        @Test
+        void shouldReturnFalseWhenFieldsAreEmpty() {
 
-        Mono<Boolean> result = newTourLogViewModel.addNewTourLog();
+            Mono<Boolean> result = newTourLogViewModel.addNewTourLog();
 
-        assertFalse(result.block());
-        verifyNoInteractions(tourLogService);
-        verifyNoInteractions(tourService);
-        verifyNoInteractions(tourLogListViewModel);
+            assertFalse(result.block());
+
+            verifyNoInteractions(tourLogService);
+            verifyNoInteractions(tourService);
+            verifyNoInteractions(tourLogListViewModel);
+        }
+        @Test
+        void shouldSaveNewTourLogAndReturnTrue() {
+            Long tourId = 0L;
+            Tour tour = Tour.builder().id(tourId).build();
+            TourLog tourLog = TourLog.builder().comment("Test comment").totalTime(60).difficulty("Medium").rating(5).build();
+            ObjectProperty<Tour> tour2 = new SimpleObjectProperty<>();
+            tour2.set(tour);
+
+            when(tourListViewModel.getSelectedTour()).thenReturn(tour2);
+            when(tourLogService.saveTourLog(tourId, tourLog)).thenReturn(Mono.just(tourLog));
+            when(tourService.findTourById(tourId)).thenReturn(Mono.just(tour));
+            when(tourListViewModel.getTourListItems()).thenReturn(FXCollections.observableArrayList());
+
+            newTourLogViewModel.getCommentProperty().set("Test comment");
+            newTourLogViewModel.getDurationProperty().set("60");
+            newTourLogViewModel.getDifficultyProperty().set("Medium");
+            newTourLogViewModel.getRatingProperty().set("5");
+            Mono<Boolean> result = newTourLogViewModel.addNewTourLog();
+
+            assertTrue(result.block());
+
+            verify(tourLogService).saveTourLog(tourId, tourLog);
+            verify(tourService).findTourById(tourId);
+            verify(tourLogListViewModel).addItem(tourLog);
+        }
     }
 
-    @Test
-    void shouldSaveNewTourLogAndReturnTrue() {
-        Long tourId = 0l;
-        Tour tour = Tour.builder().id(tourId).build();
-        TourLog tourLog = TourLog.builder().comment("Test comment").totalTime(60).difficulty("Medium").rating(5).build();
-        ObjectProperty<Tour> tour2 = new SimpleObjectProperty<>();
-        tour2.set(tour);
 
-
-        when(tourListViewModel.getSelectedTour()).thenReturn(tour2);
-        when(tourLogService.saveTourLog(tourId, tourLog)).thenReturn(Mono.just(tourLog));
-        when(tourService.findTourById(tourId)).thenReturn(Mono.just(tour));
-        when(tourListViewModel.getTourListItems()).thenReturn(FXCollections.observableArrayList());
-
-
-        newTourLogViewModel.getCommentProperty().set("Test comment");
-        newTourLogViewModel.getDurationProperty().set("60");
-        newTourLogViewModel.getDifficultyProperty().set("Medium");
-        newTourLogViewModel.getRatingProperty().set("5");
-        Mono<Boolean> result = newTourLogViewModel.addNewTourLog();
-
-        assertTrue(result.block());
-        verify(tourLogService).saveTourLog(tourId, tourLog);
-        verify(tourService).findTourById(tourId);
-        verify(tourLogListViewModel).addItem(tourLog);
-    }
 
 
 }

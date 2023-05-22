@@ -4,12 +4,15 @@ import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.service.TourService;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -34,54 +37,71 @@ public class NewTourViewModelTest {
         }
     }
 
-    @Test
-    public void testAddNewTour_WithInvalidValidFields() {
-        Tour tour = new Tour();
-        Mono<Boolean> result = newTourViewModel.addNewTour();
-        assertFalse(result.block());
-        verify(tourListViewModel, never()).addItem(tour);
-    }
+
+    @Nested
+    @DisplayName("AddNewTour")
+    class AddNewTour {
+        @Test
+        public void shouldReturnFalseWhenEmptyFields() { //Add tour
+            Tour tour = new Tour();
+            Mono<Boolean> result = newTourViewModel.addNewTour();
+
+            assertFalse(result.block());
+            verify(tourListViewModel, never()).addItem(tour);
+            verify(tourService, never()).saveTour(tour);
+            verifyNoInteractions(tourService);
+        }
 
 
-    @Test
-    public void testAddNewTour_WithValidFields() {
+        @Test
+        public void shouldAddNewTour() {
 
-        Tour tour = new Tour().builder().name("TestName").from("Deinleingasse").to("Hauptbahnhof").description("Description").transportType("Walking").build();
-
-
-        newTourViewModel.getNameProperty().set("TestName");
-        newTourViewModel.getFromProperty().set("Deinleingasse");
-        newTourViewModel.getToProperty().set("Hauptbahnhof");
-        newTourViewModel.getDescriptionProperty().set("Description");
-        newTourViewModel.getTransportTypeProperty().set("Walking");
-
-        when(tourService.saveTour(tour))
-                .thenReturn(Mono.just(tour));
-
-        Mono<Boolean> result = newTourViewModel.addNewTour();
-        assertTrue(result.block());
-
-        verify(tourListViewModel, times(1)).addItem(tour);
-
-    }
-
-    @Test
-    public void testAddNewTour_OnErrorResume() {
-
-        Tour tour = new Tour().builder().name("TestName").from("Deinleingasse").to("Hauptbahnhof").description("Description").transportType("Walking").build();
-
-        newTourViewModel.getNameProperty().set("TestName");
-        newTourViewModel.getFromProperty().set("Deinleingasse");
-        newTourViewModel.getToProperty().set("Hauptbahnhof");
-        newTourViewModel.getDescriptionProperty().set("Description");
-        newTourViewModel.getTransportTypeProperty().set("Walking");
+            new Tour();
+            Tour tour = Tour.builder().name("TestName").from("Deinleingasse").to("Hauptbahnhof").description("Description").transportType("Walking").build();
 
 
-        when(tourService.saveTour(tour))
-                .thenReturn(Mono.error(new RuntimeException("Some error message")));
+            newTourViewModel.getNameProperty().set("TestName");
+            newTourViewModel.getFromProperty().set("Deinleingasse");
+            newTourViewModel.getToProperty().set("Hauptbahnhof");
+            newTourViewModel.getDescriptionProperty().set("Description");
+            newTourViewModel.getTransportTypeProperty().set("Walking");
 
-        Mono<Boolean> result = newTourViewModel.addNewTour();
-        assertFalse(result.block());
+            when(tourService.saveTour(tour))
+                    .thenReturn(Mono.just(tour));
+
+            Mono<Boolean> result = newTourViewModel.addNewTour();
+            assertTrue(result.block());
+
+            verify(tourListViewModel, times(1)).addItem(tour);
+            verify(tourService, times(1)).saveTour(tour);
+            verifyNoMoreInteractions(tourService);
+
+
+        }
+
+        @Test
+        public void shouldResumeOnErrorWhenAddingNewTour() {
+
+            new Tour();
+            Tour tour = Tour.builder().name("TestName").from("Deinleingasse").to("Hauptbahnhof").description("Description").transportType("Walking").build();
+
+            newTourViewModel.getNameProperty().set("TestName");
+            newTourViewModel.getFromProperty().set("Deinleingasse");
+            newTourViewModel.getToProperty().set("Hauptbahnhof");
+            newTourViewModel.getDescriptionProperty().set("Description");
+            newTourViewModel.getTransportTypeProperty().set("Walking");
+
+            when(tourService.saveTour(tour))
+                    .thenReturn(Mono.error(new RuntimeException("Some error message")));
+            Mono<Boolean> result = newTourViewModel.addNewTour();
+
+            assertFalse(result.block());
+            verify(tourListViewModel, never()).addItem(tour);
+            verify(tourService, times(1)).saveTour(tour);
+            verifyNoMoreInteractions(tourService);
+
+        }
+
     }
 
 

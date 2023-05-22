@@ -6,6 +6,8 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +25,7 @@ public class UpdateTourLogViewModelTest {
     @Mock
     TourLogService tourLogService;
 
-    TourLogListViewModel tourLogListViewModel = spy(new TourLogListViewModel(tourLogService,null));
+    TourLogListViewModel tourLogListViewModel = spy(new TourLogListViewModel(tourLogService, null));
 
     @InjectMocks
     UpdateTourLogViewModel updateTourLogViewModel;
@@ -38,70 +40,74 @@ public class UpdateTourLogViewModelTest {
         }
     }
 
-    @Test
-    public void testUpdateTourLog_Success() {
 
-        updateTourLogViewModel.getCommentProperty().set("Comment");
-        updateTourLogViewModel.getDurationProperty().set("4");
-        updateTourLogViewModel.getDifficultyProperty().set("Medium");
-        updateTourLogViewModel.getRatingProperty().set("5");
-        ObjectProperty<TourLog> selectedTourLogProperty = new SimpleObjectProperty<>();
-        TourLog selectedTourLog = TourLog.builder().id(1l).build();
-        selectedTourLogProperty.set(selectedTourLog);
+    @Nested
+    @DisplayName("UpdateTourLog")
+    class UpdateTourLog {
 
-        when(tourLogListViewModel.getSelectedTourLog()).thenReturn(selectedTourLogProperty);
+        @Test
+        public void shouldHandleEmptyOrInvalidFieldsWhenUpdatingTourLog() {
+            Mono<Boolean> result = updateTourLogViewModel.updateTourLog();
+            assertFalse(result.block());
 
-        TourLog updatedTourLog = new TourLog();
-        when(tourLogService.updateTourLog(any(TourLog.class))).thenReturn(Mono.just(updatedTourLog));
+            verifyNoInteractions(tourLogListViewModel);
+            verifyNoInteractions(tourLogService);
+
+        }
+
+        @Test
+        public void shouldUpdateTourLogSuccessfully() {
+
+            updateTourLogViewModel.getCommentProperty().set("Comment");
+            updateTourLogViewModel.getDurationProperty().set("4");
+            updateTourLogViewModel.getDifficultyProperty().set("Medium");
+            updateTourLogViewModel.getRatingProperty().set("5");
+            ObjectProperty<TourLog> selectedTourLogProperty = new SimpleObjectProperty<>();
+            TourLog selectedTourLog = TourLog.builder().id(1L).build();
+            selectedTourLogProperty.set(selectedTourLog);
+
+            when(tourLogListViewModel.getSelectedTourLog()).thenReturn(selectedTourLogProperty);
+
+            TourLog updatedTourLog = new TourLog();
+            when(tourLogService.updateTourLog(any(TourLog.class))).thenReturn(Mono.just(updatedTourLog));
 
 
-        Mono<Boolean> result = updateTourLogViewModel.updateTourLog();
+            Mono<Boolean> result = updateTourLogViewModel.updateTourLog();
+
+            assertTrue(result.block());
+            verify(tourLogListViewModel).updateTourLog(updatedTourLog);
+            verify(tourLogService).updateTourLog(any(TourLog.class));
+
+        }
+
+        @Test
+        public void shouldHandleErrorWhenUpdatingTourLog() {
+
+            updateTourLogViewModel.getCommentProperty().set("Comment");
+            updateTourLogViewModel.getDurationProperty().set("4");
+            updateTourLogViewModel.getDifficultyProperty().set("Medium");
+            updateTourLogViewModel.getRatingProperty().set("5");
+
+            ObjectProperty<TourLog> selectedTourLogProperty = new SimpleObjectProperty<>();
+            TourLog selectedTourLog = TourLog.builder().id(1L).build();
+            selectedTourLogProperty.set(selectedTourLog);
+
+            when(tourLogListViewModel.getSelectedTourLog()).thenReturn(selectedTourLogProperty);
 
 
-        assertTrue(result.block());
+            Throwable error = new RuntimeException("Update error");
+            when(tourLogService.updateTourLog(any(TourLog.class))).thenReturn(Mono.error(error));
 
-//        verify(feedbackProperty).set("TourLog updated");
-        verify(tourLogListViewModel).updateTourLog(updatedTourLog);
-        verify(tourLogService).updateTourLog(any(TourLog.class));
+            Mono<Boolean> result = updateTourLogViewModel.updateTourLog();
+            assertFalse(result.block());
+
+
+
+            verify(tourLogListViewModel, never()).updateTourLog(any(TourLog.class));
+            verify(tourLogService).updateTourLog(any(TourLog.class));
+
+        }
+
     }
-
-
-    @Test
-    public void testUpdateTourLog_EmptyOrInvalidFields() {
-
-        Mono<Boolean> result = updateTourLogViewModel.updateTourLog();
-        assertFalse(result.block());
-
-        verifyNoInteractions(tourLogListViewModel);
-        verifyNoInteractions(tourLogService);
-    }
-
-    @Test
-    public void testUpdateTourLog_Error() {
-
-        updateTourLogViewModel.getCommentProperty().set("Comment");
-        updateTourLogViewModel.getDurationProperty().set("4");
-        updateTourLogViewModel.getDifficultyProperty().set("Medium");
-        updateTourLogViewModel.getRatingProperty().set("5");
-
-        ObjectProperty<TourLog> selectedTourLogProperty = new SimpleObjectProperty<>();
-        TourLog selectedTourLog = TourLog.builder().id(1l).build();
-        selectedTourLogProperty.set(selectedTourLog);
-
-        when(tourLogListViewModel.getSelectedTourLog()).thenReturn(selectedTourLogProperty);
-
-
-        Throwable error = new RuntimeException("Update error");
-        when(tourLogService.updateTourLog(any(TourLog.class))).thenReturn(Mono.error(error));
-
-        Mono<Boolean> result = updateTourLogViewModel.updateTourLog();
-
-        assertFalse(result.block());
-
-
-//        verify(feedbackProperty).set("Error updating TourLog");
-        verify(tourLogListViewModel, never()).updateTourLog(any(TourLog.class));
-    }
-
 
 }

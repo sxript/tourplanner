@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
@@ -28,12 +29,9 @@ class TourControllerTest {
     private TourService tourService;
     @Mock
     private MapQuestLookupService mapQuestLookupService;
+    @InjectMocks
     private TourController tourController;
 
-    @BeforeEach
-    void setup() {
-        tourController = new TourController(tourService, mapQuestLookupService);
-    }
 
     @Nested
     @DisplayName("GET /api/v1/tours")

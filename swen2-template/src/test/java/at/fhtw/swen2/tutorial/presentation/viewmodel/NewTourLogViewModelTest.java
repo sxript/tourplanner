@@ -9,9 +9,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,11 +28,9 @@ public class NewTourLogViewModelTest {
     @Mock
     private TourLogListViewModel tourLogListViewModel;
 
-
     private TourListViewModel tourListViewModel = spy(new TourListViewModel(null,new DetailTourViewModel(null,null),null));
     @Mock
     private TourLogService tourLogService;
-
     @Mock
     private TourService tourService;
 
@@ -51,8 +47,9 @@ public class NewTourLogViewModelTest {
         }
     }
 
-    @Test
-    void addNewTourLog_whenFieldsAreEmpty_shouldReturnFalse() {
+
+    @Test //add new tourTolg
+    void shouldReturnFalseWhenFieldsAreEmpty() {
 
         Mono<Boolean> result = newTourLogViewModel.addNewTourLog();
 

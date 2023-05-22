@@ -31,7 +31,7 @@ public class TourLogControllerTest {
     }
 
     @Test
-    public void createTourLog_ValidTourLog_ReturnsOkResponse() {
+    public void shouldCreateTourLog() {
 
         Long tourId = 1L;
         TourLog tourLog = new TourLog();
@@ -45,7 +45,7 @@ public class TourLogControllerTest {
     }
 
     @Test
-    public void updateTourLog_ValidTourLog_ReturnsOkResponse() {
+    public void shouldUpdateTourLog() {
 
         Long id = 1L;
         TourLog tourLog = new TourLog();
@@ -63,7 +63,7 @@ public class TourLogControllerTest {
     @DisplayName("Get /api/v1/logs/{id}")
     class GetTourLogById {
         @Test
-        void getTourLogById_ExistingId_ReturnsTourLog() {
+        void shouldReturnTourLogForExistingID() {
             TourLog tourLog = new TourLog();
             when(tourLogsService.findTourLogById(anyLong()))
                     .thenReturn(Optional.of(tourLog));
@@ -76,7 +76,7 @@ public class TourLogControllerTest {
         }
 
         @Test
-        void getTourLogById_NonExistingId_ThrowsResourceNotFoundException() {
+        void shouldThrowsResourceNotFoundExceptionForNonExistingId() {
             // Mock the tourLogsService.findTourLogById method
             when(tourLogsService.findTourLogById(anyLong()))
                     .thenReturn(Optional.empty());
@@ -97,7 +97,7 @@ public class TourLogControllerTest {
     @DisplayName("Delete /api/v1/logs/{id}")
     class DeleteTourLog{
         @Test
-        void deleteTourLog_ExistingId_ReturnsNoContent() {
+        void shouldDeleteTourLogForExistingId() {
             when(tourLogsService.deleteTourLogById(anyLong()))
                     .thenReturn(1);
 
@@ -110,7 +110,7 @@ public class TourLogControllerTest {
         }
 
         @Test
-        void deleteTourLog_NonExistingId_ThrowsResourceNotFoundException() {
+        void shouldThrowsResourceNotFoundExceptionForNonExistingId() {
             when(tourLogsService.deleteTourLogById(anyLong()))
                     .thenReturn(0);
 

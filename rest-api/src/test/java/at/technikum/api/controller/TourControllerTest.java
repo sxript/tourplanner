@@ -44,7 +44,6 @@ class TourControllerTest {
         }
 
         @Test
-        @DisplayName("Should return all tours when search query is null")
         void shouldReturnAllToursWithSearchQueryEmpty() {
             List<Tour> tours = new ArrayList<>();
             tours.add(new Tour("Tour 1", "From 1", "To 1", "Transport Type 1", "Description 1", 1.0, 1, null));
@@ -62,7 +61,6 @@ class TourControllerTest {
 
 
         @Test
-        @DisplayName("Should return empty list when no tours found")
         void shouldReturnEmptyListWhenNoToursFound() {
             when(tourService.getAllTours(null)).thenReturn(new ArrayList<>());
 
@@ -105,7 +103,7 @@ class TourControllerTest {
     @DisplayName("Delete /api/v1/tours/{id}")
     class DeleteTour{
         @Test
-        public void deleteTour_ExistingTourId_ReturnsNoContentResponse() {
+        public void shouldReturnNoContentResponseForExistingTourId() {
             Long id = 1L;
             when(tourService.deleteTour(id)).thenReturn(1);
 
@@ -116,8 +114,9 @@ class TourControllerTest {
             assertEquals(null, response.getBody());
         }
 
+
         @Test
-        public void deleteTour_NonExistingTourId_ThrowsResourceNotFoundException() {
+        public void shouldReturnNoContentResponseForNonExistingTourId() {
             Long id = 1L;
             when(tourService.deleteTour(id)).thenReturn(0);
 

@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -211,19 +212,32 @@ public class ReportGenerationUtility {
                 AtomicReference<Double> totalRating = new AtomicReference<>((double) 0);
                 AtomicInteger count = new AtomicInteger();
 
+                CountDownLatch latch = new CountDownLatch(1);
+
                 tourLogService.findAllTourLogsByTourId(tour.getId(), null)
                         .flatMapMany(Flux::fromIterable)
+                        .doOnComplete(() -> {
+                            latch.countDown();
+                        })
                         .subscribe(tourLog -> {
                             totalTime.updateAndGet(v -> (v + tourLog.getTotalTime()));
                             totalRating.updateAndGet(v -> (v + tourLog.getRating()));
                             count.getAndIncrement();
+                            System.out.println(tourLog);
 
                         });
+
+
+                try {
+                    latch.await(); // Warte auf das Signal, dass die asynchrone Verarbeitung abgeschlossen ist
+                } catch (InterruptedException e) {
+                }
 
                 if (count.get() == 0) {
                     table.addCell("No Tour Logs available");
                     table.addCell("No Tour Logs available");
                 } else {
+
                     table.addCell(String.valueOf(totalTime.get() / count.get()));
                     table.addCell(String.valueOf(totalRating.get() / count.get()));
                 }

@@ -2,19 +2,15 @@ package at.fhtw.swen2.tutorial.presentation.view;
 
 import at.fhtw.swen2.tutorial.exception.DataIOException;
 import at.fhtw.swen2.tutorial.model.Tour;
-import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.presentation.StageAware;
 import at.fhtw.swen2.tutorial.presentation.event.ApplicationShutdownEvent;
 import at.fhtw.swen2.tutorial.presentation.viewmodel.TourListViewModel;
+import at.fhtw.swen2.tutorial.reports.ImportReportUtility;
 import at.fhtw.swen2.tutorial.reports.ReportGenerationUtility;
 import at.fhtw.swen2.tutorial.service.TourLogService;
 import at.fhtw.swen2.tutorial.service.TourService;
 import at.fhtw.swen2.tutorial.util.AlertUtils;
-import at.fhtw.swen2.tutorial.util.DataExportDTO;
 import at.fhtw.swen2.tutorial.util.DataIOUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,13 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -46,6 +40,8 @@ import java.util.ResourceBundle;
 public class ApplicationController implements Initializable, StageAware {
 
     private final ReportGenerationUtility reportGenerationUtility;
+
+    private  final ImportReportUtility importReportUtility;
     ApplicationEventPublisher publisher;
 
     @FXML
@@ -80,7 +76,8 @@ public class ApplicationController implements Initializable, StageAware {
 
     private final DataIOUtil dataIOUtil;
 
-    public ApplicationController(ReportGenerationUtility reportGenerationUtility, ApplicationEventPublisher publisher, TourService tourService, TourLogService tourLogService, TourListViewModel tourListViewModel, DataIOUtil dataIOUtil) {
+    public ApplicationController(ReportGenerationUtility reportGenerationUtility, ImportReportUtility importReportUtility, ApplicationEventPublisher publisher, TourService tourService, TourLogService tourLogService, TourListViewModel tourListViewModel, DataIOUtil dataIOUtil) {
+        this.importReportUtility = importReportUtility;
         log.debug("Initializing application controller");
         this.publisher = publisher;
         this.tourService = tourService;
@@ -112,10 +109,7 @@ public class ApplicationController implements Initializable, StageAware {
     }
 
 
-    // TODO: is this the right place for this?
     public void onFileImport() {
-        // TODO: loading indicator
-        ObjectMapper objectMapper = new ObjectMapper();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
@@ -123,32 +117,8 @@ public class ApplicationController implements Initializable, StageAware {
         // Show save file dialog
         File file = fileChooser.showOpenDialog(stage.getValue());
 
-        if (file != null) {
-            // User selected a file, do something with it
-            try {
-                String jsonData = Files.readString(file.toPath());
-                List<DataExportDTO> data = objectMapper.readValue(jsonData, new TypeReference<>() {
-                });
-                // Loop through each exported data item and create a Callable for it
-                for (DataExportDTO dataItem : data) {
-                    tourService.saveTour(dataItem.getTour())
-                            .subscribeOn(Schedulers.boundedElastic())
-                            .subscribe(importedTour -> {
-                                Platform.runLater(() -> tourListViewModel.addItem(importedTour));
+        importReportUtility.fileImport(file);
 
-                                // Loop through each tour log in the exported data item and import it
-                                log.info("Importing {} tour logs for tour {}", dataItem.getTourLogs().size(), importedTour.getName());
-                                for (TourLog tourLog : dataItem.getTourLogs()) {
-                                    tourLogService.saveTourLog(importedTour.getId(), tourLog)
-                                            .subscribeOn(Schedulers.boundedElastic())
-                                            .subscribe(savedTourLog -> log.info("Imported tour log {}", savedTourLog.getId()));
-                                }
-                            }, error -> AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error importing tour", error.getMessage()));
-                }
-            } catch (IOException e) {
-                AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error reading file", e.getMessage());
-            }
-        }
     }
 
     // TODO: is this the right place for this?

@@ -86,9 +86,6 @@ public class DetailTourController implements Initializable {
         currentTourDistanceLabel.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourDistanceLabel());
         currentTourPopularity.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourPopularity());
         currentTourChildFriendliness.textProperty().bindBidirectional(detailTourViewModel.getCurrentTourChildFriendliness());
-
-
-        // TODO: this should not be in the controller
         createTourLogButton.setVisible(false);
 
         Tour tour = tourListViewModel.getSelectedTour().getValue();

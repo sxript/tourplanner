@@ -55,8 +55,22 @@ During the development of the project, several lessons were learned that can be 
 - Testing and Quality Assurance: Prioritizing thorough testing, including unit tests, integration tests, and manual testing, helped identify and resolve issues early, ensuring a reliable and robust application.
 - Error Handling and Logging: Implementing robust error handling mechanisms and comprehensive logging proved essential for effective debugging and troubleshooting, enabling timely issue resolution.
 
-# Unit test-Desing
-For the purpose of testing the controller classes, a systematic and organized approach was employed. The AAA (Arrange-Act-Assert) pattern was followed, enabling clear separation of the test setup, execution of actions, and verification of outcomes. To ensure controlled and isolated testing, extensive mocking techniques were employed, including the use of spies to simulate and monitor the behavior of relevant components and dependencies. These strategies facilitated thorough evaluation of the controller classes, resulting in comprehensive test coverage and reliable assessment of their functionality and interactions
+# Design pattern
+Used Design patterns: 
+- MVVM 
+- Dependency Injection
+- Interface pattern
+- Repository pattern
+
+# Unit-Test Design
+For the purpose of testing the controller classes, a systematic and organized approach was employed. The AAA (Arrange-Act-Assert) pattern was followed, enabling clear separation of the test setup, execution of actions, and verification of outcomes. To ensure controlled and isolated testing, extensive mocking techniques were employed, including the use of spies to simulate and monitor the behavior of relevant components and dependencies. These strategies facilitated thorough evaluation of the controller classes, resulting in comprehensive test coverage and reliable assessment of their functionality and interactions.
+
+# Features
+### Vault Integration
+Secret management is implemented using Vault, which provides a secure and centralized storage solution for sensitive information.
+
+### Multi-Repository Structure
+The project follows a multi-repository structure, consisting of separate repositories for the frontend JavaFX and the backend server components. This separation allows for better code organization, modularity, and maintainability.
 
 # Timespent
 - 15h Research (Spring Boot, Vault, Reactive Library)

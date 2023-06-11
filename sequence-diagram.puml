@@ -1,0 +1,20 @@
+@startuml
+
+actor User as "User"
+participant View as "View"
+participant ViewModel as "ViewModel"
+participant Backend as "Backend"
+participant Database as "Database"
+participant Frontend as "Frontend"
+
+User -> View: Clicks on the "+" button to create a new tour
+View -> ViewModel: Notify new tour creation
+ViewModel -> ViewModel: Validate tour data
+ViewModel -> Backend: Send tour data
+Backend -> Database: Save tour data
+Backend --> ViewModel: Tour saved successfully
+ViewModel --> View: Notify tour creation success
+ViewModel -> Frontend: Notify new tour availability
+Frontend -> Frontend: Display the new tour
+
+@enduml

@@ -14,6 +14,8 @@ This document provides an overview of the design and architecture of the project
 
 ## 2 Backend Architecture
 The backend architecture is based on the Spring Boot framework, which provides a robust and scalable foundation for building Java applications. The use of Spring Boot allows for easy configuration, dependency injection, and integration with other Spring projects.
+![](class-diagram-restApi.png)
+
 
 ### 2.1 Spring Boot
 
@@ -40,6 +42,55 @@ In the frontend component, secrets are stored in an .env file. The .env file is 
 
 Integration between Backend and Frontend
 The backend and frontend components are integrated using RESTful APIs. The backend exposes a set of RESTful endpoints that the frontend can invoke to retrieve data and perform operations. The frontend component communicates with the backend asynchronously, leveraging the reactive programming model.
+
+### 3.3 UX
+![](wireframe.png)
+
+The program offers the following features:
+Tour Management:
+- Create, delete, and edit tours. 
+2. Tour Details:
+- When a tour is clicked, users can view its details, including a picture of the route from the start to the destination, and a table with tour logs.
+3. Tour Log Management:
+- Create, delete, and edit tour logs associated with a tour.
+4. Export and Import:
+- Export tours with their tour logs as JSON files.
+- Import previously exported JSON files.
+5. Loading Indicator:
+- Displays a loading indicator when the frontend is waiting for backend processes to complete.
+
+### 3.4 Use-Cases
+
+Creating a New Tour:
+
+- User opens the app and navigates to the "Create Tour" section.
+- User provides a name, start location, destination, description, and mode of transport for the tour.
+- User submits the tour details, and the app saves the information.
+
+Viewing Tour Details:
+- User opens the app and selects a previously created tour from the list.
+- User clicks on the tour to view its details.
+- The app displays the name, start location, destination, description, and mode of transport for the selected tour.
+- Additionally, an image of the route is shown to give a visual representation of the tour. 
+
+Adding Tour Logs:
+- User selects a tour from the list and clicks on it to view its details.
+- The app displays the tour information along with a table of existing tour logs (if any).
+- User clicks on the "Add Tour Log" button.
+- User fills in the comment, duration, difficulty, and rating for the tour log.
+- User submits the tour log, and the app saves it.
+
+Editing Tour Logs:
+- User selects a tour from the list and clicks on it to view its details.
+- The app displays the tour information along with the table of existing tour logs.
+- User selects a tour log from the table to edit.
+- The app presents a form with pre-filled information for the selected tour log.
+- User modifies the comment, duration, difficulty, or rating as needed.
+- User saves the changes, and the app updates the tour log.
+
+![](use-case.png)
+![](sequence-diagram.png)
+
 
 ## 4 Conclusion
 This documentation has provided an overview of the design and architecture of the project. The backend component is built using Spring Boot with Vault for secret management, following the reactive programming paradigm. The frontend component is developed using Spring Boot with JavaFX and stores secrets in an .env file. The integration between the backend and frontend is achieved through RESTful APIs.

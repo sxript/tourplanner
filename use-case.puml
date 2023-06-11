@@ -1,0 +1,36 @@
+@startuml
+
+left to right direction
+skinparam packageStyle rect
+
+actor Parent as "Parent"
+actor Child as "Child"
+
+rectangle "Tour App" {
+  usecase "Create Tour" as (Create Tour)
+  usecase "View Tour Details" as (View Tour Details)
+  usecase "Add Tour Log" as (Add Tour Log)
+  usecase "Edit Tour Log" as (Edit Tour Log)
+  usecase "Import Tours" as (Import Tours)
+  usecase "Export Tours" as (Export Tours)
+  usecase "Create Summary Report" as (Create Summary Report)
+
+  (Create Tour) --> (View Tour Details)
+  (View Tour Details) --> (Add Tour Log)
+  (Add Tour Log) --> (Edit Tour Log)
+  (Edit Tour Log) --> (View Tour Details)
+  (Import Tours) ..> (Create Tour) : <<include>>
+  (Import Tours) ..> (Add Tour Log) : <<include>>
+  (Export Tours) ..> (View Tour Details) : <<include>>
+  (Create Summary Report) ..> (View Tour Details) : <<include>>
+
+  Parent --> (View Tour Details)
+  Child --> (View Tour Details)
+  Parent --> (Add Tour Log)
+  Child --> (Add Tour Log)
+  Parent --> (Import Tours)
+  Parent --> (Export Tours)
+  Parent --> (Create Summary Report)
+}
+
+@enduml

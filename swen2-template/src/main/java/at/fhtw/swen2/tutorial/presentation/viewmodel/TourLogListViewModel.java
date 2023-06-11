@@ -63,7 +63,6 @@ public class TourLogListViewModel {
                     });
                     tourListViewModel.getDetailTourViewModel().updateSpecialAttributes(tourToUpdate);
                 }));
-
     }
 
     public void displayTourLogList(Long tourId) {

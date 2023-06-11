@@ -55,6 +55,9 @@ public class ImportReportUtility {
                                             .subscribe(savedTourLog -> log.info("Imported tour log {}", savedTourLog.getId()));
                                 }
                             }, error -> AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error importing tour", error.getMessage()));
+
+
+
                 }
             } catch (IOException e) {
                 AlertUtils.showAlert(Alert.AlertType.ERROR, "Error", "Error reading file", e.getMessage());

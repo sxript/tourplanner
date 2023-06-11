@@ -72,6 +72,8 @@ public class DetailTourViewModel {
     }
 
     public void updateSpecialAttributes(Tour tour) {
+        System.out.println("Updating special attributes");
+        System.out.println("------------------------");
         currentTourPopularity.set(String.valueOf(tour.getPopularity()));
         currentTourChildFriendliness.set(String.valueOf(tour.getChildFriendliness()));
     }

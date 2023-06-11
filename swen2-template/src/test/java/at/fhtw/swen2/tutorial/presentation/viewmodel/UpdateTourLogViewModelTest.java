@@ -25,7 +25,7 @@ public class UpdateTourLogViewModelTest {
     @Mock
     TourLogService tourLogService;
 
-    TourLogListViewModel tourLogListViewModel = spy(new TourLogListViewModel(tourLogService, null));
+    TourLogListViewModel tourLogListViewModel = spy(new TourLogListViewModel(tourLogService, tourService, null));
 
     @InjectMocks
     UpdateTourLogViewModel updateTourLogViewModel;

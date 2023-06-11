@@ -79,7 +79,14 @@ public class TourLogsService {
     }
 
     public int deleteTourLogById(Long id) {
-        return tourLogsRepository.deleteTourLogById(id);
+
+        TourLog updatedTourLog = tourLogsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No TourLog with id = " + id));
+
+        int deleted = tourLogsRepository.deleteTourLogById(id);
+
+        updateTourSpecialAttributes(updatedTourLog.getTour().getId());
+        return deleted;
     }
 
     public List<TourLog> deleteAllTourLogsFromTourById(Long tourId) {
@@ -87,6 +94,8 @@ public class TourLogsService {
             throw new ResourceNotFoundException("No Tour with id = " + tourId);
         }
 
-        return tourLogsRepository.deleteByTourId(tourId);
+        List<TourLog> deletedTourLogs = tourLogsRepository.deleteByTourId(tourId);
+        updateTourSpecialAttributes(tourId);
+        return deletedTourLogs;
     }
 }

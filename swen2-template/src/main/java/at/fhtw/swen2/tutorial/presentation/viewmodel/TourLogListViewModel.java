@@ -1,7 +1,9 @@
 package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
+import at.fhtw.swen2.tutorial.model.Tour;
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.service.TourLogService;
+import at.fhtw.swen2.tutorial.service.TourService;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,8 +17,6 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -26,13 +26,15 @@ public class TourLogListViewModel {
     private final ObservableList<TourLog> tourLogListItems = FXCollections.observableArrayList();
     private final ObjectProperty<TourLog> selectedTourLog = new SimpleObjectProperty<>();
     private final TourLogService tourLogService;
+    private final TourService tourService;
 
     private final TourListViewModel tourListViewModel;
 
     private Disposable disposable;
 
-    public TourLogListViewModel(TourLogService tourLogService, @Lazy TourListViewModel tourListViewModel) {
+    public TourLogListViewModel(TourLogService tourLogService, TourService tourService, @Lazy TourListViewModel tourListViewModel) {
         this.tourLogService = tourLogService;
+        this.tourService = tourService;
         this.tourListViewModel = tourListViewModel;
     }
 
@@ -47,6 +49,21 @@ public class TourLogListViewModel {
         }
         tourLogListItems.remove(selectedTourLogToDelete);
         tourLogService.deleteTourLogById(selectedTourLogToDelete.getId());
+
+        Tour tour = tourListViewModel.getSelectedTour().getValue();
+
+        System.out.println(tour);
+
+        tourService.findTourById(tour.getId())
+                .subscribeOn(Schedulers.boundedElastic())
+                .subscribe(tourToUpdate -> Platform.runLater(() -> {
+                    tourListViewModel.getTourListItems().stream().filter(t -> t.getId().equals(tourToUpdate.getId())).findFirst().ifPresent(t -> {
+                        t.setChildFriendliness(tourToUpdate.getChildFriendliness());
+                        t.setPopularity(tourToUpdate.getPopularity());
+                    });
+                    tourListViewModel.getDetailTourViewModel().updateSpecialAttributes(tourToUpdate);
+                }));
+
     }
 
     public void displayTourLogList(Long tourId) {

@@ -51,9 +51,6 @@ public class TourLogListViewModel {
         tourLogService.deleteTourLogById(selectedTourLogToDelete.getId());
 
         Tour tour = tourListViewModel.getSelectedTour().getValue();
-
-        System.out.println(tour);
-
         tourService.findTourById(tour.getId())
                 .subscribeOn(Schedulers.boundedElastic())
                 .subscribe(tourToUpdate -> Platform.runLater(() -> {

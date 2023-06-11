@@ -223,8 +223,6 @@ public class ReportGenerationUtility {
                             totalTime.updateAndGet(v -> (v + tourLog.getTotalTime()));
                             totalRating.updateAndGet(v -> (v + tourLog.getRating()));
                             count.getAndIncrement();
-                            System.out.println(tourLog);
-
                         });
 
 

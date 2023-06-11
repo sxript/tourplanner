@@ -12,10 +12,22 @@
 ## 1 Introduction
 This document provides an overview of the design and architecture of the project. The project consists of a backend component developed using Spring Boot with Vault for secret management and a frontend component developed using Spring Boot with JavaFX. The backend component follows the reactive paradigm for writing asynchronous code.
 
+### 1.1 App architecture
+
+Our application follows a layered architecture, with a clear separation between the frontend and backend components. In the frontend, we adopt the Model-View-ViewModel (MVVM) pattern to structure our code. This pattern divides the responsibilities of data modeling (Model), user interface rendering (View), and the logic and operations that connect the Model and View (ViewModel).
+
+The View layer in the frontend is responsible for presenting the user interface. It handles rendering and displaying data to the user, as well as capturing user input and events. The ViewModel layer acts as an intermediary between the View and the backend services. It provides the necessary data and functionality required by the View, handles user interactions, and triggers appropriate actions.
+
+Moving to the backend layer, we have implemented a Rest API to serve as the communication interface between the frontend and the server. The Rest API provides a standardized way to exchange data and perform operations. Within the frontend, we have a business layer that consumes the Rest API. This layer contains the services responsible for interacting with the backend and executing specific business logic operations.
+
+The services in the business layer communicate with the Rest API endpoints to retrieve and manipulate data from the backend. They encapsulate the necessary functionality and provide an interface for the frontend to interact with the backend services. Additionally, we have data models that define the structure and representation of the data exchanged between the frontend and the backend. These models ensure consistency and integrity in data handling throughout the application.
+
+By adopting this layered architecture, we achieve a separation of concerns, allowing for easier maintenance, testing, and scalability. The MVVM pattern in the frontend promotes code organization, reusability, and an improved user experience. The Rest API and business layer in the backend provide a solid foundation for handling data and implementing business logic operations.
+
 ## 2 Backend Architecture
 The backend architecture is based on the Spring Boot framework, which provides a robust and scalable foundation for building Java applications. The use of Spring Boot allows for easy configuration, dependency injection, and integration with other Spring projects.
 ![](class-diagram-restApi.png)
-
+![](er-diagram.png)
 
 ### 2.1 Spring Boot
 
@@ -113,8 +125,14 @@ Used Design patterns:
 - Interface pattern
 - Repository pattern
 
+
 # Unit-Test Design
 For the purpose of testing the controller classes, a systematic and organized approach was employed. The AAA (Arrange-Act-Assert) pattern was followed, enabling clear separation of the test setup, execution of actions, and verification of outcomes. To ensure controlled and isolated testing, extensive mocking techniques were employed, including the use of spies to simulate and monitor the behavior of relevant components and dependencies. These strategies facilitated thorough evaluation of the controller classes, resulting in comprehensive test coverage and reliable assessment of their functionality and interactions.
+
+### Unit-Test decisions
+
+In our project, we split the program into a Rest-API and a JavaFx Frontend. During testing, we focused on the model-view aspects in the frontend and the controller classes in the backend. Since the business logic resided in the API, we had to mock various dependencies to test effectively. Our testing strategy ensured thorough validation of the frontend's interactions with the data models and the backend's handling of requests and processing of data. By isolating components through mocking, we could specifically test the logic within the API, enhancing the reliability of our tests.
+
 
 # Features
 ### Vault Integration

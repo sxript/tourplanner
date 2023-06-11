@@ -2,6 +2,7 @@ package at.fhtw.swen2.tutorial.presentation.viewmodel;
 
 import at.fhtw.swen2.tutorial.model.TourLog;
 import at.fhtw.swen2.tutorial.service.TourLogService;
+import at.fhtw.swen2.tutorial.service.TourService;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -24,6 +25,9 @@ import static org.mockito.Mockito.*;
 public class UpdateTourLogViewModelTest {
     @Mock
     TourLogService tourLogService;
+
+    @Mock
+    TourService tourService;
 
     TourLogListViewModel tourLogListViewModel = spy(new TourLogListViewModel(tourLogService, tourService, null));
 

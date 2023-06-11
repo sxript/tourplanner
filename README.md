@@ -27,7 +27,8 @@ By adopting this layered architecture, we achieve a separation of concerns, allo
 ## 2 Backend Architecture
 The backend architecture is based on the Spring Boot framework, which provides a robust and scalable foundation for building Java applications. The use of Spring Boot allows for easy configuration, dependency injection, and integration with other Spring projects.
 ![](class-diagram-restApi.png)
-![](er-diagram.png)
+<img src="er-diagram.png"  width="30%" height="10%">
+
 
 ### 2.1 Spring Boot
 
